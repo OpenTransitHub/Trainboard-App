@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -16,127 +15,134 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body id="body">
 
-    <noscript> You need to enable JavaScript to run this app.</noscript>
+<noscript> You need to enable JavaScript to run this app.</noscript>
 
-    <div id="map"></div>
+<div id="map"></div>
+<div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none;">
+    <img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
+    Routendaten werden geladen...
+</div>
 
-    <div class="TRIPcontent">
+<div class="TRIPcontent">
     <center>
-    <div class="coloredSpace" id="bigheaderbox">
-        <div class="darker">
-            <div class="dragbar"></div>
-            <div class="blanktable">
-                <div class="tripcontainer wide">
+        <div class="coloredSpace" id="bigheaderbox">
+            <div class="darker">
+                <div class="dragbar"></div>
+                <div class="blanktable">
+                    <div class="tripcontainer wide">
 
-                    <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-top: 4px; padding-left: 4px;"><span id="trainTitle"></span></td><td class="wide"></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important;"><img src="./assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
-                    <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
-                    
-                    
+                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-top: 4px; padding-left: 4px;"><span id="trainTitle"></span></td><td class="wide"></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important;"><img src="./assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
+                        <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
+
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="station-container">
-        <div class="station"><span id="originStation"></span></div>
-        <div class="arrow-circle">•►</div>
-        <div class="station"><span id="destinationStation"></span></div>
-    </div>
-
-    <div class="displayflex actiontable" id="pinDiv">
-        <div class="actiontableelement"><img src="./assets/icons/addtrain.png" id="addtrainIcon" class="inverted noinvert actionicon"></div>
-        <div class="actiontableelement"><span id="pinIt">Anheften</span></div>
-    </div>
-
-    <a href="https://www.bahn.de/buchung/jetzt-einchecken?dbkanal_007=tutorialSlider_14-1_link_KomfortCheckinimBrowseraufrufen">
-        <div class="displayflex actiontable hidden" id="comfortbutton">
-            <div class="actiontableelement"><img src="./assets/icons/comfortcheckin.svg" class="inverted noinvert actionicon"></div>
-            <div class="actiontableelement"><span id="pinIt">Jetzt einchecken</span></div>
+        <div class="station-container">
+            <div class="station"><span id="originStation"></span></div>
+            <div class="arrow-circle">•►</div>
+            <div class="station"><span id="destinationStation"></span></div>
         </div>
-    </a>
-    <a id="wagonorderbutton">
-        <div class="displayflex actiontable">
-            <div class="actiontableelement"><img src="./assets/icons/wagonorder.svg" class="inverted noinvert actionicon"></div>
-            <div class="actiontableelement"><span id="pinIt">Wagenreihung</span></div>
+
+        <div class="displayflex actiontable" id="pinDiv">
+            <div class="actiontableelement"><img src="./assets/icons/addtrain.png" id="addtrainIcon" class="inverted noinvert actionicon"></div>
+            <div class="actiontableelement"><span id="pinIt">Anheften</span></div>
         </div>
-    </a>
 
-    <a id="webfisbutton">
-        <div class="displayflex actiontable bigonly">
-            <div class="actiontableelement"><img src="./assets/icons/webFIS.svg" class="inverted noinvert actionicon"></div>
-            <div class="actiontableelement"><span id="pinIt">webFIS öffnen</span></div>
+        <a href="https://www.bahn.de/buchung/jetzt-einchecken?dbkanal_007=tutorialSlider_14-1_link_KomfortCheckinimBrowseraufrufen">
+            <div class="displayflex actiontable hidden" id="comfortbutton">
+                <div class="actiontableelement"><img src="./assets/icons/comfortcheckin.svg" class="inverted noinvert actionicon"></div>
+                <div class="actiontableelement"><span id="pinIt">Jetzt einchecken</span></div>
+            </div>
+        </a>
+        <a id="wagonorderbutton">
+            <div class="displayflex actiontable">
+                <div class="actiontableelement"><img src="./assets/icons/wagonorder.svg" class="inverted noinvert actionicon"></div>
+                <div class="actiontableelement"><span id="pinIt">Wagenreihung</span></div>
+            </div>
+        </a>
+
+        <a id="webfisbutton">
+            <div class="displayflex actiontable bigonly">
+                <div class="actiontableelement"><img src="./assets/icons/webFIS.svg" class="inverted noinvert actionicon"></div>
+                <div class="actiontableelement"><span id="pinIt">webFIS öffnen</span></div>
+            </div>
+        </a>
+
+        <a href="#remarks">
+            <div class="displayflex actiontable">
+                <div class="actiontableelement"><img src="./assets/icons/arrow.svg" class="actionicon" id="warningicon"></div>
+                <div class="actiontableelement"><span id="trip-warning-counter-button">Keine</span>&nbsp;<span id="pinIt">akuelle Informationen</span></div>
+            </div>
+        </a>
+
+        <div class="coloredSpace displayflex center">
+
         </div>
-    </a>
 
-    <a href="#remarks">
-        <div class="displayflex actiontable">
-            <div class="actiontableelement"><img src="./assets/icons/arrow.svg" class="actionicon" id="warningicon"></div>
-            <div class="actiontableelement"><span id="trip-warning-counter-button">Keine</span>&nbsp;<span id="pinIt">akuelle Informationen</span></div>
+
+        <div class="trip-container-centered">
+
+            <div class="trip-status-container"></div>
+            <!-- Header der Seite mit Zugdetails -->
+
+
+
+            <!-- Modal -->
+
+            <div class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></div>
         </div>
-    </a>
-
-    <div class="coloredSpace displayflex center">
-
-    </div>
 
 
-    <div class="trip-container-centered">
+        <!-- Liste der Haltestellen -->
+        <div class="trip-stopovers">
+            <!-- Dynamisch generierte Stopover-Elemente werden hier eingefügt -->
+        </div>
 
-        <div class="trip-status-container"></div>
-        <!-- Header der Seite mit Zugdetails -->
+        <!-- Warnungen und Hinweise -->
+        <hr>
+        <h3>Aktuelle Meldungen</h3>
+        <div class="tab">
+            <button class="tablinks tabActive trainTab" onclick="openCity(event, 'Zug')" id="trainTab">Zug</button>
+            <button class="tablinks trackTab" onclick="openCity(event, 'Strecke')" id="trackTab">Strecke</button>
+        </div>
+
+        <div class="tab smaller tabcontent" style="display: block; padding: 0px; overflow:hidden;" id="Zug">
+
+            <table id="remarksTable" cellpadding="10"></table>
+
+            <br>
+        </div>
+
+        <div class="tab smaller tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
+            <div id="loadingConstructions"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.</center></div>
+
+            <table cellpadding="10"><tbody id="constructionsTable"></tbody></table>
+
+            <br>
+        </div>
 
 
-
-        <!-- Modal -->
-
-        <div class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></div>
-    </div>
-    
-
-    <!-- Liste der Haltestellen -->
-    <div class="trip-stopovers">
-        <!-- Dynamisch generierte Stopover-Elemente werden hier eingefügt -->
-    </div>
-
-    <!-- Warnungen und Hinweise -->
-    <hr>
-    <h3>Aktuelle Meldungen</h3>
-    <div class="tab">
-        <button class="tablinks tabActive trainTab" onclick="openCity(event, 'Zug')" id="trainTab">Zug</button>
-        <button class="tablinks trackTab" onclick="openCity(event, 'Strecke')" id="trackTab">Strecke</button>
-      </div>
-
-    <div class="tab smaller tabcontent" style="display: block; padding: 0px; overflow:hidden;" id="Zug">
-
-        <table id="remarksTable" cellpadding="10"></table>
 
         <br>
-    </div>
 
-    <div class="tab smaller tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
-        <div id="loadingConstructions"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.</center></div>
-
-        <table cellpadding="10"><tbody id="constructionsTable"></tbody></table>
-
-        <br>
-    </div>
+        <small>Datenquelle:</small><br>
+        <span id="logo"></span>
 
 
 
-    <br>
-
-    <small>Datenquelle:</small><br>
-    <span id="logo"></span>
-
-
-
-    <br><br><br>
+        <br><br><br>
     </center>
-    </div>
+</div>
 </div>
 
 
@@ -146,35 +152,14 @@
 
 
 <script>
-
-    window.scroll({
-      top: 300,
-      behavior: "smooth",
-    });
-
-    // Tabs Störungen
-    function openCity(evt, cityName) {
-  // Declare all variables
-  var i, tabcontent, tablinks;
-
-  // Get all elements with class="tabcontent" and hide them
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-
-  // Get all elements with class="tablinks" and remove the class "tabActive"
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" tabActive", "");
-  }
-
-  // Show the current tab, and add an "tabActive" class to the button that opened the tab
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " tabActive";
-}
-
-
+    // Globale Variablen
+    let map;
+    let marker;
+    let intervalId;
+    let stationId;
+    let constructionsLoaded = false; // Flag für Lazy Loading
+    let updateIntervalId = null; // Für Page Visibility API
+    const tripId = decodeURIComponent(getParameterByName('tripId'));
 
     // Funktion, um Parameter aus der URL zu extrahieren
     function getParameterByName(name, url = window.location.href) {
@@ -186,257 +171,342 @@
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 
-    let map;
-    let marker;
-    let intervalId;
-
-    // Funktion zur Aktualisierung der aktuellen Position auf der Karte
-    async function updateCurrentPosition(tripId) {
-        let tripApiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
-        tripResponse = await fetch(tripApiUrl);
-
-        const tripData = await tripResponse.json();
-
-        if (tripData.trip.currentLocation && marker) {
-            const newPosition = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
-            marker.setLngLat(newPosition);
+    // Page Visibility API für Update-Interval Management
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            // Tab ist nicht aktiv - stoppe Updates
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            if (updateIntervalId) {
+                clearInterval(updateIntervalId);
+                updateIntervalId = null;
+            }
+        } else {
+            // Tab ist wieder aktiv - starte Updates neu
+            if (!intervalId && marker) {
+                intervalId = setInterval(() => updateCurrentPosition(tripId), 10000);
+            }
+            if (!updateIntervalId) {
+                updateIntervalId = setInterval(fetchAndDisplayData, 30000);
+            }
+            // Führe sofort ein Update durch
+            updateCurrentPosition(tripId);
+            fetchAndDisplayData();
         }
     }
 
-    // Funktion zum Initialisieren der Karte
-    async function fetchAndDisplayMapData() {
-        const tripId = decodeURIComponent(getParameterByName('tripId'));
-        const stationId = getParameterByName('stationID');
+    // Event Listener für Page Visibility
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Initialisiere Map sofort beim Seitenaufruf
+    function initializeMap() {
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY3V6aW1tYXJ0aW4iLCJhIjoiY204dGRyb3AxMDgxcDJrc2VjeXVwNXN3NyJ9.VR8xzsuQJ_-0h95CN_UD8g';
+
+        // Karte mit Standardposition initialisieren (Österreich)
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v10',
+            center: [13.3, 47.8], // Zentrum von Österreich
+            zoom: 7,
+            fadeDuration: 0 // Schnelleres Rendering
+        });
+
+        // Zeige Ladeindikator
+        document.getElementById('map-loading').style.display = 'block';
+
+        // Map ist bereit, lade die Daten
+        map.once('load', () => {
+            loadMapData();
+        });
+    }
+
+    // Lade Kartendaten parallel
+    async function loadMapData() {
+        stationId = getParameterByName('stationID');
 
         if (!tripId) {
             alert("Keine tripId in der URL gefunden.");
+            document.getElementById('map-loading').style.display = 'none';
             return;
         }
 
+        try {
+            // Lade nur Polyline und Trip-Daten - Baustellen werden lazy geladen
+            const [polylineData, tripData] = await Promise.all([
+                fetch(`https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/polyline?stationID=${stationId}`).then(r => r.json()),
+                fetch(`https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`).then(r => r.json())
+            ]);
 
-        let polylineApiUrl = `https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/polyline?stationID=${stationId}`;       
-        let polylineResponse;
-        polylineResponse = await fetch(polylineApiUrl);
-        const polylineData = await polylineResponse.json();
+            // Verarbeite Polyline-Daten
+            if (polylineData.polyline && polylineData.polyline.features) {
+                const coordinates = polylineData.polyline.features
+                    .filter(feature => feature.geometry.type === "Point")
+                    .map(feature => [feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
 
-        let baustellenApiUrl = `https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/baustellen`;       
-        let baustellenResponse;
-        baustellenResponse = await fetch(baustellenApiUrl);
-        const baustellenData = await baustellenResponse.json();
+                if (coordinates.length > 0) {
+                    // Füge Route hinzu
+                    const fullRoute = {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': coordinates
+                        }
+                    };
 
-    
+                    map.addSource('fullRoute', {
+                        'type': 'geojson',
+                        'data': fullRoute
+                    });
 
-    let tripApiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
-    let tripResponse;
-    tripResponse = await fetch(tripApiUrl);
-    const tripData = await tripResponse.json();
+                    map.addLayer({
+                        'id': 'fullRoute',
+                        'type': 'line',
+                        'source': 'fullRoute',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': '#ffffff',
+                            'line-width': 4
+                        }
+                    });
 
-    // Bestimmen der Startposition aus den Polyline-Daten
-    let startPosition = [16.3738, 48.2082]; // Standardposition
-    if (polylineData.polyline && polylineData.polyline.features && polylineData.polyline.features.length > 0) {
-        const firstFeature = polylineData.polyline.features[0];
-        if (firstFeature.geometry.type === "Point") {
-            startPosition = [firstFeature.geometry.coordinates[0], firstFeature.geometry.coordinates[1]];
+                    // Stopps hinzufügen
+                    const stopFeatures = polylineData.polyline.features
+                        .filter(feature => feature.geometry.type === 'Point' && feature.properties.type === 'stop')
+                        .map(feature => ({
+                            type: 'Feature',
+                            geometry: feature.geometry,
+                            properties: {
+                                description: feature.properties.name || 'Unbekannter Halt',
+                            }
+                        }));
+
+                    if (stopFeatures.length > 0) {
+                        map.addSource('stops', {
+                            'type': 'geojson',
+                            'data': {
+                                'type': 'FeatureCollection',
+                                'features': stopFeatures
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'poi-labels',
+                            'type': 'symbol',
+                            'source': 'stops',
+                            'layout': {
+                                'text-field': ['get', 'description'],
+                                'text-variable-anchor': ['left'],
+                                'text-radial-offset': 1,
+                                'text-justify': 'auto'
+                            },
+                            'paint': {
+                                'text-color': '#fff'
+                            }
+                        });
+                    }
+
+                    // Stop-Marker hinzufügen
+                    polylineData.polyline.features.forEach(feature => {
+                        if (feature.geometry.type === "Point" && feature.properties.type === "stop") {
+                            const stopMarker = document.createElement('img');
+                            stopMarker.src = './assets/icons/stop-marker.svg';
+                            stopMarker.style.width = '10px';
+                            stopMarker.style.height = '10px';
+
+                            new mapboxgl.Marker({
+                                element: stopMarker
+                            })
+                                .setLngLat(feature.geometry.coordinates)
+                                .addTo(map);
+                        }
+                    });
+
+                    // Aktueller Standort des Zuges
+                    if (tripData.trip.currentLocation) {
+                        const currentLocation = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
+
+                        const imageMarker = document.createElement('img');
+                        imageMarker.src = './assets/icons/mapmarker.svg';
+                        imageMarker.style.width = '40px';
+                        imageMarker.style.height = '40px';
+
+                        marker = new mapboxgl.Marker({
+                            element: imageMarker
+                        })
+                            .setLngLat(currentLocation)
+                            .addTo(map);
+
+                        // Starte Intervall für Updates nur wenn Tab aktiv ist
+                        if (!document.hidden) {
+                            intervalId = setInterval(() => updateCurrentPosition(tripId), 10000);
+                        }
+                    }
+
+                    // Karte auf Route zoomen
+                    const bounds = coordinates.reduce(function (bounds, coord) {
+                        return bounds.extend(coord);
+                    }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+                    map.fitBounds(bounds, {
+                        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+                        duration: 800 // Schnellere Animation
+                    });
+                }
+            }
+
+            // Verstecke Ladeindikator
+            document.getElementById('map-loading').style.display = 'none';
+        } catch (error) {
+            console.error("Fehler beim Laden der Kartendaten:", error);
+            document.getElementById('map-loading').style.display = 'none';
         }
     }
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoibWFydGlpbmhpZXIiLCJhIjoiY2x6b284ZGxtMHRlbzJpcjd5em80MDIxcSJ9.BMb9-B_QvsdFy6arQxennw';
-    map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/dark-v10',
-        center: startPosition,
-        zoom: 10
+    // Lazy Loading für Baustellen-Daten
+    async function loadConstructions() {
+        if (constructionsLoaded) return; // Bereits geladen
+
+        constructionsLoaded = true;
+
+        try {
+            let constructionsUrl = `https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/baustellen`;
+            let response = await fetch(constructionsUrl);
+            let constructionData = await response.json();
+
+            const constructionsList = document.getElementById('constructionsTable');
+            constructionsList.innerHTML = ''; // Clear existing content
+
+            if (constructionData.baustellen && constructionData.baustellen.length > 0) {
+                document.getElementById('loadingConstructions').classList.add('hidden');
+
+                // Füge Baustellen-Marker zur Karte hinzu
+                if (map && map.loaded()) {
+                    constructionData.baustellen.forEach(baustelle => {
+                        const baustellenMarker = document.createElement('img');
+                        baustellenMarker.src = './assets/icons/' + baustelle.wirkung + '-marker.svg';
+                        baustellenMarker.style.width = '10px';
+                        baustellenMarker.style.height = '10px';
+
+                        new mapboxgl.Marker({
+                            element: baustellenMarker
+                        })
+                            .setLngLat([baustelle.koordinaten.von.x, baustelle.koordinaten.von.y])
+                            .addTo(map);
+                    });
+                }
+
+                constructionData.baustellen.forEach((baustellen) => {
+                    let wirkung;
+
+                    if (baustellen.wirkung == 'ABWEICHUNG_VOM_FPL') {
+                        wirkung = 'Abweichung vom Fahrplan'
+                    } else if (baustellen.wirkung == 'FAHRZEITVERLAENGERUNG') {
+                        wirkung = 'Fahrzeitverlängerung auf Regellaufweg'
+                    } else if (baustellen.wirkung == 'SONSTIGES') {
+                        wirkung = 'Sonstiges'
+                    } else if (baustellen.wirkung == 'TOTALSPERRUNG') {
+                        wirkung = 'Totalsperrung'
+                    } else if (baustellen.wirkung == 'GGL_MIT_ZS_6') {
+                        wirkung = 'Fahrt auf Gegengleis mit Signal Zs 6'
+                    } else if (baustellen.wirkung == 'GGL_MIT_ZS8') {
+                        wirkung = 'Fahrt auf Gegengleis mit Signal Zs 8'
+                    } else {
+                        wirkung = baustellen.wirkung;
+                    }
+
+                    constructionsList.innerHTML += `<tr><td><img src="./assets/icons/${baustellen.wirkung}.svg" class="serviceicon"></td><td class="wide">${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div></td></tr>`;
+                });
+
+                const baustellenCount = constructionData.baustellen.length;
+                document.getElementById('trackTab').innerHTML = `Strecke <span class=\"pill\">&nbsp;${baustellenCount}&nbsp;</span>`;
+            } else {
+                document.getElementById('loadingConstructions').innerHTML = `<center><h3>🚞</h3><h3>Keine Streckeninformationen</h3>Für diese Strecke liegen keine Meldungen vor.</center>`;
+            }
+        } catch (error) {
+            console.error("Fehler beim Laden der Baustellen:", error);
+            document.getElementById('loadingConstructions').innerHTML = `<center><h3>⚠️</h3><h3>Fehler beim Laden</h3>Die Streckeninformationen konnten nicht geladen werden.</center>`;
+        }
+    }
+
+    // Funktion zur Aktualisierung der aktuellen Position auf der Karte
+    async function updateCurrentPosition(tripId) {
+        // Nur updaten wenn Tab aktiv ist
+        if (document.hidden) return;
+
+        try {
+            const tripApiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
+            const response = await fetch(tripApiUrl);
+            const tripData = await response.json();
+
+            if (tripData.trip.currentLocation && marker) {
+                const newPosition = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
+                marker.setLngLat(newPosition);
+            }
+        } catch (error) {
+            console.error("Fehler beim Aktualisieren der Position:", error);
+        }
+    }
+
+    // Starte Map-Initialisierung sofort
+    initializeMap();
+
+    // Scroll-Animation
+    window.scroll({
+        top: 300,
+        behavior: "smooth",
     });
 
-    if (polylineData.polyline && polylineData.polyline.features) {
-        const coordinates = polylineData.polyline.features.map(feature => {
-            if (feature.geometry.type === "Point") {
-                return [feature.geometry.coordinates[0], feature.geometry.coordinates[1]];
-            }
-        }).filter(coord => coord);
+    // Tabs Störungen - modifiziert für Lazy Loading
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
 
-        const fullRoute = {
-            'type': 'Feature',
-            'geometry': {
-                'type': 'LineString',
-                'coordinates': coordinates
-            }
-        };
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
 
-        map.on('load', () => {
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" tabActive", "");
+        }
 
-            
-            // Füge die Route als Layer hinzu
-            map.addSource('fullRoute', {
-                'type': 'geojson',
-                'data': fullRoute
-            });
-            
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " tabActive";
 
-            map.addLayer({
-                'id': 'fullRoute',
-                'type': 'line',
-                'source': 'fullRoute',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': '#ffffff',
-                    'line-width': 4
-                }
-            });
-
-            // Erstelle eine Quelle für die Stopps
-            const stopFeatures = polylineData.polyline.features
-                .filter(feature => feature.geometry.type === 'Point' && feature.properties.type === 'stop')
-                .map(feature => ({
-                    type: 'Feature',
-                    geometry: feature.geometry,
-                    properties: {
-                        description: feature.properties.name || 'Unbekannter Halt',
-                    }   
-                }));
-
-
-                
-
-            // Wenn Stopps vorhanden sind, füge sie als Quelle und Layer hinzu
-            if (stopFeatures.length > 0) {
-                map.addSource('stops', {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'FeatureCollection',
-                        'features': stopFeatures
-                    }
-                });
-
-                map.addLayer({
-                    'id': 'poi-labels',
-                    'type': 'symbol',
-                    'source': 'stops',
-                    'layout': {
-                        'text-field': ['get', 'description'],
-                        'text-variable-anchor': ['left'],
-                        'text-radial-offset': 1,
-                        'text-justify': 'auto'
-                        
-                    },
-                    'paint': {
-                        'text-color': '#fff'
-                    }
-
-                    
-                });
-            }
-
-
-
-            // Iteriere durch die Features, um Marker für Stopps hinzuzufügen
-            polylineData.polyline.features.forEach(feature => {
-                if (feature.geometry.type === "Point" && feature.properties.type === "stop") {
-                    const stopPosition = feature.geometry.coordinates;
-
-                    // Erstelle einen Marker mit einem anderen Stil für Stops
-                    const stopMarker = document.createElement('img');
-                    stopMarker.src = './assets/icons/stop-marker.svg'; // anderes Icon für Stopps
-                    stopMarker.style.width = '10px'; // Breite des Stop-Markers
-                    stopMarker.style.height = '10px'; // Höhe des Stop-Markers
-
-                    // Marker mit dem Bild erstellen und hinzufügen
-                    new mapboxgl.Marker({
-                        element: stopMarker // Das Bild als Marker verwenden
-                    })
-                        .setLngLat(stopPosition) // Position des Markers setzen
-                        .addTo(map); // Marker zur Karte hinzufügen
-                }
-            });
-
-            // Iteriere durch die Baustellen, um Marker hinzuzufügen
-            baustellenData.baustellen.forEach(baustelle => {
-                const baustellenPosition = [baustelle.koordinaten.von.x, baustelle.koordinaten.von.y];
-
-
-                    // Erstelle einen Marker mit einem anderen Stil für Stops
-                    const baustellenMarker = document.createElement('img');
-                    baustellenMarker.src = './assets/icons/' + baustelle.wirkung + '-marker.svg'; // anderes Icon für Stopps
-                    baustellenMarker.style.width = '10px'; // Breite des Stop-Markers
-                    baustellenMarker.style.height = '10px'; // Höhe des Stop-Markers
-
-                    // Marker mit dem Bild erstellen und hinzufügen
-                    new mapboxgl.Marker({
-                        element: baustellenMarker // Das Bild als Marker verwenden
-                    })
-                        .setLngLat(baustellenPosition) // Position des Markers setzen
-                        .addTo(map); // Marker zur Karte hinzufügen
-            });
-
-            // Marker für den Standort des Zuges hinzufügen
-            if (tripData.trip.currentLocation) {
-                const currentLocation = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
-
-                // Bild-Element für den Zug-Standort
-                const imageMarker = document.createElement('img');
-                imageMarker.src = './assets/icons/mapmarker.svg'; // Hier das Icon für den Zugstandort
-                imageMarker.style.width = '40px'; // Breite des Bildes anpassen
-                imageMarker.style.height = '40px'; // Höhe des Bildes anpassen
-
-                // Marker für den Zugstandort
-                marker = new mapboxgl.Marker({
-                    element: imageMarker // Das Bild als Marker verwenden
-                })
-                    .setLngLat(currentLocation) // Position des Markers setzen
-                    .addTo(map); // Marker zur Karte hinzufügen
-            } else {
-                console.warn("Aktuelle Position nicht verfügbar, Marker wird nicht gesetzt.");
-            }
-
-            const bounds = coordinates.reduce(function (bounds, coord) {
-                return bounds.extend(coord);
-            }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-
-            map.fitBounds(bounds, {
-                padding: {top: 50, bottom: 50, left: 50, right: 50}
-            });
-
-            if (tripData.trip.currentLocation) {
-                intervalId = setInterval(() => updateCurrentPosition(tripId), 10000);
-            }
-        });
-    } else {
-        console.error("Keine gültigen Polyline-Daten gefunden");
+        // Lazy Loading: Lade Baustellen beim ersten Klick auf "Strecke" Tab
+        if (cityName === 'Strecke' && !constructionsLoaded) {
+            loadConstructions();
+        }
     }
-}
-
-fetchAndDisplayMapData();
-
 
     async function fetchAndDisplayData() {
-        const currentUrl = window.location.href;
+        // Nur updaten wenn Tab aktiv ist
+        if (document.hidden) return;
 
+        const currentUrl = window.location.href;
         const tripId = decodeURIComponent(getParameterByName('tripId', currentUrl));
         stationId = getParameterByName('stationID', currentUrl);
 
-      
-
         let data;
-
 
         if (stationId !== null) {
             let apiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
             let response = await fetch(apiUrl);
             data = await response.json();
             profileUsed = 'dynamic';
-        } 
-        
+        }
+
         document.getElementById('logo').innerHTML = `<img src="./assets/providerLogos/${data.provider}.svg" class="trip-logo" title="Die Datenquelle steht in keinerlei Verbindung mit diesem Projekt. Die Daten können Fehler aufweisen.">`;
 
-       
         if (!data) {
-
             console.error('Fehler beim Abrufen der Trip-Daten.');
             const statusElement = document.getElementById('tripStatus');
-            document.getElementById('body').innerHTML= `
+            document.getElementById('body').innerHTML = `
                 <nav id="navbar">
                     <div class="tabs"><span class="active">&nbsp;Zuginformationen&nbsp;</span></div>
                     <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
@@ -458,7 +528,6 @@ fetchAndDisplayMapData();
             return;
         }
 
-
         // Funktion zur Aktualisierung des Zugstatus
         function updateTrainStatus(trip) {
             let currentTime = new Date();
@@ -467,7 +536,6 @@ fetchAndDisplayMapData();
 
             const statusElement = document.getElementById('tripStatus');
 
-            // Funktion zur Formatierung der Zeitangabe
             function formatTimeDifference(timeDiffMillis) {
                 const totalMinutes = Math.round(timeDiffMillis / 60000);
                 const hours = Math.floor(totalMinutes / 60);
@@ -486,28 +554,21 @@ fetchAndDisplayMapData();
                 return timeString;
             }
 
-            // Hilfsfunktion zur Generierung des Plattform-Strings
             function getPlatformInfo(platform) {
                 return platform ? `auf Gleis ${platform}` : 'ohne festgelegtes Gleis';
             }
 
-            // Prüfen, ob der gesamte Zug storniert wurde
             const isTripCancelled = trip.cancelled === true;
-
-            // Prüfen, ob alle Stopovers storniert wurden
             const allStopoversCancelled = trip.stopovers.every(stop => (stop.cancelled === true));
 
-            // Wenn der Zug vollständig storniert wurde
             if (isTripCancelled && allStopoversCancelled) {
                 statusElement.innerHTML = `${trip.line.name} ist vollständig ausgefallen.`;
                 return;
             }
 
-            // Wenn der Zug teilweise storniert wurde
             const cancelledStopovers = trip.stopovers.filter(stop => ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)));
             const activeStopovers = trip.stopovers.filter(stop => ((!stop.cancelled) && (stop.arrival !== null) && (stop.departure !== null)));
 
-            // Funktion zum Finden des nächsten aktiven Stopovers
             function findNextActiveStopover() {
                 for (let i = 0; i < activeStopovers.length; i++) {
                     const stop = activeStopovers[i];
@@ -521,7 +582,6 @@ fetchAndDisplayMapData();
                 return null;
             }
 
-            // Wenn der Zug noch nicht abgefahren ist
             if (departureTime && currentTime < departureTime && !trip.origin.cancelled) {
                 const timeUntilDeparture = departureTime - currentTime;
                 const timeString = formatTimeDifference(timeUntilDeparture);
@@ -532,7 +592,6 @@ fetchAndDisplayMapData();
                 return;
             }
 
-            // Wenn der Zug bereits abgefahren ist oder der Abfahrtsbahnhof storniert wurde
             let nextStop = findNextActiveStopover();
 
             if (nextStop) {
@@ -544,10 +603,8 @@ fetchAndDisplayMapData();
                 const platformInfoDeparture = getPlatformInfo(nextStop.departurePlatform || nextStop.plannedDeparturePlatform);
 
                 if (timeUntilNextStop > 0) {
-                    // Zug erreicht bald den nächsten Halt
                     statusElement.innerHTML = `${trip.line.name} erreicht in ${timeString} <b class="markedstation">${nextStop.stop.name}</b> ${platformInfoArrival}.`;
                 } else {
-                    // Zug ist bereits am nächsten Halt angekommen
                     const departureTimeAtNextStop = nextStop.departure ? new Date(nextStop.departure) : new Date(nextStop.plannedDeparture);
                     const timeUntilDeparture = departureTimeAtNextStop - currentTime;
 
@@ -560,7 +617,6 @@ fetchAndDisplayMapData();
                     }
                 }
             } else {
-                // Wenn kein weiterer aktiver Halt mehr bevorsteht
                 if (arrivalTime && currentTime >= arrivalTime && !trip.destination.cancelled) {
                     statusElement.innerHTML = `${trip.line.name} hat sein Ziel <b class="markedstation">${trip.destination.name}</b> erreicht.`;
                 } else if (trip.destination.cancelled) {
@@ -575,7 +631,6 @@ fetchAndDisplayMapData();
                 }
             }
 
-            // Hinweis auf ausgefallene Halte
             if (cancelledStopovers.length > 0) {
                 const cancelledStopsNames = cancelledStopovers.map(stop => stop.stop.name).join(', ');
                 statusElement.innerHTML += `\nDie folgenden Halte entfallen: ${cancelledStopsNames}.`;
@@ -586,7 +641,6 @@ fetchAndDisplayMapData();
             document.getElementById('comfortbutton').classList.remove('hidden');
         }
 
-        // Titel und Details setzen
         document.getElementById('trainTitle').innerHTML = `(${data.trip.line.fahrtNr})`;
 
         var lineName = data.trip.line.name.split('(')[0];
@@ -596,11 +650,8 @@ fetchAndDisplayMapData();
 
         document.getElementById('title').innerHTML = `${data.trip.line.productName} ${data.trip.line.fahrtNr} 🡺 ${data.trip.destination.name}`;
 
-        // Dauer berechnen
         const departureTime = new Date(data.trip.plannedDeparture);
 
-
-        // Datum setzen
         const tripDate = departureTime.toLocaleDateString('de-DE', {
             year: 'numeric',
             month: 'long',
@@ -608,13 +659,9 @@ fetchAndDisplayMapData();
         });
         document.getElementById('trip-date').innerHTML = tripDate;
 
-        // Ursprungsstation und Zielstation setzen
         document.getElementById('originStation').textContent = data.trip.origin.name;
-
         document.getElementById('destinationStation').textContent = data.trip.destination.name;
 
-
-        // Funktion zur Bestimmung des Haltestellenstatus
         function getStopStatus(stop, currentTime, isLastStop) {
             if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
                 return 'cancelled';
@@ -628,7 +675,6 @@ fetchAndDisplayMapData();
             const arrivalTime = actualArrival || plannedArrival;
             const departureTime = actualDeparture || plannedDeparture;
 
-            // Wenn es sich um die Endhaltestelle handelt und die Ankunftszeit vergangen ist, setze den Status auf 'past'
             if (isLastStop && arrivalTime && arrivalTime < currentTime) {
                 return 'past';
             }
@@ -642,11 +688,10 @@ fetchAndDisplayMapData();
             }
         }
 
-// Haltestellen dynamisch hinzufügen
         const stopoversContainer = document.querySelector('.trip-stopovers');
         stopoversContainer.innerHTML = '';
 
-        const currentTime = new Date(); // Aktuelle Zeit
+        const currentTime = new Date();
 
         let currentStopFound = false;
 
@@ -658,12 +703,8 @@ fetchAndDisplayMapData();
             let stopStatus = getStopStatus(stop, currentTime, isLastStop);
 
             if (!currentStopFound && stopStatus === 'future') {
-                // Setze die erste zukünftige Haltestelle als 'current'
                 stopStatus = 'current';
-                
 
-                // Berechne den Fortschrittsprozentsatz basierend auf der Abfahrtszeit der vorherigen Haltestelle
-                // Falls es keine vorherige Haltestelle gibt, setze den Fortschritt auf 0%
                 let progressPercentage = 0;
 
                 if (index > 0) {
@@ -676,10 +717,9 @@ fetchAndDisplayMapData();
                     const timePassed = currentTime - previousDepartureTime;
 
                     progressPercentage = (timePassed / totalTime) * 100;
-                    progressPercentage = Math.min(Math.max(progressPercentage, 0), 100); // Begrenze zwischen 0% und 100%
+                    progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
                 }
 
-                // Setze die CSS-Variable mit dem Fortschrittsprozentsatz
                 stopElement.style.setProperty('--progress-percentage', `${progressPercentage}%`);
                 stopElement.style.setProperty('--progress-px', `${40 / 100 * (progressPercentage - 1) - 45}px`);
                 stopElement.innerHTML = `
@@ -689,17 +729,12 @@ fetchAndDisplayMapData();
                     <img src="./assets/icons/train-top.svg" alt="Location" class="trainposition">
                 </picture>
                 `;
-
             }
 
-            // Füge eine Klasse basierend auf dem Status hinzu
             stopElement.classList.add(`stop-${stopStatus}`);
-            
 
-            // Generiere den Inhalt der Haltestelle
             if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
                 stopElement.innerHTML += `
-            
             <div class="trip-stop-time">
                 <div class="trip-delay" style="font-size: 16px">Entfällt</div>
             </div>
@@ -711,7 +746,6 @@ fetchAndDisplayMapData();
             </div>
         `;
             } else if (stopStatus === 'current') {
-
                 currentStopFound = true;
 
                 const plannedArrivalTime = stop.plannedArrival ? new Date(stop.plannedArrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
@@ -728,7 +762,6 @@ fetchAndDisplayMapData();
                 }
 
                 stopElement.innerHTML += `
-                
             <div class="trip-stop-time">
                 <div>${arrivalTimeDisplay}</div>
                 <div>${departureTimeDisplay}</div>
@@ -741,8 +774,6 @@ fetchAndDisplayMapData();
                 ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="./assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="./assets/icons/placeholder.svg">'}
             </div>
         `;
-
-
             } else {
                 const plannedArrivalTime = stop.plannedArrival ? new Date(stop.plannedArrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
                 const actualArrivalTime = stop.arrival ? new Date(stop.arrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
@@ -758,7 +789,6 @@ fetchAndDisplayMapData();
                 }
 
                 stopElement.innerHTML += `
-                
             <div class="trip-stop-time">
                 <div>${arrivalTimeDisplay}</div>
                 <div>${departureTimeDisplay}</div>
@@ -776,15 +806,13 @@ fetchAndDisplayMapData();
             stopoversContainer.appendChild(stopElement);
         });
 
+        updateTrainStatus(data.trip);
 
-        // Wagenreihungsbutton
         var wagonorderbutton = document.getElementById('wagonorderbutton');
 
         var test = '2';
-        // Setze das href-Attribut
 
         const tripdepartureTime = new Date(new URLSearchParams(window.location.search).get('departureTime')).toISOString();
-
 
         if ((stationId === null) || tripdepartureTime === null) {
             var choosenstation = data.trip.stopovers[0].stop.id;
@@ -794,42 +822,33 @@ fetchAndDisplayMapData();
             const tripdepartureTime = new URLSearchParams(window.location.search).get('departureTime');
         }
 
-
         if (wagonorderbutton) {
             wagonorderbutton.href = `wagonorder.html?trainnumber=${data.trip.line.fahrtNr}&station=${choosenstation}&producttype=${data.trip.line.productName}&departure=${tripdepartureTime}`;
         }
 
         document.getElementById('webfisbutton').href = `./webfis/screen.html?trip=${encodeURIComponent(tripId)}&station=${choosenstation}`;
 
-        // Funktion zum Entfernen von HTML-Tags aus Text (ohne Veränderung der Groß-/Kleinschreibung)
         function sanitizeText(text) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = text;
             return tempDiv.textContent || tempDiv.innerText || '';
         }
 
-        // Funktion zum Entfernen von HTML-Tags und Normalisieren des Textes für Vergleichszwecke
         function sanitizeAndNormalizeText(text) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = text;
             let sanitizedText = tempDiv.textContent || tempDiv.innerText || '';
-            // Konvertiere zu Kleinbuchstaben und entferne führende/trailing Leerzeichen
             sanitizedText = sanitizedText.toLowerCase().trim();
-            // Ersetze mehrere Leerzeichen durch ein einzelnes
             sanitizedText = sanitizedText.replace(/\s+/g, ' ');
-            // Optional: Ersetze Zahlen durch Platzhalter, um ähnliche Warnungen zu erkennen
             sanitizedText = sanitizedText.replace(/\d+/g, '#');
             return sanitizedText;
         }
 
-
-        // Warnungen dynamisch hinzufügen
         const warningsList = document.getElementById('remarksTable');
         warningsList.innerHTML = '';
 
         const warningCounterElement = document.getElementById('trip-warning-counter-button');
 
-        // Sammle die Remarks der Station
         let stationRemarks = [];
         if (stationId) {
             const stationStopover = data.trip.stopovers.find(stopover => stopover.stop.id === stationId);
@@ -838,14 +857,11 @@ fetchAndDisplayMapData();
             }
         }
 
-        // Sammle die Remarks des Trips
         const tripRemarks = data.trip.remarks || [];
 
-        // Kombiniere die Remarks, wobei die der Station zuerst kommen
         const combinedRemarks = [...stationRemarks, ...tripRemarks];
 
         if (combinedRemarks.length > 0) {
-
             document.getElementById('warningicon').src = './assets/icons/warning.svg';
 
             const uniqueMessages = new Set();
@@ -853,22 +869,19 @@ fetchAndDisplayMapData();
 
             combinedRemarks.forEach(remark => {
                 const normalizedText = sanitizeAndNormalizeText(remark.text);
-                // Check ob remark.code definiert ist
                 let code = 'default';
                 if (remark.code) {
                     code = sanitizeText(remark.code.replace(/\./g, ''));
                 }
                 if (!uniqueMessages.has(normalizedText)) {
                     uniqueMessages.add(normalizedText);
-                    uniqueRemarks.push({...remark, code});
+                    uniqueRemarks.push({ ...remark, code });
                 }
             });
 
             const warningCount = uniqueRemarks.length;
 
-            // Aktualisiere den Warnungszähler oben
             warningCounterElement.innerHTML = `${warningCount}`;
-            
 
             const WarningHeaderItem = document.createElement('tr');
             document.getElementById('trainTab').innerHTML = `Zug <span class=\"pill\">&nbsp;${warningCount}&nbsp;</span>`;
@@ -879,21 +892,12 @@ fetchAndDisplayMapData();
                 const code = remark.code || 'default';
                 warningItem.innerHTML += (`<td class="clear"><img src="./assets/icons/remark${code}.svg" class="serviceicon"></td><td class="clear wide">${sanitizeText(remark.text)}</td>`);
                 warningsList.appendChild(warningItem);
-                
             });
         } else {
-            // Aktualisiere den Warnungszähler oben
             warningCounterElement.innerHTML = '&nbsp;Keine&nbsp;';
-
-           document.getElementById('remarks').classList.add('hidden');
-
+            document.getElementById('remarks').classList.add('hidden');
         }
 
-
-        // Dynamischen Status des Zuges setzen
-        updateTrainStatus(data.trip);
-
-        // Header Farbe
         const badgeClassProductName = encodeURIComponent(data.trip.line.productName);
         const badgeClassProduct = encodeURIComponent(data.trip.line.product);
         const badgeClassLineOperator = encodeURIComponent(lineName.replace(/\s+/g, '')) + encodeURIComponent(data.trip.line.operator.id);
@@ -912,8 +916,6 @@ fetchAndDisplayMapData();
 
         let $number = encodeURIComponent(data.trip.id);
 
-
-        // Funktion, um ein Cookie zu setzen
         function setCookie(name, value, days) {
             let expires = "";
             if (days) {
@@ -924,7 +926,6 @@ fetchAndDisplayMapData();
             document.cookie = name + "=" + (value || "") + expires + "; path=/";
         }
 
-        // Funktion, um ein Cookie abzurufen
         function getCookie(name) {
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
@@ -936,102 +937,36 @@ fetchAndDisplayMapData();
             return null;
         }
 
-        // Funktion beim Klick auf das Div
         document.getElementById('pinDiv').addEventListener('click', function () {
-            // Setze das Cookie
-            setCookie('pinnedjourney', $number, 7); // Cookie für 7 Tage speichern
-            setCookie('pinnedjourneyStation', stationId , 7);
+            setCookie('pinnedjourney', $number, 7);
+            setCookie('pinnedjourneyStation', stationId, 7);
             document.getElementById("pinIt").textContent = "Angeheftet";
             document.getElementById("addtrainIcon").src = "./assets/icons/addedtrain.svg";
         });
 
-        // Rufe das Cookie ab
         const tripCookieValue = getCookie('pinnedjourney');
-
         const stationCookieValue = getCookie('pinnedjourneyStation');
 
-        
-        
-
         const activeValue = `${encodeURIComponent(tripId)}`;
-
 
         if (tripCookieValue === activeValue) {
             console.log('It is pinned Journey');
             document.getElementById("pinIt").textContent = "Angeheftet";
             document.getElementById("addtrainIcon").src = "./assets/icons/addedtrain.svg";
-
         } else {
             console.log('It is not pinned Journey');
         }
-
-
-
-        // Baustellen
-
-        let constructionsUrl = `https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/baustellen`;
-        let response = await fetch(constructionsUrl);
-        let constructionData = await response.json();
-
-        const constructionsList = document.getElementById('constructionsTable');
-
-        constructionData.baustellen.forEach((baustellen) => {
-
-            document.getElementById('loadingConstructions').classList.add('hidden');
-
-            console.log(baustellen.richtung);
-
-            let wirkung;
-
-            if (baustellen.wirkung == 'ABWEICHUNG_VOM_FPL') {
-                wirkung = 'Abweichung vom Fahrplan'
-            } else  if (baustellen.wirkung == 'FAHRZEITVERLAENGERUNG') {
-                wirkung = 'Fahrzeitverlängerung auf Regellaufweg'
-            } else  if (baustellen.wirkung == 'SONSTIGES') {
-                wirkung = 'Sonstiges'
-            } else  if (baustellen.wirkung == 'TOTALSPERRUNG') {
-                wirkung = 'Totalsperrung'
-            } else  if (baustellen.wirkung == 'GGL_MIT_ZS_6') {
-                wirkung = 'Fahrt auf Gegengleis mit Signal Zs 6'
-            } else  if (baustellen.wirkung == 'GGL_MIT_ZS8') {
-                wirkung = 'Fahrt auf Gegengleis mit Signal Zs 8'
-            }else {
-                wirkung = baustellen.wirkung;
-            }
-
-
-            
-            constructionsList.innerHTML += `<tr><td><img src="./assets/icons/${baustellen.wirkung}.svg" class="serviceicon"></td><td class="wide">${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div></td></tr>`;
-
-
-            const baustellenCount = constructionData.baustellen.length;
-
-            document.getElementById('trackTab').innerHTML = `Strecke <span class=\"pill\">&nbsp;${baustellenCount}&nbsp;</span>`;
-
-
-            if (bauste = 0) {
-                document.getElementById('loadingConstructions').innerHTML = `<h3>🚞</h3><h3>Keine Streckeninformationen</h3>Für diese Strecke liegen keine Meldungen vor.`
-            }
-            
-           
-            
-        });
-
     }
 
-    // Event-Handler für das Öffnen und Schließen des Modals
     document.addEventListener('DOMContentLoaded', function () {
-
-        // Rufe fetchAndDisplayData auf
         fetchAndDisplayData();
-
-        // Alle 30 Sekunden die Daten aktualisieren
-        setInterval(fetchAndDisplayData, 30000); // 30 Sekunden in Millisekunden
+        // Starte Intervall nur wenn Tab aktiv ist
+        if (!document.hidden) {
+            updateIntervalId = setInterval(fetchAndDisplayData, 30000);
+        }
     });
 
     fetchAndDisplayData();
-
-
 
 </script>
 </body>
