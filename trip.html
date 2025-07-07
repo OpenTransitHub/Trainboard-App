@@ -25,9 +25,9 @@
 <noscript> You need to enable JavaScript to run this app.</noscript>
 
 <div id="map"></div>
-<div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none;">
+<div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
     <img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
-    Routendaten werden geladen...
+    <span class="bigonly">Routendaten werden geladen...</span>
 </div>
 
 <div class="TRIPcontent">
