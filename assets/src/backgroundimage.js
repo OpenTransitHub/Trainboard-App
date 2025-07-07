@@ -1,4 +1,7 @@
-// Background Image
+document.body.style.backgroundImage = `url('./assets/background.jpg')`;
+
+
+// Background Image (Deprecated)
 const url = "https://data.cuzimmartin.dev/mainpage-images/latest";
 
 fetch(url)
