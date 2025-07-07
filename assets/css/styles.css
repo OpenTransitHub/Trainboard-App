@@ -113,6 +113,25 @@ body {
     margin-top: 21px;
 }
 
+.weatherimage {
+    width: 100%;
+    height: 250px;
+    background-color: #021917;
+    background-size: cover;
+    background-position: right;
+    border-radius: 10px;
+    vertical-align: bottom;
+    position: relative;
+    box-shadow: inset #0000009d 0px 70px 60px;
+    background-position: center;
+    top: 5px;
+}
+
+.imageboxcontent {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
 @keyframes startblur {
     from {backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);}
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Wetter</title>
+	<title id="title">Wetter</title>
 	<link rel="stylesheet" href="./assets/css/styles.css">
 	<link rel="stylesheet" href="./assets/css/dark-styles.css">
 	<link rel="stylesheet" href="./assets/css/line-colors.css">
@@ -12,40 +12,31 @@
 	<meta name="theme-color" content="#000">
 </head>
 
-<body>
+<body class="bodyWithPopup">
 
+	
+<script src="./assets/src/pinnedPopup.js"></script>
 <center>
 
-<nav id="navbar"><div class="tabs"><span class="active">&nbsp;Wetter <span id="city"></span></a></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
-<br>
+<nav id="navbar"><div class="tabs"><span class="active">&nbsp;Wetter <span id="city"></span>&nbsp;</a></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
 
-<br>
-
-<div id="container" class="tripcontainer">
-	<div class="container">
-		<div class="left-div">
-			<p id="feelsLike"></p>
-			<p id="minMax"></p>
-			<p id="pressure"></p>
-			<p id="humidity"></p>
-			<p id="wind"></p>
-			<p id="clouds"></p>
-
-			<div id="warnings"></div>
+<div class="blanktext">
 	
-			<p><small>Wetterdaten: Open Weather Map</small></p>
-		</div>
-		<div class="right-div lineview">
-			<div id="weatherimage" class="weatherimage">
-				<div class="imageboxcontent">
-					<span class="aligner" id="weatherheader"></span>
-					<spanp id="description"></span>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+	<br>
+	<span class="aligner" id="weatherheader"></span>
+	<p id="description"></p>
+	<p id="feelsLike"></p>
+	<p id="minMax"></p>
+	<p id="pressure"></p>
+	<p id="humidity"></p>
+	<p id="wind"></p>
+	<p id="clouds"></p>
 
+	<div id="warnings"></div>
+	
+	<p><small>Wetterdaten: Open Weather Map</small></p>
+	
+</div>
 	
 </center>
 
@@ -63,12 +54,10 @@ var city = urlParams.get('city');
 		console.log(weatherdata.main.temp);
 		
 		console.log(weatherdata.weather[0].description);
-
-		document.getElementById("weatherimage").style.backgroundImage = "url('./assets/weathercanvas/canvas-" + weatherdata.weather[0].icon + ".svg')";
 		
 		document.getElementById('city').innerHTML =  weatherdata.name;	
 		
-		document.getElementById('weatherheader').innerHTML =  "<span class=\"big\">" + Math.floor(weatherdata.main.temp) + "°C</span> &nbsp;<img src=\"./assets/weatcherIcons/" + weatherdata.weather[0].icon + ".svg\" class=\"noinvert\">";
+		document.getElementById('weatherheader').innerHTML =  "<span class=\"big\">" + Math.floor(weatherdata.main.temp) + "°C</span> <img src=\"./assets/weatcherIcons/" + weatherdata.weather[0].icon + ".svg\" class=\"megaicon noinvert\">";
 		
 		document.getElementById('feelsLike').innerHTML =  "Gefühlt wie: " + Math.floor(weatherdata.main.feels_like) + "°C";	  
 
@@ -82,14 +71,17 @@ var city = urlParams.get('city');
 
 		document.getElementById('wind').innerHTML =  "&#128168; Wind: " + Math.floor(weatherdata.wind.speed) + " km/h / "+ weatherdata.wind.deg + "°";	  
 
-		document.getElementById('clouds').innerHTML =  "&#x2601; &nbsp;Bewölkung: " + weatherdata.clouds.all + " %";
-		
-		
+		document.getElementById('clouds').innerHTML =  "&#x2601; &nbsp;Bewölkung: " + weatherdata.clouds.all + " %";	  
 
 		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
 			document.getElementById('warnings').innerHTML = "<div class=\"weatherwarning\"><small class=\"secondary\">📢 Wetterwarnung</small><br><b>" + weatherdata.alerts[0].properties?.EVENT + "</b><br><small>" + weatherdata.alerts[0].properties?.DESCRIPTION + "<hr><b>Herausgeber:</b> " + weatherdata.alerts[0].properties?.CONTACT + "</small></div>";	  
 		}
+
+		document.getElementById('title').innerHTML = weatherdata.name + " " + Math.floor(weatherdata.main.temp) + "°C - " + weatherdata.weather[0].description;
 	})
+
+	fetchAndDisplayData();
+
 </script>
 
 </body>
