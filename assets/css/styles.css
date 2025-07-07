@@ -109,7 +109,7 @@ body {
 }
 
 .versiondiv {
-    background-image: url("/assets/branding/bernina_gradient.png");
+    background-image: url("../branding/bernina_gradient.png");
     margin-top: 21px;
 }
 
