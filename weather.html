@@ -64,7 +64,7 @@ var city = urlParams.get('city');
 		
 		console.log(weatherdata.weather[0].description);
 
-		document.getElementById("weatherimage").style.backgroundImage = "url('./assets/weathercanvas/canvas-" + weatherdata.weather[0].icon + ".svg')";
+		document.getElementById("weatherimage").style.backgroundImage = "url('./assets/weathercanvas/canvas-" + weatherdata.weather[0].icon + ".png')";
 		
 		document.getElementById('city').innerHTML =  weatherdata.name;	
 		
