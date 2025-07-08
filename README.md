@@ -13,11 +13,9 @@ You need an internet connection to fetch data.
 
 ```
 ⚠️ PLEASE NOTE ⚠️
-Trainboard v0.8 or higher is mandatory to run the application successfully. 
+Trainboard v1.2.1 or higher is mandatory to run the application successfully. 
 Older version might not longer work, due to changes in the requested APIs.
 
-Trainboard v0.17 or higher ist recommended for more stable API-Endpoints and
-improved data accuracy.
 ```
 
 ## Contribution
