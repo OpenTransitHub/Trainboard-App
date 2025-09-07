@@ -327,6 +327,7 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 
 	if (findtrain === 0) {
 		tableBody.innerHTML = `<tr><td colspan="4">Keine Daten verfügbar</td></tr>`;
+		window.location.replace(`suburban.html?station=${stationID}`);
 	}
 }
 
