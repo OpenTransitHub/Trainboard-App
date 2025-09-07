@@ -212,6 +212,7 @@ body {
     background-color: #ffffff1f !important;
     color: #fff;  
     flex: 0 0 auto;
+    backdrop-filter: blur(1.2px);
 }
 
 .addtrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover {
