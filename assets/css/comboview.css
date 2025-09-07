@@ -1,0 +1,71 @@
+body {
+    overflow-y: hidden;
+}
+
+.remark {
+    display: none;
+}
+
+#combocontainer {
+    flex: 1; /* füllt restlichen Platz nach dem Header */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+}
+
+#arrival, #departure {
+    flex: 1;
+    overflow-y: auto;
+}
+
+#arrival {
+    background-color: #b3c4bb;
+}
+
+#departure {
+    background-color: #c6c6e2;
+}
+
+
+tr:nth-child(even) {
+    background-color: #d9d9d999;
+}
+
+th {
+    font-size: 1.5em;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    #arrival {
+        background-color: #02140b;
+    }
+
+    #departure {
+        background-color: #030320;
+    }
+
+    tr:nth-child(even) {
+            background-color: #222222ac;
+    }
+
+    .darkinvert {
+        filter: invert(1);
+    }
+}
+
+@media (max-width: 900px) {
+    #combocontainer {
+        flex-direction: column;
+    }
+
+    #arrival, #departure {
+        height: 10%;
+        width: 100%;
+    }
+
+    #combocontainer {
+         height: 87vh;
+    }
+}
