@@ -39,11 +39,11 @@ th {
 
 @media (prefers-color-scheme: dark) {
     #arrival {
-        background-color: #02140b;
+        background-color: #042615;
     }
 
     #departure {
-        background-color: #030320;
+        background-color: #06063a;
     }
 
     tr:nth-child(even) {
