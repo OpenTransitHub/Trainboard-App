@@ -385,20 +385,20 @@
                 document.getElementById('loadingConstructions').classList.add('hidden');
 
                 // Füge Baustellen-Marker zur Karte hinzu
-                if (map && map.loaded()) {
-                    constructionData.baustellen.forEach(baustelle => {
-                        const baustellenMarker = document.createElement('img');
-                        baustellenMarker.src = './assets/icons/' + baustelle.wirkung + '-marker.svg';
-                        baustellenMarker.style.width = '10px';
-                        baustellenMarker.style.height = '10px';
+                //if (map && map.loaded()) {
+                  //  constructionData.baustellen.forEach(baustelle => {
+                    //    const baustellenMarker = document.createElement('img');
+                      //  baustellenMarker.src = './assets/icons/' + baustelle.wirkung + '-marker.svg';
+                        //baustellenMarker.style.width = '10px';
+                        //baustellenMarker.style.height = '10px';
 
-                        new mapboxgl.Marker({
-                            element: baustellenMarker
-                        })
-                            .setLngLat([baustelle.koordinaten.von.x, baustelle.koordinaten.von.y])
-                            .addTo(map);
-                    });
-                }
+                        //new mapboxgl.Marker({
+                        //    element: baustellenMarker
+                      //  })
+                     //       .setLngLat([baustelle.koordinaten.von.x, baustelle.koordinaten.von.y])
+                     //       .addTo(map);
+                  //  });
+              //  }
 
                 constructionData.baustellen.forEach((baustellen) => {
                     let wirkung;
