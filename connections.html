@@ -21,8 +21,10 @@
     <br>
     <br>
     <h3 id="headertext"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></h3>
-    <br>
-    <br>
+    
+    <span id="weatherchip"></span>
+
+    <br><br>
 
 </center>
 <table id="transfersTable">
@@ -39,6 +41,8 @@
     <!-- Rows will be added here by JavaScript -->
     </tbody>
 </table>
+
+
 
 <div id="noTransfersMessage" style="text-align: center; display: none; margin: 85px 0;">
     <p>Keine Anschlüsse in den nächsten 45 Minuten verfügbar.</p>
@@ -156,8 +160,8 @@
             });
 
             // Aktualisiere die Header-Informationen
-            document.getElementById('headertext').innerHTML = 'Ankunft mit ' + data.arrivalLine + ' in ' + data.arrivalStationName + ' um ' + formatTime(data.arrivalTime) + ' auf Gleis ' + data.arrivalPlatform;
-            document.getElementById('arrivallineheader').innerHTML = data.arrivalLine || '';
+            document.getElementById('headertext').innerHTML = 'Ankunft mit <span class="chip">' + data.arrivalLine.split('(')[0] + '</span> in ' + data.arrivalStationName + ' um ' + formatTime(data.arrivalTime) + ' auf Gleis ' + data.arrivalPlatform;
+            document.getElementById('arrivallineheader').innerHTML = data.arrivalLine.split('(')[0] || '';
 
             // Wenn keine Transfers vorhanden sind
             if (!hasValidTransfers) {
@@ -165,8 +169,32 @@
                 document.getElementById('transfersTable').style.display = 'none';
             }
 
+
+            fetch(`https://data.cuzimmartin.dev/weather?city=${data.arrivalStationName.split(/[\s-]/)[0]}`)
+            .then(response => response.json())
+            .then(weatherdata => {
+                
+                console.log(weatherdata.main.temp);
+                
+                console.log(weatherdata.weather[0].description);
+
+                
+                document.getElementById("weatherchip").innerHTML = `
+                <a href="weather.html?city=${data.arrivalStationName.split(/[\s-]/)[0]}">
+                <span class="chip iconchip weatherchip" 
+                        style="background-image: url('./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg')">
+                    ${Math.floor(weatherdata.main.temp)}°C
+                </span>
+                </a>`;
+
+})
+
         })
         .catch(error => console.error("Error fetching or processing data:", error));
+
+
+
+	
 </script>
 
 

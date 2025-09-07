@@ -180,6 +180,82 @@ body {
     color: #fff;
 }
 
+.chip {
+    background-color: #d9d9d9;
+    background-repeat: no-repeat;
+    background-position: 5px;
+    margin-left: 5px;
+    margin-right: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 100px;
+    width: fit-content;
+}
+
+
+.iconchip {
+    padding-left: 35px !important;
+    background-size: 20px;
+    background-position-x: 8px;
+}
+
+.warnchip {
+    background-color: #c9cb3b !important;
+    background-image: url(../icons/bell.svg);
+    background-size: unset;
+    color: #000;
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.addtrainchip, .reihungchip, .checkinChip, .webfisChip {
+    background-color: #ffffff1f !important;
+    color: #fff;  
+    flex: 0 0 auto;
+}
+
+.addtrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover {
+    cursor: pointer;
+
+}
+
+.addtrainchip {
+    background-image: url(../icons/addtrain.png);
+}
+
+.reihungchip {
+    background-image: url(../icons/wagonorder.svg);
+}
+
+.checkinChip {
+    background-image: url(../icons/comfortcheckin.svg);
+}
+
+.webfisChip {
+    background-image: url(../icons/webFIS.svg);
+}
+
+
+.chipfloater {
+    height: fit-content;
+    width: 100%;
+    text-align: left;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(5deg); }
+  30% { transform: rotate(-5deg); }
+  45% { transform: rotate(4deg); }
+  60% { transform: rotate(-4deg); }
+  75% { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
+}
+
 .markedstation {
     color: #767676 !important;
 }

@@ -198,5 +198,7 @@
 		border: 1px solid #5c5c5c8a;
 	}
 
-	
+	.chip {
+		background-color: #222222;
+	}	
 }

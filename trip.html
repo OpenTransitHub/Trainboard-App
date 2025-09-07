@@ -26,8 +26,8 @@
 
 <div id="map"></div>
 <div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
-    <img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
-    <span class="bigonly">Routendaten werden geladen...</span>
+    <img src="./assets/whiteSpinner.svg" class="loadingspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
+    <span class="bigonly">Route wird geladen...</span>
 </div>
 
 <div class="TRIPcontent">
@@ -38,52 +38,45 @@
                 <div class="blanktable">
                     <div class="tripcontainer wide">
 
-                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-top: 4px; padding-left: 4px;"><span id="trainTitle"></span></td><td class="wide"></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important;"><img src="./assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
+                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-left: 4px;"><span id="trainTitle"></span></td><td class="wide"></td><td><div class="warnchip chip iconchip hidden" id="trip-warning-counter-button">0</div></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important; padding-top: 5px !important;"><img src="./assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
                         <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
 
+                        <br>
+                        <small class="disabled"><span id="lauf"></span></small>
 
                     </div>
                 </div>
+                <div class="chipfloater">
+                    <div class="chip addtrainchip iconchip" id="pinChip">
+                        Anheften
+                    </div>
+
+                    <a id="wagonorderbutton">
+                        <div class="chip reihungchip iconchip">
+                            Wagenreihung
+                        </div>
+                    </a>
+
+                    <a id="webfisbutton">
+                        <div class="chip webfisChip iconchip">
+                            webFIS
+                        </div>
+                    </a>
+
+                    <a href="https://www.bahn.de/buchung/jetzt-einchecken?dbkanal_007=tutorialSlider_14-1_link_KomfortCheckinimBrowseraufrufen">
+                        <div class="chip iconchip checkinChip hidden" id="comfortbutton">
+                            Einchecken
+                        </div>
+                    </a>
+                </div>
+                
             </div>
         </div>
 
-        <div class="station-container">
-            <div class="station"><span id="originStation"></span></div>
-            <div class="arrow-circle">•►</div>
-            <div class="station"><span id="destinationStation"></span></div>
-        </div>
 
-        <div class="displayflex actiontable" id="pinDiv">
-            <div class="actiontableelement"><img src="./assets/icons/addtrain.png" id="addtrainIcon" class="inverted noinvert actionicon"></div>
-            <div class="actiontableelement"><span id="pinIt">Anheften</span></div>
-        </div>
+        
 
-        <a href="https://www.bahn.de/buchung/jetzt-einchecken?dbkanal_007=tutorialSlider_14-1_link_KomfortCheckinimBrowseraufrufen">
-            <div class="displayflex actiontable hidden" id="comfortbutton">
-                <div class="actiontableelement"><img src="./assets/icons/comfortcheckin.svg" class="inverted noinvert actionicon"></div>
-                <div class="actiontableelement"><span id="pinIt">Jetzt einchecken</span></div>
-            </div>
-        </a>
-        <a id="wagonorderbutton">
-            <div class="displayflex actiontable">
-                <div class="actiontableelement"><img src="./assets/icons/wagonorder.svg" class="inverted noinvert actionicon"></div>
-                <div class="actiontableelement"><span id="pinIt">Wagenreihung</span></div>
-            </div>
-        </a>
-
-        <a id="webfisbutton">
-            <div class="displayflex actiontable bigonly">
-                <div class="actiontableelement"><img src="./assets/icons/webFIS.svg" class="inverted noinvert actionicon"></div>
-                <div class="actiontableelement"><span id="pinIt">webFIS öffnen</span></div>
-            </div>
-        </a>
-
-        <a href="#remarks">
-            <div class="displayflex actiontable">
-                <div class="actiontableelement"><img src="./assets/icons/arrow.svg" class="actionicon" id="warningicon"></div>
-                <div class="actiontableelement"><span id="trip-warning-counter-button">Keine</span>&nbsp;<span id="pinIt">akuelle Informationen</span></div>
-            </div>
-        </a>
+      
 
         <div class="coloredSpace displayflex center">
 
@@ -99,7 +92,7 @@
 
             <!-- Modal -->
 
-            <div class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></div>
+            <div class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner noinvert"></div>
         </div>
 
 
@@ -659,8 +652,7 @@
         });
         document.getElementById('trip-date').innerHTML = tripDate;
 
-        document.getElementById('originStation').textContent = data.trip.origin.name;
-        document.getElementById('destinationStation').textContent = data.trip.destination.name;
+        document.getElementById('lauf').innerHTML = data.trip.origin.name + ' → ' + data.trip.destination.name;
 
         function getStopStatus(stop, currentTime, isLastStop) {
             if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
@@ -862,7 +854,8 @@
         const combinedRemarks = [...stationRemarks, ...tripRemarks];
 
         if (combinedRemarks.length > 0) {
-            document.getElementById('warningicon').src = './assets/icons/warning.svg';
+
+            document.getElementById('trip-warning-counter-button').classList.remove('hidden');
 
             const uniqueMessages = new Set();
             const uniqueRemarks = [];
@@ -937,11 +930,13 @@
             return null;
         }
 
-        document.getElementById('pinDiv').addEventListener('click', function () {
+        document.getElementById('pinChip').addEventListener('click', function () {
             setCookie('pinnedjourney', $number, 7);
             setCookie('pinnedjourneyStation', stationId, 7);
-            document.getElementById("pinIt").textContent = "Angeheftet";
-            document.getElementById("addtrainIcon").src = "./assets/icons/addedtrain.svg";
+            document.getElementById("pinChip").textContent = "Angeheftet";
+            document.getElementById("pinChip").style.backgroundImage = "url('./assets/icons/addedtrain.svg')";
+
+
         });
 
         const tripCookieValue = getCookie('pinnedjourney');
@@ -951,8 +946,8 @@
 
         if (tripCookieValue === activeValue) {
             console.log('It is pinned Journey');
-            document.getElementById("pinIt").textContent = "Angeheftet";
-            document.getElementById("addtrainIcon").src = "./assets/icons/addedtrain.svg";
+            document.getElementById("pinChip").textContent = "Angeheftet";
+            document.getElementById("pinChip").style.backgroundImage = "url('./assets/icons/addedtrain.svg')";
         } else {
             console.log('It is not pinned Journey');
         }
