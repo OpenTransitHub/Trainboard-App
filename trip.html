@@ -73,7 +73,7 @@
             </div>
         </div>
 
-
+        <div id="trainslider"></div>
         
 
       
@@ -951,6 +951,67 @@
         } else {
             console.log('It is not pinned Journey');
         }
+
+        // WAGONORDER GRAPHIC             
+        async function loadTrainData() {
+        const url = `https://data.cuzimmartin.dev/wagenreihung?train_number=${data.trip.line.fahrtNr}&eva=${choosenstation}&train_type=${data.trip.line.productName}&departure_time=${tripdepartureTime}`;
+        const response = await fetch(url);
+        const traindata = await response.json();
+
+        const container = document.getElementById("trainslider");
+        container.innerHTML = ""; // Reset
+
+        traindata.groups.forEach(group => {
+            const transportCategory = group.transport.category;
+            const vehicles = group.vehicles;
+
+            vehicles.forEach((vehicle, index) => {
+            const vehicleId = vehicle.vehicleID;
+            const category = vehicle.type.category;
+            const constructionType = vehicle.type.constructionType || "";
+            const series = vehicle.typeDetails.series || "";
+            const typeDetailsCategory = vehicle.typeDetails.category;
+
+            // prüfen ob erstes oder letztes Fahrzeug in dieser Gruppe
+            let suffix = "";
+            if (index === 0) suffix = "-firstgroupvehicle";
+            if (index === vehicles.length - 1) suffix = "-lastgroupvehicle";
+
+            // Bild-Pfade mit Suffix
+            const sources = [
+                `./assets/vehicles/${category}-${vehicleId}${suffix}.png`,
+                `./assets/vehicles/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
+                `./assets/vehicles/blank-${typeDetailsCategory}${suffix}.png`
+            ];
+
+            // <img> erstellen
+            const img = document.createElement("img");
+            img.alt = `${category} (${vehicleId})`;
+            img.dataset.fallbacks = JSON.stringify(sources);
+            img.dataset.index = 0;
+            img.src = sources[0];
+            img.classList.add('vehicle');
+
+            // Fallback-Mechanismus
+            img.onerror = function () {
+                let index = parseInt(this.dataset.index, 10);
+                const fallbacks = JSON.parse(this.dataset.fallbacks);
+
+                if (index < fallbacks.length - 1) {
+                index++;
+                this.dataset.index = index;
+                this.src = fallbacks[index]; // Nächstes Bild probieren
+                } else {
+                this.onerror = null; // Keine Endlosschleife
+                }
+            };
+
+            container.appendChild(img);
+            });
+        });
+        }
+        loadTrainData();
+        
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -962,6 +1023,10 @@
     });
 
     fetchAndDisplayData();
+
+
+
+
 
 </script>
 </body>

@@ -2284,6 +2284,7 @@ top: 0px;
     top: 5%;
     left: 20px;
     overflow-y: scroll;
+    overflow-x: hidden;
     border-radius: 10px;
     z-index: 10;
     background-color: rgba(255,255,255,0.9);
@@ -2293,4 +2294,18 @@ top: 0px;
 }
 
 
+.vehicle {
+    height: 60px;
+}
+
+#trainslider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    border-bottom: #cecece 1px solid;
+}
 
