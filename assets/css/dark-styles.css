@@ -4,6 +4,10 @@
 		color: #efefef;
 	}
 
+	.coloredbody {
+		background-color: #0f0f0f;
+	}
+
 	.darkbody {
 		background-color: #0f0f0f;
 	}
@@ -201,4 +205,25 @@
 	.chip {
 		background-color: #222222;
 	}	
+
+	.listitem {
+		background-color: #222222;
+	}
+
+	.listimagecontainer img {
+		height: 30px;
+		filter: invert(1);
+		-webkit-filter: invert(1);
+	}
+
+	.listimagecontainerred img {
+		filter: unset;
+		-webkit-filter: unset;
+	}
+
+	.listimagecontainergreen img {
+		filter: unset;
+		-webkit-filter: unset;
+	}
 }
+

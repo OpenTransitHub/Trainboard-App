@@ -26,7 +26,10 @@ body {
     overflow-x: clip;
     background-color: #fff;
     color: #000;
+}
 
+.coloredbody {
+    background-color: #d9d9d9;
 }
 
 /* Info Div auf Home*/
@@ -2307,5 +2310,66 @@ top: 0px;
     display: flex;
     flex-direction: row;
     border-bottom: #cecece 1px solid;
+}
+
+
+.listcontainer {
+    width: 100%;
+}
+
+
+.listitem {
+    background-color: #fff;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.listcontainer div:last-child {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.listcontainer div:first-child {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.listimagecontainer {
+    height: 45px;
+    width: 45px;
+    border-radius: 200px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin: 7px;
+    margin-right: 14px;
+}
+
+.listimagecontainer img {
+    height: 30px;
+}
+
+.listimagecontainerred {
+    background-color: red;
+}
+
+.listimagecontainergreen {
+    background-color: green;
+}
+
+.platformselect {
+    background-color: #041E42;
+    color: #fff;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 100px;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
 }
 

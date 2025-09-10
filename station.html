@@ -16,15 +16,16 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
-<body class="bodyWithPopup">
+<body class="bodyWithPopup coloredbody">
 
 <script src="./assets/src/pinnedPopup.js"></script>
 <center>
     <noscript> You need to enable JavaScript to run this app.</noscript>
 
     <nav id="navbar">
-			<div class="tabs">
+			<div class="tabs" id="tabs">
 				<a href="#" class="active">&nbsp;Bahnhof&nbsp;</a>
+				
 			</div>
             <div class="iconbar"><a class="navsearch" href="stationsearch.html">Bahnhofsuche</a></div>
 	</nav>
@@ -58,14 +59,6 @@
 					<h3>Services</h3>
 	                <table id="additionalservicestable" cellpadding="10"></table>
 				</div>
-				
-				<div id="facilitystatusbox">
-					<h3>Außer Betrieb</h3>
-	                <table id="facilitiesstatus" cellpadding="10">
-						
-					</table>
-				</div>
-				
 				
             </div>
             <div class="right-div lineview">
@@ -116,6 +109,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
 var stationID = urlParams.get('station');
 
+document.getElementById('tabs').innerHTML += `<a href="accessibility.html?station=${stationID}">Barrierefreiheit</a>`;
 
 
 
@@ -275,39 +269,6 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	if (data.hasTaxiRank === true) {
 		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasTaxiRank.svg\" class=\"serviceicon\"><td class=\"wide\">Taxistand</td><td><span class=\"secondary\">Ja</span></td></tr>";
 	}
-		
-	//FACILITIES
-	
-	const facilitiesstatusTable = document.getElementById("facilitiesstatus");
-	let facilityActiveCounter = 0;
-	let facilityInactiveCounter = 0;
-
-	
-	data.facilities.forEach(facility => {
-		if (facility.state === 'INACTIVE') {
-			facilitiesstatusTable.innerHTML += "<tr><td><img src=\"./assets/icons/"+ facility.type +".svg\" class=\"serviceicon\"></td><td class=\"wide\">" + (facility.type === "ESCALATOR" ? "Fahrtreppe" : (facility.type === "ELEVATOR" ? "Aufzug" : facility.type)) + " " + facility.description + "</tr>";
- 			++facilityInactiveCounter;
-		} else {
-			++facilityActiveCounter;
-		}
-		
-		});
-		
-	console.log('Inactive: '+  facilityInactiveCounter)
-	
-	console.log('Active: '+  facilityActiveCounter)
-	
-	if (facilityActiveCounter === 1) {
-		facilitiesstatusTable.innerHTML += "<tr><td><img src=\"./assets/icons/facilityActive.svg\" class=\"serviceicon\"></td><td class=\"wide\">" + facilityActiveCounter + " Anlage in Betrieb</tr>";
-	} else {
-		facilitiesstatusTable.innerHTML += "<tr><td><img src=\"./assets/icons/facilityActive.svg\" class=\"serviceicon\"></td><td class=\"wide\">" + facilityActiveCounter + " Anlagen in Betrieb</tr>";
-	}
-	
-	
-	if (facilityActiveCounter === 0 && facilityInactiveCounter === 0) {
-		document.getElementById('facilitystatusbox').classList.add('hidden');
-	}
-	
 	
 	//SERVICES
 	const additionalservicestable = document.getElementById("additionalservicestable");
