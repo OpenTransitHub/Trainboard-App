@@ -225,5 +225,19 @@
 		filter: unset;
 		-webkit-filter: unset;
 	}
+
+	.listimagecontainerwine img {
+		filter: unset;
+		-webkit-filter: unset;
+	}
+
+	.listimagecontainernoinvert img {
+		filter: unset;
+		-webkit-filter: unset;
+	}
+
+	.contrastlistitem {
+		background-color: #000;
+	}
 }
 

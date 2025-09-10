@@ -69,24 +69,25 @@
 						
 					</div>
 				</div>
-                
-			
-				<span id="adress"></span>
-				
-				<span id="sevmap"></span>
-
-				<span id="weather"></span>
-
-				<span id="statistics" style="display: none;"></span>
-
-				<div class="changebutton button">
-					Umsteigezeit<br>
-
-					<table><tr><td><select name="startplatforms" type="text" id="platStart" class="platforminput leftcorners"><option value="" disabled selected hidden>von Gl.</option></select><td><select name="startplatforms" type="text" id="platEnd" class="platforminput rightcorners"><option value="" disabled selected hidden>nach Gl.</option></select></td></tr></table>
-					
-					<span id="timeSpan"></span>
+                <br>
+				<div class="listcontainer" id="detailscontainer">
 					
 				</div>
+
+				<br>
+
+				<div class="listcontainer">
+					<div class="listitem contrastlistitem">
+						<div class="listimagecontainer"><img src="./assets/icons/kichange.svg"></div>
+						<div class="listitemtext">
+							Umsteigezeit<br>
+							<table><tr><td><select name="startplatforms" type="text" id="platStart" class="platformselect"><option value="" disabled selected hidden>von Gl.</option></select></td><td><select name="startplatforms" type="text" id="platEnd" class="platformselect"><option value="" disabled selected hidden>nach Gl.</option></select></td></tr></table>
+							<span id="timeSpan"></span>
+						</div>
+					</div>
+				</div>
+			
+				
 
 				<span id="stationCat"></span>
 				
@@ -111,6 +112,7 @@ var stationID = urlParams.get('station');
 
 document.getElementById('tabs').innerHTML += `<a href="accessibility.html?station=${stationID}">Barrierefreiheit</a>`;
 
+//	document.getElementById('tabs').innerHTML += `<a href="shops.html?station=${stationID}">Shops</a>`;
 
 
 /*    KI UMSTEIGEZEIT   */
@@ -133,7 +135,7 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
         if (startValue && endValue) {
             // Überprüfen, ob die Gleise unterschiedlich sind
             if (startValue === endValue) {
-                timeSpan.textContent = 'Wähle unterschiedliche Gleise aus';
+                timeSpan.innerHTML = `<div class="chip iconchip warnchip">Wähle unterschiedliche Gleise</div>`;
             } else {
                 // URL für den API-Aufruf erstellen
                 const transferUrl = `${baseTransferUrl}/${startValue}/${endValue}`;
@@ -212,11 +214,22 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	
 	document.getElementById('productline').textContent = data.productLine.productLine;
 	
-	document.getElementById('adress').innerHTML = "<a href=\"https://www.google.com/maps/dir/?api=1&=true&destination=" +  data.mailingAddress.street + " " + data.mailingAddress.zipcode + " " + data.mailingAddress.city  + "\" class=\"black\"><div class=\"button \">" + data.mailingAddress.street + "<br>" + data.mailingAddress.zipcode + "<br>" + data.mailingAddress.city + "</div></a>";
+	document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem contrastlistitem">
+				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="./assets/icons/directions.svg"></a></div>
+				<div class="listitemtext"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}" class="black">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></a></div>
+			</a>
+		</div>
+	`
 
-	document.getElementById('sevmap').innerHTML = "<a href=\"https://www.bahnhof.de/downloads/replacement-service-maps/" +  data.number + ".pdf\"><div class=\"sevbutton button \">Lageplan</div></a>";	  
+	document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem contrastlistitem">
+				<div class="listimagecontainer listimagecontainerwine"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf"><img src="./assets/icons/sevlogo.svg" class="fillimg"></a></div>
+				<div class="listitemtext"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf" class="black">Umgebungsplan<br><small class="disabled">Zugang zum SEV</small></a></div>
+			</a>
+		</div>
+	`
 	
-	document.getElementById('statistics').innerHTML = "<a href=\"dashboard.html?stationID=" +  data.evaNumber + "\"><div class=\"statisticbutton button \">Statistiken</div></a>";
 
 	var imgurl = data.photoPath;
 	document.getElementById("stationimage").style.backgroundImage = "url(" + imgurl + ")";
@@ -305,10 +318,24 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	.then(weatherdata => {
 
 		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
-			document.getElementById('weather').innerHTML = "<a href=\"weather.html?city=" + data.mailingAddress.city + "\"><div class=\"button\">" + Math.floor(weatherdata.main.temp) + "°C " + weatherdata.weather[0].description +"<br><div class=\"weatherwarning\">📢 " + weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "") + "</div></div></a>";	  
+			
+			document.getElementById('detailscontainer').innerHTML += `
+				<div class="listitem contrastlistitem">
+						<div class="listimagecontainer listimagecontainernoinvert"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip warnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
+					</a>
+				</div>
+			`
+
+
 		} else {
-			document.getElementById('weather').innerHTML = "<a href=\"weather.html?city=" + data.mailingAddress.city + "\"><div class=\"button\">" + Math.floor(weatherdata.main.temp) + "°C " + weatherdata.weather[0].description +"<br></div></a>";	  
-		}
+			document.getElementById('detailscontainer').innerHTML += `
+				<div class="listitem contrastlistitem">
+						<div class="listimagecontainer listimagecontainernoinvert"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a></div>
+					</a>
+				</div>
+			`		}
 
 	})^
 
@@ -319,7 +346,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
 const stationName = data.name;
 
-fetch('https://bahnhofskatzen.de.cool/catsdata.json')
+fetch('https://traincats.io/catsdata.json')
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP-Error! Status: ${response.status}`);
@@ -334,7 +361,7 @@ fetch('https://bahnhofskatzen.de.cool/catsdata.json')
 
 			document.getElementById('stationCat').innerHTML += `
 				<div class="button">
-					<img src="https://bahnhofskatzen.de.cool/assets/cats/${matchingCat.filename}" class="catPic">
+					<img src="https://traincats.io/assets/cats/${matchingCat.filename}" class="catPic">
 					Bahnhofskatze<br>
 					<small>gesichtet von: <a href="${matchingCat.sociallink}">${matchingCat.socialname}</a></small>
 				</div>

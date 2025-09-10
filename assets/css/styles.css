@@ -211,14 +211,24 @@ body {
     animation: wiggle 0.5s ease-in-out;
 }
 
-.addtrainchip, .reihungchip, .checkinChip, .webfisChip {
+.addtrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip {
     background-color: #ffffff1f !important;
     color: #fff;  
     flex: 0 0 auto;
     backdrop-filter: blur(1.2px);
 }
 
-.addtrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover {
+.warnchip {
+    background-color: rgb(111, 37, 37) !important;
+    border-radius: 100px !important;
+    background-image: url(../icons/warnsign.svg);
+    font-size: 13px;
+    animation: unset;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.addtrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip {
     cursor: pointer;
 
 }
@@ -598,7 +608,7 @@ span {
     height: 250px;
     background-color: #000;
     background-size: cover;
-    border-radius: 10px;
+    border-radius: 20px;
     vertical-align: bottom;
     position: relative;
     box-shadow: inset #000 0px -70px 60px;
@@ -753,6 +763,10 @@ a {
     color: #fff;
     text-decoration: none;
     white-space: nowrap;
+}
+
+a .black {
+    color: #000;
 }
 
 .active {
@@ -2320,7 +2334,7 @@ top: 0px;
 
 .listitem {
     background-color: #fff;
-    border-radius: 3px;
+    border-radius: 4px;
     padding: 5px;
     margin-bottom: 2px;
     display: flex;
@@ -2353,6 +2367,11 @@ top: 0px;
     height: 30px;
 }
 
+.listimagecontainer .fillimg {
+    height: 100%; 
+    width: 100%;
+}
+
 .listimagecontainerred {
     background-color: red;
 }
@@ -2360,6 +2379,7 @@ top: 0px;
 .listimagecontainergreen {
     background-color: green;
 }
+
 
 .platformselect {
     background-color: #041E42;
@@ -2372,4 +2392,6 @@ top: 0px;
     outline: none;
     margin-bottom: 10px;
 }
+
+
 
