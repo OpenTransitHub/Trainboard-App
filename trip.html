@@ -959,7 +959,7 @@
         const traindata = await response.json();
 
         const container = document.getElementById("trainslider");
-        container.innerHTML = ""; // Reset
+        container.innerHTML = ""; 
 
         traindata.groups.forEach(group => {
             const transportCategory = group.transport.category;
@@ -972,19 +972,16 @@
             const series = vehicle.typeDetails.series || "";
             const typeDetailsCategory = vehicle.typeDetails.category;
 
-            // prüfen ob erstes oder letztes Fahrzeug in dieser Gruppe
             let suffix = "";
             if (index === 0) suffix = "-firstgroupvehicle";
             if (index === vehicles.length - 1) suffix = "-lastgroupvehicle";
 
-            // Bild-Pfade mit Suffix
             const sources = [
-                `./assets/vehicles/${category}-${vehicleId}${suffix}.png`,
-                `./assets/vehicles/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
-                `./assets/vehicles/blank-${typeDetailsCategory}${suffix}.png`
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/${category}-${vehicleId}${suffix}.png`,
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/blank-${typeDetailsCategory}${suffix}.png`
             ];
 
-            // <img> erstellen
             const img = document.createElement("img");
             img.alt = `${category} (${vehicleId})`;
             img.dataset.fallbacks = JSON.stringify(sources);
