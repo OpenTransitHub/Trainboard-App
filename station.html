@@ -43,21 +43,16 @@
         <div class="container blanktext">
             <div class="left-div">
 			
-				
-				
-				<table cellpadding="10">
-					<tr id="topservicestable"></tr>
-					
-				</table>
-				
 				<h3>Ausstattung</h3>
-                <table id="servicestable" cellpadding="10">
-					
-				</table>
+				<div class="listcontainer" id="features">
+
+				</div>
+
+				<br>
 				
-				<div id="servicesbox">
-					<h3>Services</h3>
-	                <table id="additionalservicestable" cellpadding="10"></table>
+				<h3 id="serviceheader">Services</h3>
+				<div class="listcontainer" id="services">
+
 				</div>
 				
             </div>
@@ -235,78 +230,43 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	
 	document.getElementById('title').textContent = `Ausstattung: ${data.name}`;
 	
-	//TOP SERVICES
-	const topservicesTable = document.getElementById("topservicestable");
 	
-	if (data.hasWiFi === true) {
-		topservicesTable.innerHTML += "<td><img src=\"./assets/icons/hasWiFi.svg\" class=\"topserviceicon\"><td class=\"wide\">WiFi<br><span class=\"secondary\">Ja</span></td>";
-	} else {
-		//topservicesTable.innerHTML += "<td><img src=\"./assets/icons/hasntWiFi.svg\" class=\"topserviceicon\"><td class=\"wide\">WiFi<br><span class=\"secondary\">Nein</span></td>";
+	//Features
+	const features = document.getElementById("features");
+	const featureList = [
+		{ key: 'hasWiFi', icon: 'hasWiFi.svg', text: 'Kostenloses WiFi' },
+		{ key: 'hasParking', icon: 'hasparking.svg', text: 'Parkplatz' },
+		{ key: 'hasBicycleParking', icon: 'hasBicycleParking.svg', text: 'Fahrradparkplatz' },
+		{ key: 'hasPublicFacilities', icon: 'hasPublicFacilities.svg', text: 'Öffentliches WC' },
+		{ key: 'hasLockerSystem', icon: 'hasLockerSystem.svg', text: 'Schließfächer' },
+		{ key: 'hasTaxiRank', icon: 'hasTaxiRank.svg', text: 'Taxistand' }
+	];
 
-	}
-	
-	if (data.hasSteplessAccess === 'yes') {
-		topservicesTable.innerHTML += "<td><img src=\"./assets/icons/hasSteplessAccess.svg\" class=\"topserviceicon\"><td class=\"wide\">Stufenfrei<br><span class=\"secondary\">Ja</span></td>";
-	
-	} else if (data.hasSteplessAccess === 'partial') {
-	
-		topservicesTable.innerHTML += "<td><img src=\"./assets/icons/partialSteplessAccess.svg\" class=\"topserviceicon\"><td class=\"wide\">Stufenfrei<br><span class=\"secondary\">Teilweise</span></td>";
-
-	} else {
-		topservicesTable.innerHTML += "<td><img src=\"./assets/icons/hasntSteplessAccess.svg\" class=\"topserviceicon\"><td class=\"wide\">Stufenfrei<br><span class=\"secondary\">Nein</span></td>";
-
-	}
-	
-	
+	featureList.forEach(feature => {
+		if (data[feature.key] === true) {
+			features.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+		}
+	});
 	
 	//SERVICES
-	const servicesTable = document.getElementById("servicestable");
-	
-	if (data.hasParking === true) {
-		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasParking.svg\" class=\"serviceicon\"><td class=\"wide\">Parkplatz</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasBicycleParking === true) {
-		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasBicycleParking.svg\" class=\"serviceicon\"><td class=\"wide\">Radparken</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasPublicFacilities === true) {
-		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasPublicFacilities.svg\" class=\"serviceicon\"><td class=\"wide\">Öffentliches WC</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasLockerSystem === true) {
-		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasLockerSystem.svg\" class=\"serviceicon\"><td class=\"wide\">Schließfächer</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasTaxiRank === true) {
-		servicesTable.innerHTML += "<tr><td><img src=\"./assets/icons/hasTaxiRank.svg\" class=\"serviceicon\"><td class=\"wide\">Taxistand</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	//SERVICES
-	const additionalservicestable = document.getElementById("additionalservicestable");
-	
-	if (data.hasTravelCenter === true) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/hasTravelcenter.svg\" class=\"serviceicon\"><td class=\"wide\">Reisezentrum</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if ("DBinformation" in data) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/dbinformation.svg\" class=\"serviceicon\"><td class=\"wide\">DB Information</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-		
-	if (data.hasDBLounge === true) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/hasDBLounge.svg\" class=\"serviceicon\"><td class=\"wide\">DB Lounge</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasLostAndFound === true) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/hasLostAndFound.svg\" class=\"serviceicon\"><td class=\"wide\">Fundbüro</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-	
-	if (data.hasRailwayMission === true) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/hasRailwayMission.svg\" class=\"serviceicon\"><td class=\"wide\">Bahnhofsmission</td><td><span class=\"secondary\">Ja</span></td></tr>";
-	}
-		
-	if (data.hasCarRental === true) {
-		document.getElementById("additionalservicestable").innerHTML += "<tr><td><img src=\"./assets/icons/hasCarRental.svg\" class=\"serviceicon\"><td class=\"wide\">Mietwagenverleih</td><td><span class=\"secondary\">Ja</span></td></tr>";
+	const services = document.getElementById("services");
+	const serviceList = [
+		{ key: 'hasTravelCenter', icon: 'hasTravelCenter.svg', text: 'Reisezentrum' },
+		{ key: 'DBinformation', icon: 'dbinformation.svg', text: 'DB Information' },
+		{ key: 'hasDBLounge', icon: 'hasDBLounge.svg', text: 'DB Lounge' },
+		{ key: 'hasLostAndFound', icon: 'hasLostAndFound.svg', text: 'Fundbüro' },
+		{ key: 'hasRailwayMission', icon: 'hasRailwayMission.svg', text: 'Bahnhofsmission' },
+		{ key: 'hasCarRental', icon: 'hasCarRental.svg', text: 'Autoverleih' }
+	];
+
+	serviceList.forEach(service => {
+		if (data[service.key] === true || (service.key === 'DBinformation' && service.key in data)) {
+			services.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/${service.icon}"></div><div class="listitemtext">${service.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+		}
+	});
+
+	if (services.innerHTML === '') {
+		document.getElementById('serviceheader').classList.add('hidden');
 	}
 	
 	
