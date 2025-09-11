@@ -219,6 +219,14 @@ body {
 }
 
 .warnchip {
+    background-color: #c9cb3b !important;
+    background-image: url(../icons/bell.svg);
+    background-size: unset;
+    color: #000;
+    animation: wiggle 0.5s ease-in-out;
+}
+
+.weatherwarnchip {
     background-color: rgb(111, 37, 37) !important;
     border-radius: 100px !important;
     background-image: url(../icons/warnsign.svg);
@@ -2341,6 +2349,11 @@ top: 0px;
     align-items: center;
 }
 
+.listcontainer:has(> div:last-child.hidden) > div:nth-last-child(2) {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
 .listcontainer div:last-child {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -2393,5 +2406,10 @@ top: 0px;
     margin-bottom: 10px;
 }
 
+.selectnopadding {
+    margin-bottom: 2px;
+}
 
-
+.noflex {
+    display:block;
+}

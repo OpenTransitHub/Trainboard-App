@@ -81,9 +81,19 @@
 						<div class="listimagecontainer"><img src="./assets/icons/kichange.svg"></div>
 						<div class="listitemtext">
 							Umsteigezeit<br>
-							<table><tr><td><select name="startplatforms" type="text" id="platStart" class="platformselect"><option value="" disabled selected hidden>von Gl.</option></select></td><td><select name="startplatforms" type="text" id="platEnd" class="platformselect"><option value="" disabled selected hidden>nach Gl.</option></select></td></tr></table>
-							<span id="timeSpan"></span>
+							<small class="disabled">KI-unterstützte Schätzung</small>
 						</div>
+					</div>
+					<div class="listitem contrastlistitem">
+						<div class="listitemtext">
+			
+							<table><tr><td><small class="disabled">Von</small><br><select name="startplatforms" type="text" id="platStart" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td><td><small class="disabled">Nach</small><br><select name="startplatforms" type="text" id="platEnd" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td></tr></table>
+							
+						</div>
+					</div>
+
+					<div class="listitem contrastlistitem hidden noflex" id="timeSpan">
+						
 					</div>
 				</div>
 			
@@ -116,47 +126,37 @@ document.getElementById('tabs').innerHTML += `<a href="accessibility.html?statio
 
 
 /*    KI UMSTEIGEZEIT   */
-
-// Die URL der JSON-Daten
 const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' + stationID;
 
     
-    // Beide select-Elemente und das span-Element
     const selectStart = document.getElementById('platStart');
     const selectEnd = document.getElementById('platEnd');
     const timeSpan = document.getElementById('timeSpan');
 
-    // Funktion zum Aktualisieren des Textes mit der Umstiegszeit
     function updateTransferTime() {
         const startValue = selectStart.value;
         const endValue = selectEnd.value;
 
-        // Überprüfen, ob beide Felder einen Wert haben
         if (startValue && endValue) {
-            // Überprüfen, ob die Gleise unterschiedlich sind
             if (startValue === endValue) {
-                timeSpan.innerHTML = `<div class="chip iconchip warnchip">Wähle unterschiedliche Gleise</div>`;
+				timeSpan.classList.remove('hidden');
+                timeSpan.innerHTML = `<center>Wähle unterschiedliche Gleise</center>`;
             } else {
-                // URL für den API-Aufruf erstellen
                 const transferUrl = `${baseTransferUrl}/${startValue}/${endValue}`;
 
-                // API-Aufruf machen, um die Umstiegszeit zu holen
                 fetch(transferUrl)
                     .then(response => response.json())
                     .then(data => {
-                        // MinTransferTime und linked aus der JSON-Antwort holen
                         const transferTime = data.minTransferTime;
                         const isLinked = data.linked;
 
-                        // Basis-Text für die Umstiegszeit
-                        let output = `<span class="transfertime">~${transferTime}</span> min`;
+                        let output = `<center><span class="transfertime">~${transferTime}&nbsp;min</span></center>`;
 
-                        // Wenn linked true ist, "Gleicher Bahnsteig" hinzufügen
                         if (isLinked) {
-                            output += '<br><br>(Gleicher Bahnsteig)<br>';
+                            output += '<center><smal class="disabled">Gleicher Bahnsteig</small><br><br></center>';
                         }
 
-                        // Text im span-Element anzeigen
+						timeSpan.classList.remove('hidden');
                         timeSpan.innerHTML = output;
                     })
                     .catch(error => {
@@ -165,19 +165,18 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
                     });
             }
         } else {
-            // Text leeren, wenn nicht beide Felder ausgefüllt sind
             timeSpan.textContent = '';
+			timeSpan.classList.add('hidden');
+
         }
     }
 
-    // Event Listener für beide select-Elemente
     selectStart.addEventListener('change', updateTransferTime);
     selectEnd.addEventListener('change', updateTransferTime);
 
-    // Die URL der Plattformen, um die Optionen zu laden
+	//Available Platforms
     const platformsUrl = 'https://data.cuzimmartin.dev/platforms/' + stationID;
 
-    // JSON-Daten laden und <option> Elemente hinzufügen
     fetch(platformsUrl)
         .then(response => response.json())
         .then(data => {
@@ -186,11 +185,11 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
             // Funktion, um Optionen zu beiden select-Elementen hinzuzufügen
             const addOptions = (selectElement) => {
                 platforms.forEach(platform => {
-                    // Plattformen mit Bereich ignorieren (z.B. "10 A-C", "11 D-F"), aber "2b" zulassen
-                    if (!/ \w-\w/.test(platform)) {
+					//Würfelsektoren filtern
+					if (!/ \w-\w/.test(platform)) {
                         const option = document.createElement('option');
                         option.value = platform;
-                        option.textContent = platform;
+                        option.textContent = "Gl. " + platform;
                         selectElement.appendChild(option);
                     }
                 });
@@ -322,7 +321,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 			document.getElementById('detailscontainer').innerHTML += `
 				<div class="listitem contrastlistitem">
 						<div class="listimagecontainer listimagecontainernoinvert"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
-						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip warnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
+						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
 					</a>
 				</div>
 			`
