@@ -72,14 +72,14 @@
 				<br>
 
 				<div class="listcontainer">
-					<div class="listitem contrastlistitem">
+					<div class="listitem">
 						<div class="listimagecontainer"><img src="./assets/icons/kichange.svg"></div>
 						<div class="listitemtext">
 							Umsteigezeit<br>
 							<small class="disabled">KI-unterstützte Schätzung</small>
 						</div>
 					</div>
-					<div class="listitem contrastlistitem">
+					<div class="listitem">
 						<div class="listitemtext">
 			
 							<table><tr><td><small class="disabled">Von</small><br><select name="startplatforms" type="text" id="platStart" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td><td><small class="disabled">Nach</small><br><select name="startplatforms" type="text" id="platEnd" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td></tr></table>
@@ -87,7 +87,7 @@
 						</div>
 					</div>
 
-					<div class="listitem contrastlistitem hidden noflex" id="timeSpan">
+					<div class="listitem hidden noflex" id="timeSpan">
 						
 					</div>
 				</div>
@@ -209,7 +209,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	document.getElementById('productline').textContent = data.productLine.productLine;
 	
 	document.getElementById('detailscontainer').innerHTML += `
-		<div class="listitem contrastlistitem">
+		<div class="listitem">
 				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="./assets/icons/directions.svg"></a></div>
 				<div class="listitemtext"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}" class="black">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></a></div>
 			</a>
@@ -217,7 +217,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	`
 
 	document.getElementById('detailscontainer').innerHTML += `
-		<div class="listitem contrastlistitem">
+		<div class="listitem">
 				<div class="listimagecontainer"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf"><img src="./assets/icons/sevlogo.svg" class="fillimg"></a></div>
 				<div class="listitemtext"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf" class="black">Umgebungsplan<br><small class="disabled">Zugang zum SEV</small></a></div>
 			</a>
@@ -279,7 +279,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
 			
 			document.getElementById('detailscontainer').innerHTML += `
-				<div class="listitem contrastlistitem">
+				<div class="listitem">
 						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
 						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
 					</a>
@@ -289,7 +289,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
 		} else {
 			document.getElementById('detailscontainer').innerHTML += `
-				<div class="listitem contrastlistitem">
+				<div class="listitem">
 						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
 						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a></div>
 					</a>
