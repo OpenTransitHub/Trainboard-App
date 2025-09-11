@@ -234,17 +234,17 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	//Features
 	const features = document.getElementById("features");
 	const featureList = [
-		{ key: 'hasWiFi', icon: 'hasWiFi.svg', text: 'Kostenloses WiFi' },
-		{ key: 'hasParking', icon: 'hasparking.svg', text: 'Parkplatz' },
-		{ key: 'hasBicycleParking', icon: 'hasBicycleParking.svg', text: 'Fahrradparkplatz' },
-		{ key: 'hasPublicFacilities', icon: 'hasPublicFacilities.svg', text: 'Öffentliches WC' },
-		{ key: 'hasLockerSystem', icon: 'hasLockerSystem.svg', text: 'Schließfächer' },
-		{ key: 'hasTaxiRank', icon: 'hasTaxiRank.svg', text: 'Taxistand' }
+		{ key: 'hasWiFi', icon: 'hasWiFi.svg', text: 'Kostenloses WiFi', color: 'lightgreen' },
+		{ key: 'hasParking', icon: 'hasparking.svg', text: 'Parkplatz', color: 'blue' },
+		{ key: 'hasBicycleParking', icon: 'hasBicycleParking.svg', text: 'Fahrradparkplatz', color: 'blue' },
+		{ key: 'hasPublicFacilities', icon: 'hasPublicFacilities.svg', text: 'Öffentliches WC', color: 'lightred' },
+		{ key: 'hasLockerSystem', icon: 'hasLockerSystem.svg', text: 'Schließfächer', color: 'slate' },
+		{ key: 'hasTaxiRank', icon: 'hasTaxiRank.svg', text: 'Taxistand', color: 'yellow' }
 	];
 
 	featureList.forEach(feature => {
 		if (data[feature.key] === true) {
-			features.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+			features.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainer${feature.color}"><img src="./assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
 		}
 	});
 	

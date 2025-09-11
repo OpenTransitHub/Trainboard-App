@@ -237,7 +237,7 @@
 	}
 
 	.listimagecontainerlightgreen {
-		background-color: rgb(38, 100, 24);
+		background-color: rgb(35, 123, 51);
 	}
 
 	.listimagecontainerlightred {
@@ -245,7 +245,7 @@
 	}
 
 	.listimagecontainerslate {
-		background-color: rgb(71, 111, 151);
+		background-color: rgb(55, 141, 141);
 	}
 
 	.listimagecontainerblue {
@@ -254,6 +254,10 @@
 
 	.listimagecontainerorange {
 		background-color: rgb(202, 84, 30);
+	}
+
+	.listimagecontaineryellow {
+		background-color: rgb(129, 112, 4);
 	}
 
 }
