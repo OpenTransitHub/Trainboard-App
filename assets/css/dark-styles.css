@@ -236,6 +236,26 @@
 		-webkit-filter: unset;
 	}
 
+	.listimagecontainerlightgreen {
+		background-color: rgb(38, 100, 24);
+	}
+
+	.listimagecontainerlightred {
+		background-color: rgb(186, 57, 57);
+	}
+
+	.listimagecontainerslate {
+		background-color: rgb(71, 111, 151);
+	}
+
+	.listimagecontainerblue {
+		background-color: rgb(19, 96, 174);
+	}
+
+	.listimagecontainerorange {
+		background-color: rgb(202, 84, 30);
+	}
+
 	.contrastlistitem {
 		background-color: #000;
 	}

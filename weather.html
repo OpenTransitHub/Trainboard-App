@@ -12,7 +12,7 @@
 	<meta name="theme-color" content="#000">
 </head>
 
-<body>
+<body class="coloredbody">
 
 <center>
 
@@ -21,27 +21,58 @@
 
 <br>
 
-<div id="container" class="tripcontainer">
-	<div class="container">
+<div id="blanktext" class="coloredspace">
+	<div class="container blanktext">
 		<div class="left-div">
-			<p id="feelsLike"></p>
-			<p id="minMax"></p>
-			<p id="pressure"></p>
-			<p id="humidity"></p>
-			<p id="wind"></p>
-			<p id="clouds"></p>
 
-			<div id="warnings"></div>
+			<div class="listcontainer" style="margin-top: 5px;">
+
+				<div class="listitem">
+					<div class="listimagecontainer listimagecontainerlightred"><img src="./assets/icons/temperature.svg"></div>
+					<div class="listitemtext"><span id="minMax"></span><br><small class="disabled">Temperatur Maxime</small></div>
+				</div>
+
+				<div class="listitem">
+					<div class="listimagecontainer listimagecontainerlightgreen"><img src="./assets/icons/pressure.svg"></div>
+					<div class="listitemtext"><span id="pressure"></span><br><small class="disabled">Luftdruck</small></div>
+				</div>
+
+				<div class="listitem">
+					<div class="listimagecontainer listimagecontainerblue"><img src="./assets/icons/waterdrop.svg"></div>
+					<div class="listitemtext"><span id="humidity"></span><br><small class="disabled">Luftfeuchte</small></div>
+				</div>
+
+				<div class="listitem">
+					<div class="listimagecontainer listimagecontainerorange"><img src="./assets/icons/wind.svg" id="windicon"></div>
+					<div class="listitemtext"><span id="wind"></span><br><small class="disabled">Wind</small></div>
+				</div>
+
+				<div class="listitem">
+					<div class="listimagecontainer listimagecontainerslate"><img src="./assets/icons/clouds.svg"></div>
+					<div class="listitemtext"><span id="clouds"></span><br><small class="disabled">Bewölkung</small></div>
+				</div>
+
+			</div>
+
+			
 	
-			<p><small>Wetterdaten: Open Weather Map</small></p>
+			<p><small class="disabled">Wetterdaten: Open Weather Map</small></p>
 		</div>
 		<div class="right-div lineview">
 			<div id="weatherimage" class="weatherimage">
 				<div class="imageboxcontent">
 					<span class="aligner" id="weatherheader"></span>
-					<spanp id="description"></span>
+					<span id="description"></span><br>
+					<small id="feelsLike"></small>
 				</div>
+				
 			</div>
+
+			<br>
+
+			<div id="warnings"></div>
+
+			
 		</div>
 	</div>
 </div>
@@ -68,26 +99,48 @@ var city = urlParams.get('city');
 		
 		document.getElementById('city').innerHTML =  weatherdata.name;	
 		
-		document.getElementById('weatherheader').innerHTML =  "<span class=\"big\">" + Math.floor(weatherdata.main.temp) + "°C</span> &nbsp;<img src=\"./assets/weatcherIcons/" + weatherdata.weather[0].icon + ".svg\" class=\"noinvert\">";
+		document.getElementById('weatherheader').innerHTML =  "<span class=\"big\">" + Math.floor(weatherdata.main.temp) + "°C</span> &nbsp;<img src=\"./assets/weatcherIcons/" + weatherdata.weather[0].icon + ".svg\" class=\"weathercardicon\">";
 		
 		document.getElementById('feelsLike').innerHTML =  "Gefühlt wie: " + Math.floor(weatherdata.main.feels_like) + "°C";	  
 
 		document.getElementById('description').innerHTML =  weatherdata.weather[0].description;	
 		
-		document.getElementById('minMax').innerHTML =  "&#128317; " + weatherdata.main.temp_min + "°C / &#128316; " +  weatherdata.main.temp_max  + "°C";	  
+		document.getElementById('minMax').innerHTML =  "&#10167; " + Math.floor(weatherdata.main.temp_min) + "°C &nbsp; &#10169; " +  Math.floor(weatherdata.main.temp_max)  + "°C";	  
   
-		document.getElementById('pressure').innerHTML =  "&#9201; Luftdruck: " + weatherdata.main.pressure + " mbar";	  
+		document.getElementById('pressure').innerHTML =  weatherdata.main.pressure + " mbar";	  
 
-		document.getElementById('humidity').innerHTML =  "&#128167; Luftfeuchte: " + weatherdata.main.humidity + " %";	  
+		document.getElementById('humidity').innerHTML =  weatherdata.main.humidity + " %";	  
 
-		document.getElementById('wind').innerHTML =  "&#128168; Wind: " + Math.floor(weatherdata.wind.speed) + " km/h / "+ weatherdata.wind.deg + "°";	  
+		document.getElementById('wind').innerHTML =  Math.floor(weatherdata.wind.speed) + " km/h / "+ weatherdata.wind.deg + "°";	
+		document.getElementById('windicon').style.transform = `rotate(${weatherdata.wind.deg}deg)`;
 
-		document.getElementById('clouds').innerHTML =  "&#x2601; &nbsp;Bewölkung: " + weatherdata.clouds.all + " %";
+		document.getElementById('clouds').innerHTML =  weatherdata.clouds.all + " %";
 		
 		
 
 		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
-			document.getElementById('warnings').innerHTML = "<div class=\"weatherwarning\"><small class=\"secondary\">📢 Wetterwarnung</small><br><b>" + weatherdata.alerts[0].properties?.EVENT + "</b><br><small>" + weatherdata.alerts[0].properties?.DESCRIPTION + "<hr><b>Herausgeber:</b> " + weatherdata.alerts[0].properties?.CONTACT + "</small></div>";	  
+
+			document.getElementById('warnings').innerHTML += `
+				
+				<div class="listcontainer">
+					<div class="listitem">
+						<div class="listimagecontainer listimagecontainerred"><img src="./assets/weatherWarnIcons/${weatherdata.alerts[0].properties?.EC_GROUP.split(';')[0]}.svg"></div>
+						<div class="listitemtext">
+							${weatherdata.alerts[0].properties?.EVENT}<br><small class="disabled">Unwetterwarnung</small>
+							
+						</div>
+					</div>
+					<div class="listitem">
+						<div class="listitemtext">
+							<small>${weatherdata.alerts[0].properties?.DESCRIPTION}</small><br>
+							<small class="disabled">Herausgegeben von ${weatherdata.alerts[0].properties?.CONTACT}</small>	
+						</div>
+					</div>
+					
+				</div>
+
+				<br>
+			`;
 		}
 	})
 </script>

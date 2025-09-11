@@ -128,12 +128,20 @@ h3 {
     background-color: #021917;
     background-size: cover;
     background-position: right;
-    border-radius: 10px;
+    border-radius: 20px;
     vertical-align: bottom;
     position: relative;
     box-shadow: inset #0000009d 0px 70px 60px;
     background-position: center;
     top: 5px;
+    color: #fff;
+}
+
+.weathercardicon {
+    height: 35px;
+    padding: 5px;
+    filter: invert(1);
+    -webkit-filter: invert(1);
 }
 
 .imageboxcontent {
@@ -498,7 +506,7 @@ h3 {
     padding: 10px;
     margin-top: 5px;
     color: #000;
-    border-radius: 10px;
+    border-radius: 20px;
     box-shadow: inset 0px -20px 60px #ffe1e1;
     overflow-x: hidden;
 }
@@ -2397,6 +2405,26 @@ top: 0px;
 
 .listimagecontainergreen {
     background-color: green;
+}
+
+.listimagecontainerlightgreen {
+    background-color: rgb(136, 196, 123);
+}
+
+.listimagecontainerlightred {
+    background-color: rgb(224, 143, 143);
+}
+
+.listimagecontainerslate {
+    background-color: rgb(127, 165, 202);
+}
+
+.listimagecontainerblue {
+    background-color: rgb(97, 157, 217);
+}
+
+.listimagecontainerorange {
+    background-color: rgb(223, 136, 112);
 }
 
 

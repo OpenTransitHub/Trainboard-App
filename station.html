@@ -280,7 +280,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 			
 			document.getElementById('detailscontainer').innerHTML += `
 				<div class="listitem contrastlistitem">
-						<div class="listimagecontainer listimagecontainernoinvert"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
 						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
 					</a>
 				</div>
@@ -290,7 +290,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 		} else {
 			document.getElementById('detailscontainer').innerHTML += `
 				<div class="listitem contrastlistitem">
-						<div class="listimagecontainer listimagecontainernoinvert"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
 						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a></div>
 					</a>
 				</div>
