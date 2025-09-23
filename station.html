@@ -87,8 +87,15 @@
 						</div>
 					</div>
 
-					<div class="listitem hidden noflex" id="timeSpan">
-						
+					<div class="listitem hidden noflex" id="transferContainer">
+						<center>
+							<span id="timeSpan"></span>
+							<small id="recomendedTimeSpan" class="disabled"></small>
+						</center>
+					</div>
+
+					<div class="listitem hidden noflex" id="transferwayContainer">
+
 					</div>
 				</div>
 			
@@ -127,6 +134,8 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
     const selectStart = document.getElementById('platStart');
     const selectEnd = document.getElementById('platEnd');
     const timeSpan = document.getElementById('timeSpan');
+	const transferContainer = document.getElementById('transferContainer');
+	const transferwayContainer = document.getElementById('transferwayContainer');
 
     function updateTransferTime() {
         const startValue = selectStart.value;
@@ -134,7 +143,8 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
 
         if (startValue && endValue) {
             if (startValue === endValue) {
-				timeSpan.classList.remove('hidden');
+				transferContainer.classList.remove('hidden');
+				transferwayContainer.classList.remove('hidden');
                 timeSpan.innerHTML = `<center>Wähle unterschiedliche Gleise</center>`;
             } else {
                 const transferUrl = `${baseTransferUrl}/${startValue}/${endValue}`;
@@ -145,14 +155,28 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
                         const transferTime = data.minTransferTime;
                         const isLinked = data.linked;
 
-                        let output = `<center><span class="transfertime">~${transferTime}&nbsp;min</span></center>`;
+						document.getElementById('recomendedTimeSpan').innerHTML = `Empfohlen: ${data.recommendedTime}&nbsp;min`;
 
-                        if (isLinked) {
-                            output += '<center><smal class="disabled">Gleicher Bahnsteig</small><br><br></center>';
+						transferContainer.classList.remove('hidden');
+						transferwayContainer.classList.remove('hidden');
+                        timeSpan.innerHTML = `<center><span class="transfertime">~${transferTime}&nbsp;min</span></center>`;
+
+						 if (isLinked) {
+                            timeSpan.innerHTML += '<center><smal class="disabled">Gleicher Bahnsteig</small><br><br></center>';
                         }
 
-						timeSpan.classList.remove('hidden');
-                        timeSpan.innerHTML = output;
+
+						if (data.segments && Array.isArray(data.segments)) {
+							transferwayContainer.innerHTML = `<div class="imagepoint"><img src="./assets/icons/path-start.svg" class="pathicon"><span>Gleis ${startValue}</span><small class="disabled">Losgehen</small></div>`;
+							data.segments.forEach(segment => {
+								console.log(`Type: ${segment.type}, Distance: ${segment.distance}`);
+
+								transferwayContainer.innerHTML += `<div class="imagepoint"><img src="./assets/icons/path-${segment.type}.svg" class="pathicon"><span>${segment.type.replace('stairs', 'Treppe').replace('elevator', 'Aufzug').replace('escalator', 'Fahrtreppe').replace('walk', 'Gehen')}</span><small class="disabled">${segment.distance}m</small></div>`;
+							});
+							transferwayContainer.innerHTML += `<div class="imagepoint"><img src="./assets/icons/path-end.svg" class="pathicon"><span>Gleis ${endValue}</span><small class="disabled">Ankommen</small></div>`;
+						}
+
+
                     })
                     .catch(error => {
                         console.error('Fehler beim Abrufen der Umstiegszeit:', error);
@@ -161,7 +185,8 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
             }
         } else {
             timeSpan.textContent = '';
-			timeSpan.classList.add('hidden');
+			transferContainer.classList.add('hidden');
+			transferwayContainer.classList.add('hidden');
 
         }
     }

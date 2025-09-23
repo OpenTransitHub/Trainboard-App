@@ -2368,6 +2368,11 @@ top: 0px;
     border-bottom-right-radius: 20px;
 }
 
+.listcontainer:has(> div:last-child.hidden) > div:nth-last-child(3) {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
 .listcontainer div:last-child {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -2450,4 +2455,15 @@ top: 0px;
 
 .noflex {
     display:block;
+}
+
+.imagepoint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pathicon {
+    height: 30px;
+    padding: 5px;
 }
