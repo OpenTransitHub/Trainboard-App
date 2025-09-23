@@ -139,6 +139,11 @@
 
 
 <script>
+    if (localStorage.getItem('webfis') === 'false') {
+        document.getElementById('webfisbutton').classList.add('hidden')
+    } 
+
+
     // Globale Variablen
     let map;
     let marker;
@@ -953,6 +958,11 @@
         const traindata = await response.json();
 
         const container = document.getElementById("trainslider");
+
+        if (localStorage.getItem('materialtrains') === 'false') {
+            container.classList.add('hidden')
+        } 
+
         container.innerHTML = ""; 
 
         traindata.groups.forEach(group => {

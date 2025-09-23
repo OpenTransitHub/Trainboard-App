@@ -11,14 +11,27 @@ if (hiddennavbar === "hide") {
 	document.getElementById('navbar').classList.add('hidden');
 }
 
+if (localStorage.getItem('shownavbar') === 'false') {
+    document.getElementById('navbar').classList.add('hidden');
+} 
+
+
 // Hide Clock
 const hiddenclock = urlParams.get('clock');
 if (hiddenclock === "hide") {
 	document.getElementById('clock').classList.add('hidden');
 }
 
+if (localStorage.getItem('showclock') === 'false') {
+    document.getElementById('clock').classList.add('hidden');
+} 
+
 // Show Trainnumber
-const hiddentrainnumbers = urlParams.get('trainnumbers');
+let hiddentrainnumbers = urlParams.get('trainnumbers');
+
+if (localStorage.getItem('showtrainnumbers') === 'true') {
+    hiddentrainnumbers = "show";
+} 
 
 // Prevent Touch
 const notouch = urlParams.get('touch');
@@ -26,7 +39,15 @@ if (notouch === "no") {
 	document.getElementById('notouch').classList.remove('hidden');
 }
 
-const showsuburban = urlParams.get('suburban');
+if (localStorage.getItem('disabletouch') === 'true') {
+    document.getElementById('notouch').classList.remove('hidden');
+} 
+
+let showsuburban = urlParams.get('suburban');
+
+if (localStorage.getItem('showsuburbans') === 'true') {
+    showsuburban = "show";
+} 
 // END EXPERTMODE
 
 const stationID = urlParams.get('station');
@@ -233,7 +254,7 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 			const skipProducts = ["national", "nationalExpress"];
 			if (skipProducts.includes(entry.line.product)) return;
 		}
-		if ((siteType === 'C' || siteType === 'D' || siteType === 'A') && entry.line.product === "suburban") return;
+		if ((siteType === 'C' || siteType === 'D' || siteType === 'A') && (entry.line.product === "suburban" &&  showsuburban !== 'show')) return;
 		if (siteType === 'S' && entry.line.product !== "suburban") return;
 
 		// Cancelled
@@ -251,7 +272,7 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 		// Line badge
 		const lineParts = entry.line.name.split(" ");
 		const lineName = lineParts[0] + (lineParts[1] ? " " + lineParts[1] : "");
-		const trainnumber = hiddentrainnumbers === "show" ? `<br>(${entry.line.fahrtNr})` : '';
+		const trainnumber = hiddentrainnumbers === "show" ? `<br><small>${entry.line.fahrtNr}</small>` : '';
 		const operatorId = entry.line.operator?.id || '';
 		let linebadge = `<a href="trip.html?tripId=${encodeURIComponent(entry.tripId)}&departureTime=${encodeURIComponent(entry.plannedWhen)}&stationID=${encodeURIComponent(stationID)}">`;
 		linebadge += `<div class="linebadge ${entry.line.product} ${lineName.replace(/\s/g, '')}${operatorId} ${operatorId} ${entry.line.productName}">`;

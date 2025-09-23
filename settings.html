@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Einstellungen</title>
+	<link rel="stylesheet" href="./assets/css/styles.css">
+	<link rel="stylesheet" href="./assets/css/dark-styles.css">
+	<link rel="stylesheet" href="./assets/css/line-colors.css">
+	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
+	<link rel="manifest" href="/manifest.json" type="application/json" >
+	<meta name="theme-color" content="#000">
+</head>
+
+<body class="bodyWithPopup coloredbody">
+
+<center>
+
+<nav id="navbar"><div class="tabs"><span class="active">&nbsp;Einstellungen&nbsp;</span></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
+
+<br>
+
+	
+<div class="textonly">
+
+	<h3>Anzeigekonfiguration</h3>
+
+	<div class="listcontainer">
+		
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Navigation anzeigen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="navbar-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Uhr anzeigen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="clock-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">S-Bahnen anzeigen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="suburbans-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Zugnummern anzeigen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="trainnumber-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+	<br>
+
+	<h3>Steuerung</h3>
+
+	<div class="listcontainer">
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Touch-Eingabe deaktivieren</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="touch-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<br>
+
+	<h3>Externe Dienste</h3>
+
+	<div class="listcontainer">
+		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/materialtrains.svg" class="noinvert"></div>
+			<div class="switchitemtext">Material Trains<br><small class="disabled">Zugkonfigurationen werden als detailgetreue Grafiken in der Tripansicht angezeigt.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="materialtrains-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/webfis.svg" class="noinvert"></div>
+			<div class="switchitemtext">webFIS<br><small class="disabled">Fahrtverlauf kann als webbasierter FIS-Screen wiedergeben werden.<br>Wird nur auf Desktop Viewports unterstützt.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="webfis-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/google.svg" class="noinvert"></div>
+			<div class="switchitemtext">Google Bildersuche<br><small class="disabled">Fahrzeugtypen können aus der Wagenreihung heraus in der Bildersuche geöffnet werden.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="google-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/maps.svg" class="noinvert"></div>
+			<div class="switchitemtext">Google Maps<br><small class="disabled">Adressen können durch tippen in der Google Maps Routensuche geöffnet werden.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="maps-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/twlng.svg" class="noinvert"></div>
+			<div class="switchitemtext">Träwelling<br><small class="disabled">Der aktuelle Träwelling-Check-In wird im Widget auf der Startseite angezeigt.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="twlng-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<h3>Entwickler-Optionen</h3>
+	<div class="listcontainer">
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext"><a href="expert.html">Legacy Anzeigekonfiguration öffnen</a></div>
+			<div class="listimagecontainer">
+				<a href="expert.html"><img src="./assets/icons/arrow-right.svg"></a>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+	
+</center>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const switches = [
+        // Konfiguration für jeden Switch
+        { id: 'navbar-switch', storageKey: 'shownavbar', defaultState: true },
+        { id: 'clock-switch', storageKey: 'showclock', defaultState: true },
+        { id: 'suburbans-switch', storageKey: 'showsuburbans', defaultState: false },
+		{ id: 'trainnumber-switch', storageKey: 'showtrainnumbers', defaultState: false },
+		{ id: 'touch-switch', storageKey: 'disabletouch', defaultState: false },
+		{ id: 'materialtrains-switch', storageKey: 'materialtrains', defaultState: true },
+		{ id: 'webfis-switch', storageKey: 'webfis', defaultState: true },
+		{ id: 'google-switch', storageKey: 'google', defaultState: true },
+		{ id: 'maps-switch', storageKey: 'maps', defaultState: true },
+		{ id: 'twlng-switch', storageKey: 'twlng', defaultState: true }
+    ];
+
+    switches.forEach(sw => {
+        const element = document.getElementById(sw.id);
+        
+        // Funktion zur Aktualisierung des Zustands
+        const updateSwitchState = () => {
+            // Speichert "true" oder "false" als Textwert
+            const value = element.checked ? "true" : "false";
+            localStorage.setItem(sw.storageKey, value);
+            console.log(`${sw.storageKey} changed to: ${value}`);
+        };
+
+        // Zustand aus localStorage laden
+        const storedValue = localStorage.getItem(sw.storageKey);
+        
+        if (storedValue === null) {
+            // Wenn kein Wert im localStorage, verwende den Standardwert
+            element.checked = sw.defaultState;
+            localStorage.setItem(sw.storageKey, element.checked ? "true" : "false");
+            console.log(`No stored value for ${sw.storageKey}. Defaulting to: ${sw.defaultState}`);
+        } else {
+            // Setze den Switch auf den gespeicherten Wert
+            element.checked = storedValue === "true";
+        }
+        
+        // Event-Listener für Klicks hinzufügen
+        element.addEventListener('change', updateSwitchState);
+    });
+
+});
+</script>
+
+</body>
+</html>

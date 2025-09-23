@@ -233,13 +233,23 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	
 	document.getElementById('productline').textContent = data.productLine.productLine;
 	
-	document.getElementById('detailscontainer').innerHTML += `
+	if (localStorage.getItem('maps') === 'false') {
+		document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem">
+				<div class="listimagecontainer"><img src="./assets/icons/directions.svg"></div>
+				<div class="listitemtext">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></div>
+			</a>
+		</div>
+	`
+	} else {
+		document.getElementById('detailscontainer').innerHTML += `
 		<div class="listitem">
 				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="./assets/icons/directions.svg"></a></div>
 				<div class="listitemtext"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}" class="black">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></a></div>
 			</a>
 		</div>
 	`
+	}
 
 	document.getElementById('detailscontainer').innerHTML += `
 		<div class="listitem">

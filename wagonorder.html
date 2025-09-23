@@ -282,7 +282,13 @@
                     vehicleDiv.innerHTML += `<span title="${vehicle.vehicleID}">${categoryDisplayName}</span><br>`;
                 };
 
-                vehicleDiv.innerHTML += `<small class=\"disabled\"><a style="padding: 0px;" class="disabled" href="https://google.com/search?q=${vehicle.typeDetails.constructionType}+${vehicle.typeDetails.series}+bahn&udm=2">${vehicle.typeDetails.constructionType}<img src="./assets/icons/search.svg" style="margin-left: 7px; height: 10px;"></a><span class="fzg-${vehicle.vehicleID}"></span></small>`;
+                if (localStorage.getItem('google') === 'false') {
+                    vehicleDiv.innerHTML += `<small class=\"disabled\">${vehicle.typeDetails.constructionType}<span class="fzg-${vehicle.vehicleID}"></span></small>`;
+                } else {
+                    vehicleDiv.innerHTML += `<small class=\"disabled\"><a style="padding: 0px;" class="disabled" href="https://google.com/search?q=${vehicle.typeDetails.constructionType}+${vehicle.typeDetails.series}+bahn&udm=2">${vehicle.typeDetails.constructionType}<img src="./assets/icons/search.svg" style="margin-left: 7px; height: 10px;"></a><span class="fzg-${vehicle.vehicleID}"></span></small>`;
+
+                }
+
 
 
 

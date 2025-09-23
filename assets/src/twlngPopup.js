@@ -1,3 +1,5 @@
+if (localStorage.getItem('twlng') !== 'false') {
+
 // REFRESH ACCESS TOKEN
 async function refreshAccessToken() {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -102,3 +104,4 @@ async function loadDashboard() {
 }
 
 loadDashboard();
+}

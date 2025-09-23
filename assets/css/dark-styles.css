@@ -25,7 +25,7 @@
 	}
 	
 	.noinvert {
-		filter: invert(0);
+		filter: invert(0) !important;
 	}
 
 	.tripcontainer {
@@ -258,6 +258,10 @@
 
 	.listimagecontaineryellow {
 		background-color: rgb(129, 112, 4);
+	}
+
+	.slider {
+    	background-color:rgb(62, 62, 62);
 	}
 
 }

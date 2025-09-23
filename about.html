@@ -90,6 +90,11 @@
 
 
 <script>
+
+	if (localStorage.getItem('twlng') === 'false') {
+		document.getElementById('connect-button').classList.add('hidden')
+	}
+
 	async function checkConnection() {
 		const connectBtn = document.getElementById('connect-button');
 		const accessToken = localStorage.getItem('accessToken');

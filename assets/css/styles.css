@@ -868,7 +868,12 @@ a .black {
 }
 
 
-
+.textonly {
+    max-width: 1200px;
+    text-align: left;
+    margin-left: 20px;
+    margin-right: 20px;
+}
 
 .tripcontainer, .blanktext {
     border-radius: 5px;
@@ -1178,6 +1183,66 @@ label {
 input.checkbox {
     transform: scale(1.5);
     margin: 20px;
+}
+.onoffswitch-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.onoffswitch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+}
+
+.onoffswitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 13px;
+    right: 0;
+    bottom: 0;
+    background-color: #9b9b9b;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 8px;
+    bottom: 7px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
 
 .left {
@@ -2361,6 +2426,24 @@ top: 0px;
     margin-bottom: 2px;
     display: flex;
     align-items: center;
+}
+
+.listswitchitem {
+    display: flex;
+    align-items: center;  
+    justify-content: space-between; 
+    padding: 0 8px;
+}
+
+.switchitemtext {
+    flex: 1;
+    padding-left: 10px;
+}
+
+.listitemswitch {
+    width: 100px;    
+    text-align: right; 
+    margin: 9px;
 }
 
 .listcontainer:has(> div:last-child.hidden) > div:nth-last-child(2) {
