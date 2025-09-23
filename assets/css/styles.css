@@ -705,8 +705,7 @@ span#clock {
 }
 
 #navbar {
-    background-color: #000000eb;
-    backdrop-filter: blur(40px);
+    background-color: #000;
     color: #fff;
     height: 16px;
     padding: 25px 16px 25px 16px;
