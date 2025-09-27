@@ -48,12 +48,14 @@ h3 {
 .toggle-label {
     display: inline-block;
     color: white;
-    font-size: 16px;
+    font-size: 30px;
     text-align: center;
     border-radius: 8px;
     cursor: pointer;
     user-select: none;
     width: fit-content;
+    padding-right: 20px;
+    padding-left: 20px;
 }
 
 /* Das zweite Div */
@@ -61,26 +63,30 @@ h3 {
     display: none;
     text-align: center;
     padding: 7px;
-    padding-top: 0px;
+    margin-top: 20px;
+    padding-top: 30px;
+    margin-right: 8px;
+    background-color: #d9d9d9;
+    border-radius: 25px;
+    color: #000 !important;
+}
+
+.content a {
+    color: #000;
 }
 
 .popuplinks{
-    background-color: rgba(38, 38, 38, 0.9);
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
     width: fit-content;
     text-align: center;
     position: fixed;
-    top: 120px;
-    right: calc((100% - 700px) / 2);
+    top: 3px;
+    right: 0px;
     z-index: 30;
     text-align: right;
     padding: 2px;
     max-width: 73vw;
     max-width: 300px;
-    border-radius: 7px;
-    font-size: 0.8em;
-    line-height: 25px;
+    border-radius: 20px;
 }
 
 /* Zeigt das zweite Div an, wenn die Checkbox aktiviert ist */
@@ -954,8 +960,6 @@ input[type=number] {
     outline: none;
 }
 
-
-
 .platforminput:focus {
     outline: none;
 }
@@ -1500,11 +1504,7 @@ td {
 
 
 @media (max-width: 700px) {
-    
-    .popuplinks {
-        right: 7.5%;
-        top: 93px;
-    }
+
 
     .tripcontainer, .blanktext {
         width: 95% !important;
@@ -2448,16 +2448,20 @@ top: 0px;
 .listcontainer:has(> div:last-child.hidden) > div:nth-last-child(2) {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    margin-bottom: 0px !important;
 }
 
 .listcontainer:has(> div:last-child.hidden) > div:nth-last-child(3) {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    margin-bottom: 0px !important;
 }
 
 .listcontainer div:last-child {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    margin-bottom: 0px !important;
+
 }
 
 .listcontainer div:first-child {

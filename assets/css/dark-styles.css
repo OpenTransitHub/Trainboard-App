@@ -264,5 +264,15 @@
     	background-color:rgb(62, 62, 62);
 	}
 
+	.content {
+    background-color: #0f0f0f;
+    color: #fff !important;
+	}
+
+	.content a {
+		color: #fff !important;
+	}
 }
+
+
 
