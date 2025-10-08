@@ -27,7 +27,7 @@
 <div id="map"></div>
 <div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
     <img src="./assets/whiteSpinner.svg" class="loadingspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
-    <span class="bigonly">Route wird geladen...</span>
+    <span class="bigonly">Karte laden...</span>
 </div>
 
 <div class="TRIPcontent">
@@ -195,14 +195,30 @@
     // Initialisiere Map sofort beim Seitenaufruf
     function initializeMap() {
         mapboxgl.accessToken = 'pk.eyJ1IjoiY3V6aW1tYXJ0aW4iLCJhIjoiY204dGRyb3AxMDgxcDJrc2VjeXVwNXN3NyJ9.VR8xzsuQJ_-0h95CN_UD8g';
+    
+        const mapStyle = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+        ? 'night'
+        : '';  
 
         // Karte mit Standardposition initialisieren (Österreich)
         map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v10',
-            center: [13.3, 47.8], // Zentrum von Österreich
-            zoom: 7,
-            fadeDuration: 0 // Schnelleres Rendering
+            style: ('mapbox://styles/mapbox/standard'),
+            config: {
+                basemap: {
+                    lightPreset: mapStyle,
+                    showPointOfInterestLabels: false,
+                    backgroundPointOfInterestLabels: "none",
+                    colorModePointOfInterestLabels: "single",
+                    font: "Roboto",
+                    showLandmarkIconLabels: false
+                }
+            },
+            center: [13.3, 47.8],
+            zoom: 14,
+            pitch: 47,
+            bearing: 0,
+            antialias: true
         });
 
         // Zeige Ladeindikator
@@ -252,6 +268,10 @@
                         'data': fullRoute
                     });
 
+                    const routeLineColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                    ? '#ffffff'
+                    : '#343332'; 
+
                     map.addLayer({
                         'id': 'fullRoute',
                         'type': 'line',
@@ -261,9 +281,11 @@
                             'line-cap': 'round'
                         },
                         'paint': {
-                            'line-color': '#ffffff',
-                            'line-width': 4
-                        }
+                            'line-color': routeLineColor,
+                            'line-width': 4,
+                            'line-emissive-strength': 50,
+                        },
+                        
                     });
 
                     // Stopps hinzufügen
@@ -278,6 +300,7 @@
                         }));
 
                     if (stopFeatures.length > 0) {
+
                         map.addSource('stops', {
                             'type': 'geojson',
                             'data': {
@@ -285,6 +308,14 @@
                                 'features': stopFeatures
                             }
                         });
+
+                        const textColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                        ? '#ffffff'
+                        : '#000000';
+                        
+                        const textHaloColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                        ? '#001029'
+                        : '#ffffff';
 
                         map.addLayer({
                             'id': 'poi-labels',
@@ -297,7 +328,9 @@
                                 'text-justify': 'auto'
                             },
                             'paint': {
-                                'text-color': '#fff'
+                                'text-color': textColor,
+                                'text-halo-color': textHaloColor,
+                                'text-halo-width': 2
                             }
                         });
                     }
@@ -346,8 +379,10 @@
 
                     map.fitBounds(bounds, {
                         padding: { top: 50, bottom: 50, left: 50, right: 50 },
-                        duration: 800 // Schnellere Animation
+                        duration: 800
                     });
+
+                    
                 }
             }
 
