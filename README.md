@@ -30,6 +30,6 @@ Preserving this functionality would be highly appreciated :)
 ```
 
 ## Follow me:
-[![linkedin](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/SBahnFahrer)
+[![linkedin](https://img.shields.io/badge/twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/_aufgegleist)
 
 [☕ Buy me a coffe](https://www.buymeacoffee.com/felixnietzold)
