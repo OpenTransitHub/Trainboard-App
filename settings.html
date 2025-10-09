@@ -33,6 +33,17 @@
 			<div class="selectwallpaper"  data-id="wallpaper4" style="background-image: url(./assets/wallpapers/wallpaper4.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
 			<div class="selectwallpaper"  data-id="wallpaper5" style="background-image: url(./assets/wallpapers/wallpaper5.jpg);  background-position-y: 90%;"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
 		</div>
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Zufällig auswählen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="random-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
 	</div>
 	<br>
 	<div class="listcontainer">
@@ -234,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const switches = [
         // Konfiguration für jeden Switch
+		{ id: 'random-switch', storageKey: 'randomimg', defaultState: false },
         { id: 'navbar-switch', storageKey: 'shownavbar', defaultState: true },
         { id: 'clock-switch', storageKey: 'showclock', defaultState: true },
         { id: 'suburbans-switch', storageKey: 'showsuburbans', defaultState: false },
@@ -285,11 +297,25 @@ const images = document.querySelectorAll('.selectwallpaper');
     function selectImage(id) {
       images.forEach(img => img.classList.toggle('selected', img.dataset.id === id));
       localStorage.setItem(selectedWallpaper, id);
+
     }
 
     images.forEach(img => {
-      img.addEventListener('click', () => selectImage(img.dataset.id));
-    });
+
+		if (localStorage.getItem("randomimg") === "true") {
+			img.addEventListener('click', () => {
+				selectImage(img.dataset.id);
+				localStorage.removeItem("randomimg");
+				location.reload();
+			});
+		} else {
+			img.addEventListener('click', () => {
+				selectImage(img.dataset.id);
+			});
+		}
+		
+	});
+
 
     window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem(selectedWallpaper);
@@ -299,6 +325,21 @@ const images = document.querySelectorAll('.selectwallpaper');
         selectImage(images[0].dataset.id);
       }
     });
+
+
+	const randomSwitch = document.getElementById("random-switch");
+
+randomSwitch.checked = localStorage.getItem("randomimg") === "true";
+
+randomSwitch.addEventListener("change", () => {
+  const isRandomActive = localStorage.getItem("randomimg") === "true";
+  if (!isRandomActive && randomSwitch.checked) {
+    localStorage.setItem("randomimg", "true");
+    localStorage.setItem("selectedWallpaper", "unset");
+    location.reload();
+  }
+});
+
 </script>
 
 </body>
