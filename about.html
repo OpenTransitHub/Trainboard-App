@@ -12,6 +12,7 @@
 	<meta name="theme-color" content="#000">
 </head>
 
+<body class="bodyWithPopup coloredbody">
 
 <center>
 
@@ -22,7 +23,7 @@
 	<div id="blanktext" class="coloredspace">
 		<div class="container blanktext">
 			<div class="left-div">
-
+				<br>
 				<h3>Impressum</h3>
 				Felix Nietzold<br>
 				Tharandter Straße 105<br>
@@ -35,6 +36,7 @@
 				<a href="https://zug.network/@SBahnFahrer" class="black underlined">Mastodon</a> |
 				<a href="https://github.com/hoolycrash" class="black underlined">GitHub</a>
 
+				<br><br><br>
 				<h3>Datenschutz</h3>
 				<p>Der Webserver speichert zu Sicherheitszwecken Protokolldaten der Zugriffe:</p>
 				<ul>
@@ -57,13 +59,14 @@
 
 					</div>
 				</div>
+				<br>
+					</div>
 
 					<div class="listitem">
 						<div id="contributors"></div>
 					</div>
 				</div>
 
-				<a href="https://github.com/hoolycrash/trainboard/graphs/contributors">
 					<div class="button ">
 						<div class="blankext">
 							<b>Mitwirkende</b>
@@ -71,7 +74,6 @@
 							<div id="contributors"></div>
 						</div>
 					</div>
-				</a>
 			</div>
 
 
@@ -103,7 +105,7 @@
 		  div.innerHTML = `
 			<a class="contributor" href="${contributor.html_url}" class="black">
 			  <img src="${contributor.avatar_url}" alt="${contributor.login}" class="avatar">
-			  <strong>${contributor.login}</strong>
+			  ${contributor.login}
 			  <span class="green"> +${contributor.contributions}</span>
 			</a>
 		  `;
