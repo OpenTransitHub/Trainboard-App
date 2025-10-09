@@ -6,6 +6,7 @@ Please read comments carefully.
 .suburban {
 	background-color: #639830;
 	border-radius: 200px;
+	color: #fff;
 }
 
 .Bus {  /*THIS IS NEEDED because rail replacement busses exist :) */

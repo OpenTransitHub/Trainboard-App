@@ -304,14 +304,20 @@ h3 {
 
 .tabcontent{
     display: none;
+    border-radius: unset !important;
+    background-color: unset !important;
 }
 
 .tab {
     background-color: #f2f2f7;
-    border-radius: 15px;
+    border-radius: 100px;
     margin: 10px;
     padding: 5px;
     text-align: left;
+}
+
+.tablinks  {
+    border-radius: 100px !important;
 }
 
 .trainTab {
@@ -329,7 +335,6 @@ h3 {
 }
 
 .startStation, .endStation {
-    background-color: #fff;
     padding: 10px;
     padding-left: 20px;
 }
@@ -353,7 +358,7 @@ h3 {
 }
 
 .tab button {
-    width: calc(50% - 5px);
+    width: calc(50% - 3px);
     border: none;
     outline: none;
     cursor: pointer;
@@ -2390,7 +2395,7 @@ top: 0px;
     overflow-x: hidden;
     border-radius: 10px;
     z-index: 10;
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(217,217,217,0.9);
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     font-size: smaller;

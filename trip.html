@@ -108,16 +108,22 @@
             <button class="tablinks trackTab" onclick="openCity(event, 'Strecke')" id="trackTab">Strecke</button>
         </div>
 
-        <div class="tab smaller tabcontent" style="display: block; padding: 0px; overflow:hidden;" id="Zug">
+        <div class="tab tabcontent" style="display: block; padding: 0px; overflow:hidden;" id="Zug">
 
-            <table id="remarksTable" cellpadding="10"></table>
+            <div class="listcontainer" id="remarks">
+
+            </div>
 
             <br>
         </div>
 
-        <div class="tab smaller tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
+        <div class="tab tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
             <div id="loadingConstructions"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.</center></div>
 
+            <div class="listcontainer" id="constructions">
+
+            </div>
+            
             <table cellpadding="10"><tbody id="constructionsTable"></tbody></table>
 
             <br>
@@ -404,7 +410,7 @@
             let response = await fetch(constructionsUrl);
             let constructionData = await response.json();
 
-            const constructionsList = document.getElementById('constructionsTable');
+            const constructionsList = document.getElementById('constructions');
             constructionsList.innerHTML = ''; // Clear existing content
 
             if (constructionData.baustellen && constructionData.baustellen.length > 0) {
@@ -445,7 +451,24 @@
                         wirkung = baustellen.wirkung;
                     }
 
-                    constructionsList.innerHTML += `<tr><td><img src="./assets/icons/${baustellen.wirkung}.svg" class="serviceicon"></td><td class="wide">${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div></td></tr>`;
+                    let constructioncolor;
+
+                    if (['ABWEICHUNG_VOM_FPL', 'SONSTIGES', 'GGL_MIT_ZS_6', 'GGL_MIT_ZS_8'].includes(baustellen.wirkung)) {
+                        constructioncolor = 'yellow';
+                    } else if (['FAHRZEITVERLAENGERUNG', 'TOTALSPERRUNG'].includes(baustellen.wirkung)) {
+                        constructioncolor = 'lightred';
+                    } 
+
+                    constructionsList.innerHTML += `
+                    <div class="listitem">
+                        <div class="listimagecontainer listimagecontainer${constructioncolor}"><img src="./assets/icons/${baustellen.wirkung}.svg"></div>
+                        <div class="listitemtext">
+                            ${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div>
+                        </div>
+                    </div>
+
+                    `   
+                    
                 });
 
                 const baustellenCount = constructionData.baustellen.length;
@@ -869,7 +892,7 @@
             return sanitizedText;
         }
 
-        const warningsList = document.getElementById('remarksTable');
+        const warningsList = document.getElementById('remarks');
         warningsList.innerHTML = '';
 
         const warningCounterElement = document.getElementById('trip-warning-counter-button');
@@ -914,10 +937,12 @@
             warningsList.appendChild(WarningHeaderItem);
 
             uniqueRemarks.forEach(remark => {
-                const warningItem = document.createElement('tr');
                 const code = remark.code || 'default';
-                warningItem.innerHTML += (`<td class="clear"><img src="./assets/icons/remark${code}.svg" class="serviceicon"></td><td class="clear wide">${sanitizeText(remark.text)}</td>`);
-                warningsList.appendChild(warningItem);
+                remarks.innerHTML += (`
+                <div class="listitem">
+                    <div class="listimagecontainer"><img src="./assets/icons/remark${code}.svg"></div>
+                    <div class="listitemtext">${sanitizeText(remark.text)}</div>
+                </div>`);
             });
         } else {
             warningCounterElement.innerHTML = '&nbsp;Keine&nbsp;';
