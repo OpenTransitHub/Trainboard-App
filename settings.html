@@ -23,6 +23,37 @@
 	
 <div class="textonly">
 
+	<h3>Style</h3>
+	<div class="listcontainer">
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/wallpaper.svg"></div><div class="listitemtext">Wallpaper<br><small class="disabled">Das gewählte Bild wird auf der Startseite angezeigt.</small></div></div>
+		<div class="listitem imagecarousel">
+			<div class="selectwallpaper"  data-id="wallpaper1" style="background-image: url(./assets/wallpapers/wallpaper1.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="wallpaper2" style="background-image: url(./assets/wallpapers/wallpaper2.jpg); background-position-y: 90%;"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="wallpaper3" style="background-image: url(./assets/wallpapers/wallpaper3.jpg); background-position-y: 40%;"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="wallpaper4" style="background-image: url(./assets/wallpapers/wallpaper4.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="wallpaper5" style="background-image: url(./assets/wallpapers/wallpaper5.jpg);  background-position-y: 90%;"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+		</div>
+	</div>
+	<br>
+	<div class="listcontainer">
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/palette.svg"></div><div class="listitemtext">Hintergrundfarbe<br><small class="disabled">Die gewählte Farbe wird auf der Startseite angezeigt.</small></div></div>
+		<div class="listitem imagecarousel">
+			<div class="selectwallpaper"  data-id="color1" style="background-image: url(./assets/wallpapers/color1.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color1b" style="background-image: url(./assets/wallpapers/color1b.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color2" style="background-image: url(./assets/wallpapers/color2.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color3" style="background-image: url(./assets/wallpapers/color3.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color4" style="background-image: url(./assets/wallpapers/color4.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color5" style="background-image: url(./assets/wallpapers/color5.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color6" style="background-image: url(./assets/wallpapers/color6.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color7" style="background-image: url(./assets/wallpapers/color7.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color8" style="background-image: url(./assets/wallpapers/color8.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color9" style="background-image: url(./assets/wallpapers/color9.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+			<div class="selectwallpaper"  data-id="color10" style="background-image: url(./assets/wallpapers/color10.jpg);"><img src="./assets/icons/checkedimg.svg" class="checkedimg"></div>
+
+		</div>
+	</div>
+
+	<br>
 	<h3>Anzeigekonfiguration</h3>
 
 	<div class="listcontainer">
@@ -245,6 +276,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+//Wallpaper Select
+
+const images = document.querySelectorAll('.selectwallpaper');
+    const selectedWallpaper = 'selectedWallpaper';
+
+    function selectImage(id) {
+      images.forEach(img => img.classList.toggle('selected', img.dataset.id === id));
+      localStorage.setItem(selectedWallpaper, id);
+    }
+
+    images.forEach(img => {
+      img.addEventListener('click', () => selectImage(img.dataset.id));
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(selectedWallpaper);
+      if (saved) {
+        selectImage(saved);
+      } else {
+        selectImage(images[0].dataset.id);
+      }
+    });
 </script>
 
 </body>

@@ -2477,8 +2477,6 @@ top: 0px;
 .listcontainer div:last-child {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    margin-bottom: 0px !important;
-
 }
 
 .listcontainer div:first-child {
@@ -2569,4 +2567,42 @@ top: 0px;
 .pathicon {
     height: 30px;
     padding: 5px;
+}
+
+.selectwallpaper {
+    border: 3px solid transparent;
+    cursor: pointer;
+    border-top-left-radius: unset !important;
+    border-top-right-radius: unset !important;
+    border-bottom-left-radius: unset !important;
+    border-bottom-right-radius: unset !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100px;
+    border-radius: 15px !important;
+    background-color: rgb(37, 37, 37);
+    background-size: 170%;
+    padding: 5px;
+}
+
+.selected {
+    border-color: #2196f3;
+}
+
+.imagecarousel {
+    display: flex;
+    gap: 5px;
+}
+
+.imagecarousel > div {
+    flex: 1 1 0;
+}
+
+.checkedimg {
+    display: none;
+}
+
+.selected > .checkedimg {
+    display: unset;
 }
