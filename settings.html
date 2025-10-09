@@ -338,6 +338,12 @@ randomSwitch.addEventListener("change", () => {
     localStorage.setItem("selectedWallpaper", "unset");
     location.reload();
   }
+
+  if (isRandomActive) {
+    localStorage.removeItem("randomimg");
+    localStorage.removeItem("selectedWallpaper");
+    location.reload();
+  }
 });
 
 </script>

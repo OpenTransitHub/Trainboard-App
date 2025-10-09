@@ -24,7 +24,6 @@ if (localStorage.getItem("selectedWallpaper") !== null) {
     if (imgname === 'wallpaper5') {
       document.body.style.backgroundPositionY = '100%';
       document.body.style.backgroundPositionX = '35%';
-
     }
 
     
