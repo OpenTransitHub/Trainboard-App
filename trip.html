@@ -220,7 +220,6 @@
                 }
             },
             center: [13.3, 47.8],
-            zoom: 14,
             zoom: 2,
             pitch: 47,
             bearing: 0,
@@ -1045,7 +1044,8 @@
             const sources = [
                 `https://materialtrains.unibits.eu/vehicles/deutschebahn/${category}-${vehicleId}${suffix}.png`,
                 `https://materialtrains.unibits.eu/vehicles/deutschebahn/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
-                `https://materialtrains.unibits.eu/vehicles/deutschebahn/blank-${typeDetailsCategory}${suffix}.png`
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/blank-${typeDetailsCategory}${suffix}.png`,
+                `./assets/icons/blankvehicle.png`
             ];
 
             const img = document.createElement("img");
