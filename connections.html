@@ -105,7 +105,7 @@
                 const row = document.createElement("tr");
 
                 const lineCell = document.createElement("td");
-                lineCell.innerHTML = '<a href="trip.html?stationID=' + station + '&departureTime=' + encodeURIComponent(transfer.plannedWhen) + '&tripId=' + encodeURIComponent(transfer.toTripId) + '"><div class="linebadge ' + transfer.lineDetails.productName + ' ' + transfer.lineDetails.product + ' ' + cleanLineName.replace(" ", "") + transfer.lineDetails.operator.id + ' '+ transfer.lineDetails.operator.id + '">' + cleanLineName + '</div></a>';
+                lineCell.innerHTML = '<a href="trip.html?stationID=' + station + '&departureTime=' + encodeURIComponent(transfer.plannedWhen) + '&tripId=' + encodeURIComponent(transfer.toTripId) + '"><div class="linebadge ' + transfer.lineDetails.productName + ' ' + transfer.lineDetails.product + ' ' + cleanLineName.replace(" ", "") + (transfer.lineDetails?.operator?.id ?? '') + ' '+ (transfer.lineDetails?.operator?.id ?? '') + '">' + cleanLineName + '</div></a>';
                 row.appendChild(lineCell);
 
                 const whenCell = document.createElement("td");
