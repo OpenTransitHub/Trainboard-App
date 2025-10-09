@@ -272,6 +272,10 @@
 		filter: invert(1);
 		-webkit-filter: invert(1);
 	}
+
+	.selectwallpaper {
+		border-color: #222222;
+	}
 }
 
 
