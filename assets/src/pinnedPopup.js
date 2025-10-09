@@ -1,31 +1,19 @@
 
 async function fetchAndDisplayData() {
 
-    // Funktion zum Abrufen des Cookies
-    function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
-
     // Den Wert des Cookies 'pinnedjourney' abrufen und in einer Variablen speichern
-    const pinnedJourney = getCookie('pinnedjourney');
-    const pinnedJourneyStation = getCookie('pinnedjourneyStation');
+    const pinnedJourney = localStorage.getItem("pinnedJourney");
+    const pinnedJourneyStation = localStorage.getItem("pinnedJourneyStation");
 
     console.log(pinnedJourneyStation);
     console.log(pinnedJourney);
 
-    // Wenn der Cookie existiert, gib den Wert aus
+    // Wenn angeheftete Fahrt existiert, gib den Wert aus
     if (pinnedJourney) {
         document.getElementById('pinnedPopup').classList.remove('hidden');
         const tripId = pinnedJourney;
     } else {
-        return;  // Beende die Funktion, um keine API-Anfrage zu stellen
+        return;  
     }
 
     const currentUrl = window.location.href;

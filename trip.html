@@ -51,6 +51,10 @@
                         Anheften
                     </div>
 
+                    <div class="chip removetrainchip iconchip hidden" id="unpinChip">
+                        Angeheftet
+                    </div>
+
                     <a id="wagonorderbutton">
                         <div class="chip reihungchip iconchip">
                             Wagenreihung
@@ -118,7 +122,7 @@
         </div>
 
         <div class="tab tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
-            <div id="loadingConstructions"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.</center></div>
+            <div id="loadingConstructions"><div class="listcontainer"><div class="listitem"><div class="listitemtext" style="width: 100%;"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.<br><br></center></div></div></div></div>
 
             <div class="listcontainer" id="constructions">
 
@@ -969,48 +973,35 @@
 
         let $number = encodeURIComponent(data.trip.id);
 
-        function setCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                const date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "") + expires + "; path=/";
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
         document.getElementById('pinChip').addEventListener('click', function () {
-            setCookie('pinnedjourney', $number, 7);
-            setCookie('pinnedjourneyStation', stationId, 7);
-            document.getElementById("pinChip").textContent = "Angeheftet";
-            document.getElementById("pinChip").style.backgroundImage = "url('./assets/icons/addedtrain.svg')";
-
+            console.log('Angeheftet')
+            document.getElementById('pinChip').classList.add('hidden')
+            document.getElementById('unpinChip').classList.remove('hidden')
+            localStorage.setItem("pinnedJourney", $number);
+            localStorage.setItem("pinnedJourneyStation", stationId);
+            console.log($number);
+            console.log(stationId);
 
         });
 
-        const tripCookieValue = getCookie('pinnedjourney');
-        const stationCookieValue = getCookie('pinnedjourneyStation');
-
-        const activeValue = `${encodeURIComponent(tripId)}`;
-
-        if (tripCookieValue === activeValue) {
-            console.log('It is pinned Journey');
-            document.getElementById("pinChip").textContent = "Angeheftet";
-            document.getElementById("pinChip").style.backgroundImage = "url('./assets/icons/addedtrain.svg')";
-        } else {
-            console.log('It is not pinned Journey');
+        if ((localStorage.getItem("pinnedJourney")) === $number){
+            console.log('Angeheftete Journey')
+                document.getElementById('pinChip').classList.add('hidden')
+                document.getElementById('unpinChip').classList.remove('hidden')
+                localStorage.setItem("pinnedJourney", $number);
+                localStorage.setItem("pinnedJourneyStation", stationId);
+                console.log($number);
+                console.log(stationId);
         }
+
+        document.getElementById('unpinChip').addEventListener('click', function () {
+            console.log('Abgeheftet')
+            document.getElementById('pinChip').classList.remove('hidden')
+            document.getElementById('unpinChip').classList.add('hidden')
+            localStorage.removeItem("pinnedJourney");
+            localStorage.removeItem("pinnedJourneyStation");
+
+        });
 
         // WAGONORDER GRAPHIC             
         async function loadTrainData() {

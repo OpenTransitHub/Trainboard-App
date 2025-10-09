@@ -234,7 +234,7 @@ h3 {
     animation: wiggle 0.5s ease-in-out;
 }
 
-.addtrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip {
+.addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip {
     background-color: #ffffff1f !important;
     color: #fff;  
     flex: 0 0 auto;
@@ -259,13 +259,17 @@ h3 {
     margin-bottom: 4px;
 }
 
-.addtrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip {
+.addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip {
     cursor: pointer;
 
 }
 
 .addtrainchip {
     background-image: url(../icons/addtrain.png);
+}
+
+.removetrainchip {
+    background-image: url(../icons/addedtrain.png);
 }
 
 .reihungchip {
