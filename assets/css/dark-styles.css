@@ -267,6 +267,11 @@
 	.content a {
 		color: #fff !important;
 	}
+
+	.serviceicon {
+		filter: invert(1);
+		-webkit-filter: invert(1);
+	}
 }
 
 
