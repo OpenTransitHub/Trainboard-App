@@ -1,10 +1,39 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.5" y="2.5" width="21" height="21" rx="2.5" fill="url(#paint0_radial_837_125)" stroke="white"/>
-<path d="M7 13.6316H15V12.3684H7V13.6316ZM11.0015 21C9.89495 21 8.85488 20.79 7.88126 20.3701C6.90765 19.9502 6.06077 19.3803 5.34063 18.6604C4.62049 17.9406 4.05032 17.094 3.63011 16.1208C3.21003 15.1476 3 14.1079 3 13.0015C3 11.8949 3.20996 10.8549 3.62989 9.88126C4.04982 8.90765 4.61972 8.06077 5.33958 7.34063C6.05944 6.62049 6.90597 6.05032 7.87916 5.63011C8.85235 5.21003 9.89214 5 10.9985 5C12.1051 5 13.1451 5.20996 14.1187 5.62989C15.0924 6.04982 15.9392 6.61972 16.6594 7.33958C17.3795 8.05944 17.9497 8.90597 18.3699 9.87916C18.79 10.8524 19 11.8921 19 12.9985C19 14.1051 18.79 15.1451 18.3701 16.1187C17.9502 17.0924 17.3803 17.9392 16.6604 18.6594C15.9406 19.3795 15.094 19.9497 14.1208 20.3699C13.1476 20.79 12.1079 21 11.0015 21ZM11 19.7368C12.8807 19.7368 14.4737 19.0842 15.7789 17.7789C17.0842 16.4737 17.7368 14.8807 17.7368 13C17.7368 11.1193 17.0842 9.52632 15.7789 8.22105C14.4737 6.91579 12.8807 6.26316 11 6.26316C9.1193 6.26316 7.52632 6.91579 6.22105 8.22105C4.91579 9.52632 4.26316 11.1193 4.26316 13C4.26316 14.8807 4.91579 16.4737 6.22105 17.7789C7.52632 19.0842 9.1193 19.7368 11 19.7368Z" fill="white"/>
-<defs>
-<radialGradient id="paint0_radial_837_125" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11 3.5) rotate(90) scale(20.5)">
-<stop stop-color="#121212"/>
-<stop offset="1" stop-color="#500909"/>
-</radialGradient>
-</defs>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 -960 960 960"
+   width="24px"
+   fill="#FFFFFF"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="TOTALSPERRUNG.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="32.375"
+     inkscape:cx="11.984556"
+     inkscape:cy="12"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M363-120q-16 0-30.5-6T307-143L143-307q-11-11-17-25.5t-6-30.5v-234q0-16 6-30.5t17-25.5l164-164q11-11 25.5-17t30.5-6h234q16 0 30.5 6t25.5 17l164 164q11 11 17 25.5t6 30.5v234q0 16-6 30.5T817-307L653-143q-11 11-25.5 17t-30.5 6H363Zm117-304 86 86q11 11 28 11t28-11q11-11 11-28t-11-28l-86-86 86-86q11-11 11-28t-11-28q-11-11-28-11t-28 11l-86 86-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l86 86-86 86q-11 11-11 28t11 28q11 11 28 11t28-11l86-86Z"
+     id="path1"
+     style="fill:#000000" />
 </svg>

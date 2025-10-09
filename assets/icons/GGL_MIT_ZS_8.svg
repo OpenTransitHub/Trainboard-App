@@ -1,10 +1,40 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.5" y="2.5" width="21" height="21" rx="2.5" fill="url(#paint0_radial_837_133)" stroke="white"/>
-<path d="M6 5V9L16 17V21" stroke="white" stroke-width="1.5"/>
-<defs>
-<radialGradient id="paint0_radial_837_133" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11 3.5) rotate(90) scale(20.5)">
-<stop stop-color="#121212"/>
-<stop offset="1" stop-color="#402F04"/>
-</radialGradient>
-</defs>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="GGL_MIT_ZS_8.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="32.375"
+     inkscape:cx="11.984556"
+     inkscape:cy="12"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M18 19.5V17.5293C18 17.2871 17.8826 17.0597 17.6855 16.9189L5.36133 8.11523C4.50724 7.50517 4 6.52029 4 5.4707V3.5C4 2.80964 4.55964 2.25 5.25 2.25C5.94036 2.25 6.5 2.80964 6.5 3.5V5.4707C6.5 5.71292 6.61736 5.94027 6.81445 6.08105L19.1387 14.8848C19.9928 15.4948 20.5 16.4797 20.5 17.5293V19.5C20.5 20.1904 19.9404 20.75 19.25 20.75C18.5596 20.75 18 20.1904 18 19.5Z"
+     fill="white"
+     id="path1"
+     style="fill:#000000" />
 </svg>

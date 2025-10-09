@@ -1,6 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.5" y="2.5" width="21" height="21" rx="2.5" fill="#121212" stroke="white"/>
-<path d="M14 7V15L19.5 11L14 7Z" fill="white"/>
-<path d="M1 11H15" stroke="white" stroke-width="2" stroke-dasharray="1 1"/>
-<path d="M15 11H11C9.34315 11 8 12.3431 8 14V15C8 16.6569 6.65685 18 5 18H1" stroke="white" stroke-width="2"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M200-440q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h264l200-200h-64q-17 0-28.5-11.5T560-760q0-17 11.5-28.5T600-800h160q17 0 28.5 11.5T800-760v160q0 17-11.5 28.5T760-560q-17 0-28.5-11.5T720-600v-64L519-463q-11 11-25.5 17t-30.5 6H200Zm400 280q-17 0-28.5-11.5T560-200q0-17 11.5-28.5T600-240h64l-99-98q-12-12-12-28.5t12-28.5q12-12 29-12t29 12l97 99v-64q0-17 11.5-28.5T760-400q17 0 28.5 11.5T800-360v160q0 17-11.5 28.5T760-160H600Z"/></svg>

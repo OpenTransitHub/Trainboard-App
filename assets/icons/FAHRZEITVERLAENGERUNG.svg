@@ -1,10 +1,39 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.5" y="2.5" width="21" height="21" rx="2.5" fill="url(#paint0_radial_837_147)" stroke="white"/>
-<path d="M9.801 20C8.85673 20 7.97213 19.8266 7.1472 19.4797C6.32213 19.1329 5.601 18.656 4.9838 18.049C4.3666 17.4421 3.88167 16.7329 3.529 15.9215C3.17633 15.1102 3 14.2399 3 13.3108C3 12.3818 3.17633 11.5115 3.529 10.6998C3.88153 9.8881 4.36633 9.17862 4.9834 8.57138C5.60047 7.96415 6.3214 7.48705 7.1462 7.14007C7.971 6.7931 8.8556 6.61962 9.8 6.61962C10.08 6.61962 10.35 6.63601 10.61 6.66881C10.87 6.7016 11.1333 6.7508 11.4 6.81639V8.03636C11.1333 7.95766 10.87 7.89862 10.61 7.85927C10.35 7.81992 10.08 7.80024 9.8 7.80024C8.23693 7.80024 6.9128 8.33401 5.8276 9.40156C4.74253 10.4692 4.2 11.772 4.2 13.3098C4.2 14.8476 4.74253 16.1504 5.8276 17.2181C6.9128 18.2856 8.23693 18.8194 9.8 18.8194C11.3631 18.8194 12.6872 18.2856 13.7724 17.2181C14.8575 16.1504 15.4 14.8472 15.4 13.3084C15.4 13.1651 15.3933 13.0268 15.38 12.8936C15.3667 12.7604 15.3441 12.6216 15.3124 12.4773H16.5368C16.5635 12.6115 16.5807 12.7477 16.5884 12.886C16.5961 13.0242 16.6 13.1655 16.6 13.3098C16.6 14.239 16.4237 15.1093 16.0712 15.9208C15.7187 16.7322 15.2339 17.4415 14.617 18.0486C14.0001 18.6557 13.2793 19.1327 12.4546 19.4795C11.6299 19.8265 10.7454 20 9.801 20ZM12.1784 16.4794L9.2 13.5489V9.3744H10.4V13.0707L13.0216 15.6498L12.1784 16.4794ZM15.4 10.9031V8.54187H13V7.36124H15.4V5H16.6V7.36124H19V8.54187H16.6V10.9031H15.4Z" fill="white"/>
-<defs>
-<radialGradient id="paint0_radial_837_147" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11 3.5) rotate(90) scale(20.5)">
-<stop stop-color="#121212"/>
-<stop offset="1" stop-color="#402F04"/>
-</radialGradient>
-</defs>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 -960 960 960"
+   width="24px"
+   fill="#FFFFFF"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="FAHRZEITVERLAENGERUNG.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="32.375"
+     inkscape:cx="11.984556"
+     inkscape:cy="12"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="m480-496 100 100q11 11 11 28t-11 28q-11 11-28 11t-28-11L412-452q-6-6-9-13.5t-3-15.5v-159q0-17 11.5-28.5T440-680q17 0 28.5 11.5T480-640v144Zm240-224h-80q-17 0-28.5-11.5T600-760q0-17 11.5-28.5T640-800h80v-80q0-17 11.5-28.5T760-920q17 0 28.5 11.5T800-880v80h80q17 0 28.5 11.5T920-760q0 17-11.5 28.5T880-720h-80v80q0 17-11.5 28.5T760-600q-17 0-28.5-11.5T720-640v-80ZM440-120q-75 0-140.5-28T185-225q-49-49-77-114.5T80-480q0-75 28-140.5T185-735q49-49 114.5-77T440-840q11 0 20.5.5T481-837q17 0 28.5 11.5T521-797q0 17-11.5 28.5T481-757q-11 0-20.5-1.5T440-760q-118 0-199 81t-81 199q0 118 81 199t199 81q118 0 199-81t81-199q0-17 11.5-28.5T760-520q17 0 28.5 11.5T800-480q0 75-28 140.5T695-225q-49 49-114.5 77T440-120Z"
+     id="path1"
+     style="fill:#000000" />
 </svg>
