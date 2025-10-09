@@ -2433,6 +2433,10 @@ top: 0px;
     align-items: center;
 }
 
+.listitemtext {
+    width: calc(100% - 50px);
+}
+
 .listswitchitem {
     display: flex;
     align-items: center;  
