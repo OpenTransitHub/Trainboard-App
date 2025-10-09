@@ -12,7 +12,6 @@
 	<meta name="theme-color" content="#000">
 </head>
 
-<body class="bodyWithPopup">
 
 <center>
 
@@ -59,10 +58,9 @@
 					</div>
 				</div>
 
-				<a href="https://github.com/hoolycrash/trainboard/"><div class="githubbutton button ">GitHub</div></a>
-
-				<div id="connect-button" class="twlngbutton button">
-					Träwelling verbinden
+					<div class="listitem">
+						<div id="contributors"></div>
+					</div>
 				</div>
 
 				<a href="https://github.com/hoolycrash/trainboard/graphs/contributors">
@@ -91,51 +89,9 @@
 
 <script>
 
-	if (localStorage.getItem('twlng') === 'false') {
-		document.getElementById('connect-button').classList.add('hidden')
-	}
+	
 
-	async function checkConnection() {
-		const connectBtn = document.getElementById('connect-button');
-		const accessToken = localStorage.getItem('accessToken');
-		connectBtn.addEventListener('click', (event) => {
-			event.preventDefault();
-
-			// 2) Popup öffnen
-			window.open(
-					'https://data.cuzimmartin.dev/v1/traewelling/login',
-					'TräwellingLogin',
-					'width=600,height=700'
-			);
-		});
-
-		try {
-			// 3) Anfrage an Backend, ob schon verbunden
-			const response = await fetch('https://data.cuzimmartin.dev/v1/traewelling/connection-status', {
-				headers: {
-					'Authorization': 'Bearer ' + accessToken
-				}
-			});
-
-			// Wenn ok response -> Standard Text
-			if (!response.ok) {
-				return;
-			}
-
-			// 4) Ergebnis auswerten
-			const result = await response.json(); // z.B. { connected: true } oder false
-			if (result.connected) {
-				// Bereits verbunden => Button-Text anpassen
-				connectBtn.textContent = 'Träwelling verbunden';
-				connectBtn.onclick = null;
-			}
-		} catch (err) {
-			console.error('Fehler beim Verbindungscheck:', err);
-		}
-	}
-
-	// Beim Laden der Seite ausführen
-	document.addEventListener('DOMContentLoaded', checkConnection);
+	
 
 
 	fetch('https://api.github.com/repos/hoolycrash/trainboard/contributors')

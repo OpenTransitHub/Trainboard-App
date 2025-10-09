@@ -198,7 +198,12 @@
 
 		<div class="listitem listswicthitem">
 			<div class="listimagecontainer"><img src="./assets/icons/appicons/twlng.svg" class="noinvert"></div>
-			<div class="switchitemtext">Träwelling<br><small class="disabled">Der aktuelle Träwelling-Check-In wird im Widget auf der Startseite angezeigt.</small></div>
+			<div class="switchitemtext">Träwelling<br><small class="disabled">Der aktuelle Träwelling-Check-In wird im Widget auf der Startseite angezeigt.</small><br>
+				<small style="color: red;" id="notconected">● Nicht Verbunden</small>
+				<div id="connect-button" class="button">
+					Träwelling Konto verbinden
+				</div>
+			</div>
 			<div class="listitemswitch">
 				<div class="switchbox-container">
 					<label class="onoffswitch">
@@ -206,6 +211,8 @@
 						<span class="slider round"></span>
 					</label>
 				</div>
+
+				
 			</div>
 		</div>
 
@@ -345,6 +352,58 @@ randomSwitch.addEventListener("change", () => {
     location.reload();
   }
 });
+
+
+//Träwelling Integration
+if (localStorage.getItem('twlng') === 'false') {
+		document.getElementById('connect-button').classList.add('hidden')
+	}
+
+	async function checkConnection() {
+		const connectBtn = document.getElementById('connect-button');
+		const accessToken = localStorage.getItem('accessToken');
+		connectBtn.addEventListener('click', (event) => {
+			event.preventDefault();
+
+			// 2) Popup öffnen
+			window.open(
+					'https://data.cuzimmartin.dev/v1/traewelling/login',
+					'TräwellingLogin',
+					'width=600,height=700'
+			);
+		});
+
+		try {
+			// 3) Anfrage an Backend, ob schon verbunden
+			const response = await fetch('https://data.cuzimmartin.dev/v1/traewelling/connection-status', {
+				headers: {
+					'Authorization': 'Bearer ' + accessToken
+				}
+			});
+
+			// Wenn ok response -> Standard Text
+			if (!response.ok) {
+				return;
+			}
+
+			// 4) Ergebnis auswerten
+			const result = await response.json(); // z.B. { connected: true } oder false
+			if (result.connected) {
+				// Bereits verbunden => Button-Text anpassen
+				connectBtn.innerHTML = '<small style="color: green;" id="notconected">● Verbindung aktiv</small>';
+				connectBtn.classList.remove('twlngbutton');
+				connectBtn.classList.remove('button');
+				connectBtn.onclick = null;
+
+				document.getElementById('notconected').classList.add('hidden')
+			}
+		} catch (err) {
+			console.error('Fehler beim Verbindungscheck:', err);
+		}
+	}
+
+	// Beim Laden der Seite ausführen
+	document.addEventListener('DOMContentLoaded', checkConnection);
 
 </script>
 
