@@ -33,9 +33,12 @@ body {
 }
 
 h3 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.nohight {
     line-height: 0px;
-    padding-bottom: 10px;
-    padding-top: 3px;
 }
 
 /* Info Div auf Home*/
