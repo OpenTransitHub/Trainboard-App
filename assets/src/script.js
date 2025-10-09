@@ -316,8 +316,10 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 
 
 		if (entry.remarks && entry.remarks.length > 0) {
-			const infoMessages = entry.remarks.map(r => r.text).join(' +++ ');
-			wideCell2.innerHTML += `<div class="remark bigonly">${infoMessages}</div>`;
+			if (localStorage.getItem("showremarks") !== null && localStorage.getItem("showremarks") === "true") {
+				const infoMessages = entry.remarks.map(r => r.text).join(' +++ ');
+				wideCell2.innerHTML += `<div class="remark bigonly">${infoMessages}</div>`;
+			}
 		}
 
 		// Platform

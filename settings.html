@@ -75,6 +75,18 @@
 			</div>
 		</div>
 
+		<div class="listitem listswicthitem">
+			<div class="switchitemtext">Remarks anzeigen</div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="remarks-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
 
 	</div>
 
@@ -195,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'clock-switch', storageKey: 'showclock', defaultState: true },
         { id: 'suburbans-switch', storageKey: 'showsuburbans', defaultState: false },
 		{ id: 'trainnumber-switch', storageKey: 'showtrainnumbers', defaultState: false },
+		{ id: 'remarks-switch', storageKey: 'showremarks', defaultState: false },
 		{ id: 'touch-switch', storageKey: 'disabletouch', defaultState: false },
 		{ id: 'materialtrains-switch', storageKey: 'materialtrains', defaultState: true },
 		{ id: 'webfis-switch', storageKey: 'webfis', defaultState: true },
