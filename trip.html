@@ -12,9 +12,8 @@
     <meta name="theme-color" content="#000">
     <meta name="robots" content="noindex">
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+   <link href="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -206,20 +205,22 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiY3V6aW1tYXJ0aW4iLCJhIjoiY204dGRyb3AxMDgxcDJrc2VjeXVwNXN3NyJ9.VR8xzsuQJ_-0h95CN_UD8g';
     
         const mapStyle = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
-        ? 'night'
+        ? 'dusk'
         : '';  
 
         // Karte mit Standardposition initialisieren (Österreich)
         map = new mapboxgl.Map({
             container: 'map',
-            style: ('mapbox://styles/mapbox/standard'),
+            style: 'mapbox://styles/mapbox/standard', 
             config: {
                 basemap: {
                     lightPreset: mapStyle,
+                    font: "Roboto",
+                    showPlaceLabels: false,
                     showPointOfInterestLabels: false,
                     backgroundPointOfInterestLabels: "none",
-                    colorModePointOfInterestLabels: "single",
-                    font: "Roboto",
+                    fuelingStationModePointOfInterestLabels: "none",
+                    showRoadLabels: false,
                     showLandmarkIconLabels: false
                 }
             },
@@ -325,7 +326,7 @@
                         : '#000000';
                         
                         const textHaloColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
-                        ? '#001029'
+                        ? '#445a59'
                         : '#ffffff';
 
                         map.addLayer({
