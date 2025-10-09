@@ -221,6 +221,7 @@
             },
             center: [13.3, 47.8],
             zoom: 14,
+            zoom: 2,
             pitch: 47,
             bearing: 0,
             antialias: true
@@ -232,6 +233,8 @@
         // Map ist bereit, lade die Daten
         map.once('load', () => {
             loadMapData();
+
+            
         });
     }
 
