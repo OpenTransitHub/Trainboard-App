@@ -276,6 +276,10 @@
 	.selectwallpaper {
 		border-color: #222222;
 	}
+
+	.listitemtext  a, #contributors div a {
+  	  color: #fff;
+	}
 }
 
 
