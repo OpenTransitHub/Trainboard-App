@@ -225,6 +225,9 @@ h3 {
     justify-content: center;
 }
 
+.singlechip {
+    margin-right: 0px !important;
+}
 
 .iconchip {
     padding-left: 35px !important;
@@ -593,24 +596,24 @@ span {
     justify-content: center;
     min-height: 25px;
     max-width: 200px;
+   
+}
+
+.transferchip {
+    float: right;
+    margin-top: -4px;
 }
 
 .IMPOSSIBLE {
-    background-color: #e4bdbd;
-    color: red;
-    border-color: red;
+    background-color: #e08f8f !important;
 }
 
 .QUICK_TRANSFER {
-    background-color: #faebc6;
-    color: #1e1e1e;
-    border-color: #e4a504;
+   background-color: #d5be62 !important;
 }
 
 .POSSIBLE {
-    background-color: #ceffd6;
-    color: #0ca724;
-    border-color: #0ca724;
+    background-color: #88c47b !important;
 }
 
 .transfertime {
@@ -622,10 +625,7 @@ span {
 }
 
 .transfericon {
-    padding-left: 5px;
     padding-right: 5px;
-    height: 17px;
-
 }
 
 .wrap {
@@ -2172,7 +2172,10 @@ padding-left: 0px;
 
 @media (max-width: 768px) {
 
-  
+    .transferchip {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
 
     .trip-stopovers {
@@ -2612,4 +2615,17 @@ top: 0px;
 
 .selected > .checkedimg {
     display: unset;
+}
+
+#weatherchip {
+    text-align: unset;
+}
+
+.weatherchip {
+    color: #000 !important;
+    padding-left: 10px !important;
+}
+
+.weatherchip img {
+	padding-right: 10px;
 }

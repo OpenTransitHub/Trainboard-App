@@ -144,7 +144,7 @@
                 const tooltipText = statusTooltips[transfer.status] || 'Status unbekannt';
 
                 if(transfer.when === transfer.plannedWhen) {
-                    availableTransferTimeCell.innerHTML = '<a href="trip.html?stationID=' + station + '&departureTime=' + encodeURIComponent(transfer.plannedWhen) + '&tripId=' + encodeURIComponent(transfer.toTripId) + '"><span class="smallonly">' + formatTime(transfer.when) + '<br></span><span class="connectionbadge ' + transfer.status + '" title="' + tooltipText + '"><img src="./assets/icons/' + transfer.status + '.svg" alt="' + transfer.status + '"class="transfericon">' + transfer.availableTransferTime + '&nbsp;min</span></a>';
+                    availableTransferTimeCell.innerHTML = '<a href="trip.html?stationID=' + station + '&departureTime=' + encodeURIComponent(transfer.plannedWhen) + '&tripId=' + encodeURIComponent(transfer.toTripId) + '"><span class="smallonly">' + formatTime(transfer.when) + '<br></span><span class="chip singlechip ' + transfer.status + ' transferchip" title="' + tooltipText + '"><img src="./assets/icons/' + transfer.status + '.svg" alt="' + transfer.status + '"class="transfericon">' + transfer.availableTransferTime + '&nbsp;min</span></a>';
                 } else {
                     availableTransferTimeCell.innerHTML = '<a href="trip.html?stationID=' + station + '&departureTime=' + encodeURIComponent(transfer.plannedWhen) + '&tripId=' + encodeURIComponent(transfer.toTripId) + '"><span class="smallonly"><s class="disabled">' + formatTime(transfer.plannedWhen) + '</s>&nbsp;' + formatTime(transfer.when) + '<br></span><span class="connectionbadge ' + transfer.status + '" title="' + tooltipText + '"><img src="./assets/icons/' + transfer.status + '.svg" class="transfericon">' + transfer.availableTransferTime + '&nbsp;min</span></a>';
                 }
@@ -160,7 +160,7 @@
             });
 
             // Aktualisiere die Header-Informationen
-            document.getElementById('headertext').innerHTML = 'Ankunft mit <span class="chip">' + data.arrivalLine.split('(')[0] + '</span> in ' + data.arrivalStationName + ' um ' + formatTime(data.arrivalTime) + ' auf Gleis ' + data.arrivalPlatform;
+            document.getElementById('headertext').innerHTML = 'Ankunft mit ' + data.arrivalLine.split('(')[0] + ' in ' + data.arrivalStationName + ' um ' + formatTime(data.arrivalTime) + ' auf Gleis ' + data.arrivalPlatform;
             document.getElementById('arrivallineheader').innerHTML = data.arrivalLine.split('(')[0] || '';
 
             // Wenn keine Transfers vorhanden sind
@@ -181,8 +181,8 @@
                 
                 document.getElementById("weatherchip").innerHTML = `
                 <a href="weather.html?city=${data.arrivalStationName.split(/[\s-]/)[0]}">
-                <span class="chip iconchip weatherchip" 
-                        style="background-image: url('./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg')">
+                <span class="chip iconchip weatherchip">
+                    <img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg">
                     ${Math.floor(weatherdata.main.temp)}°C
                 </span>
                 </a>`;

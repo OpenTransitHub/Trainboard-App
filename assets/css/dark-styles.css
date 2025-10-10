@@ -280,6 +280,35 @@
 	.listitemtext  a, #contributors div a {
   	  color: #fff;
 	}
+
+	.weatherchip {
+		color: #fff !important;
+	}
+
+	.weatherchip img {
+		filter: invert(1);
+		-webkit-filter: invert(1);
+	}
+
+	.IMPOSSIBLE {
+		background-color: #ba3939 !important;
+		color: #fff !important;
+	}
+
+	.QUICK_TRANSFER {
+	background-color: #817004 !important;
+	color: #fff !important;
+	}
+
+	.POSSIBLE {
+		background-color: #237b33 !important;
+		color: #fff !important;
+	}
+
+	.transfericon {
+		filter: invert(1);
+		-webkit-filter: invert(1);
+	}
 }
 
 
