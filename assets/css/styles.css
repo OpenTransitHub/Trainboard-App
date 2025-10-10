@@ -737,6 +737,16 @@ span#clock {
     z-index: 100;
 }
 
+.fixednavbar #navbar {
+    position: fixed;
+    top: 0%;
+    width: calc(100% - 30px);
+}
+
+.fixednavbar {
+    padding-top: 66px;
+}
+
 .navsearch:before {
     background-image: url("../icons/search.svg");
     background-size: cover;
