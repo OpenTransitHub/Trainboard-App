@@ -158,6 +158,19 @@
 	<div class="listcontainer">
 
 		<div class="listitem listswicthitem">
+			<div class="listimagecontainer"><img src="./assets/icons/appicons/traincats.svg" class="noinvert"></div>
+			<div class="switchitemtext">Bahnhofskatzen<br><small class="disabled">Zeigt, wenn vorhanden, Fotos einer am Bahnhof ansässigen Katze.</small></div>
+			<div class="listitemswitch">
+				<div class="switchbox-container">
+					<label class="onoffswitch">
+						<input type="checkbox" id="traincats-switch">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="listitem listswicthitem">
 			<div class="listimagecontainer"><img src="./assets/icons/appicons/google.svg" class="noinvert"></div>
 			<div class="switchitemtext">Google Bildersuche<br><small class="disabled">Fahrzeugtypen können aus der Wagenreihung heraus in der Bildersuche geöffnet werden.</small></div>
 			<div class="listitemswitch">
@@ -259,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ id: 'trainnumber-switch', storageKey: 'showtrainnumbers', defaultState: false },
 		{ id: 'remarks-switch', storageKey: 'showremarks', defaultState: false },
 		{ id: 'touch-switch', storageKey: 'disabletouch', defaultState: false },
+		{ id: 'traincats-switch', storageKey: 'traincats', defaultState: true },
 		{ id: 'materialtrains-switch', storageKey: 'materialtrains', defaultState: true },
 		{ id: 'webfis-switch', storageKey: 'webfis', defaultState: true },
 		{ id: 'google-switch', storageKey: 'google', defaultState: true },

@@ -337,6 +337,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	console.log(data.name);
 /// Get Station CAT Images
 
+if (localStorage.getItem("traincats") !== 'false') {
 
 const stationName = data.name;
 
@@ -348,17 +349,23 @@ fetch('https://traincats.io/catsdata.json')
         return response.json();
     })
     .then(data => {
+
+		console.log(stationName)
         const matchingCat = data.find(cat => cat.station === stationName);
 
         if (matchingCat) {
             console.log(`Filename: ${matchingCat.filename}`);
 
 			document.getElementById('stationCat').innerHTML += `
-				<div class="button">
+				<br>
+				<div class="listcontainer">
+					<div class="listitem">
+						<div class="listimagecontainer"><img src="./assets/icons/cat.svg"></div>
+						<div class="listitemtext">Bahnhofskatze<br><small class="disabled">Von <a href="${matchingCat.sociallink}"><u class="disabled">@${matchingCat.socialname}</u></a></small></div>
+					</div>
 					<img src="https://traincats.io/assets/cats/${matchingCat.filename}" class="catPic">
-					Bahnhofskatze<br>
-					<small>gesichtet von: <a href="${matchingCat.sociallink}">${matchingCat.socialname}</a></small>
 				</div>
+
 			`;
         } 
     })
@@ -366,7 +373,7 @@ fetch('https://traincats.io/catsdata.json')
         console.error('Keine Bahnhofskatze', error);
     });
 
-
+}
 	
 })
 .catch(error => {
@@ -376,6 +383,8 @@ fetch('https://traincats.io/catsdata.json')
 });
 
 fetchAndDisplayData();
+
+
 
 </script>
 

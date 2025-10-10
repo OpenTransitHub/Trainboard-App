@@ -535,9 +535,7 @@ h3 {
 
 .catPic {
     width: 100%;
-    border: solid 1px #202020;
-    margin-top: 5px;
-    border-radius: 10px;
+    border-radius: 4px 4px 20px 20px;
     background-clip: content-box;
 }
 
