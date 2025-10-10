@@ -170,27 +170,11 @@
             resultsContainer.innerHTML = ''; // Clear previous results
     
             trips.forEach(trip => {
-                // Create an anchor element that wraps the entire div, making everything clickable
-                const suggestionLink = document.createElement('a');
-                suggestionLink.href = `trip.html?stationID=${trip.origin.id}&departureTime=${encodeURIComponent(trip.plannedDeparture)}&tripId=${encodeURIComponent(trip.id)}`;
-                suggestionLink.classList.add('suggestion'); // Add the suggestion class for styling
-                suggestionLink.style.textDecoration = 'none'; // Remove the underline from the link
-                
-                // Create a span for the route name
-                const nameSpan = document.createElement('span');
-                nameSpan.innerHTML = trip.line.name + '(' + trip.line.fahrtNr + ')'; // Route display
+                resultsContainer.innerHTML += `
+                    <a href="trip.html?stationID=${trip.origin.id}&departureTime=${encodeURIComponent(trip.plannedDeparture)}&tripId=${encodeURIComponent(trip.id)}" class="suggestion" style="text-decoration: none; text-align: left;">${trip.line.name.split("(Zug-Nr")[0]} (${trip.line.fahrtNr})<br>${trip.destination.name}</a>
+                `;
+                });
 
-                // Create another span for the arrow and destination name
-                const destinationSpan = document.createElement('span');
-                destinationSpan.innerHTML = ' -> ' + trip.destination.name; // Destination display
-
-                // Append both spans to the anchor (which is clickable)
-                suggestionLink.appendChild(nameSpan);
-                suggestionLink.appendChild(destinationSpan);
-
-                // Append the suggestionLink to the results container
-                resultsContainer.appendChild(suggestionLink);
-            });
         }
 
 
