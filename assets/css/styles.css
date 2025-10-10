@@ -221,6 +221,8 @@ h3 {
     padding-right: 10px;
     border-radius: 100px;
     width: fit-content;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -1791,7 +1793,6 @@ td {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 10px;
         margin-bottom: 5px;
         width: 100%;
     }
@@ -1929,7 +1930,7 @@ td {
     align-items: center;
 }
 
-#originStationPopup, #destinationStationPopup {
+#originStationPopup, #destinationStationPopup, #twlngoriginStationPopup, #twlngdestinationStationPopup {
 color: #fff;
 font-size: 1.2rem;
 font-weight: bold;
@@ -1975,6 +1976,7 @@ font-weight: bold;
 
 .darkerwidget {
     padding: 10px;
+    margin-top: 5px;
     background-color: rgba(25, 25, 25, 0.91);
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
@@ -2006,11 +2008,9 @@ font-weight: bold;
 }
 
 .widgeticon {
-    height: 20px;
-    border: 1px solid #fff;
-    border-radius: 9px;
-    margin-top: 5px;
-    margin-right: 5px;
+    height: 18px;
+    border-radius: 2px;
+    margin-right: 6px;
 }
 
 .pinnedPopup:hover {
@@ -2170,12 +2170,7 @@ padding-left: 0px;
         padding: 0px;
     }
 
-    .trip-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
 
-    }
 
     .trip-title {
         width: 100%;
@@ -2210,8 +2205,6 @@ padding-left: 0px;
         font-size: 0.9rem;
     }
 
-
-
     .trip-card-icon {
         max-width: 25px;
         margin: -5px 10px 0 0;
@@ -2219,7 +2212,8 @@ padding-left: 0px;
 
 
     #originStation
-    #destinationStation {
+    #destinationStation
+     {
     font-size: 1rem;
     }
 
@@ -2239,12 +2233,6 @@ padding-left: 0px;
     .tdPure{
         font-size: 1em !important;
         
-    }
-
-    .trip-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
     }
 
     .trip-title h1 {
