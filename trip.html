@@ -94,7 +94,7 @@
 
 
             <!-- Modal -->
-            <small class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner noinvert"></small><br><br>
+            <small class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></small><br><br>
         </div>
 
 
@@ -104,8 +104,6 @@
         </div>
 
         <!-- Warnungen und Hinweise -->
-        <hr>
-        <h3>Aktuelle Meldungen</h3>
         <div class="tab">
             <button class="tablinks tabActive trainTab" onclick="openCity(event, 'Zug')" id="trainTab">Zug</button>
             <button class="tablinks trackTab" onclick="openCity(event, 'Strecke')" id="trackTab">Strecke</button>
@@ -481,11 +479,11 @@
                 const baustellenCount = constructionData.baustellen.length;
                 document.getElementById('trackTab').innerHTML = `Strecke <span class=\"pill\">&nbsp;${baustellenCount}&nbsp;</span>`;
             } else {
-                document.getElementById('loadingConstructions').innerHTML = `<center><h3>🚞</h3><h3>Keine Streckeninformationen</h3>Für diese Strecke liegen keine Meldungen vor.</center>`;
+                document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="./assets/icons/check.svg" class="bigicon"><h3>Freie Fahrt</h3>Für diese Strecke liegen keine Meldungen vor.</center><br></div></div>`;
             }
         } catch (error) {
             console.error("Fehler beim Laden der Baustellen:", error);
-            document.getElementById('loadingConstructions').innerHTML = `<center><h3>⚠️</h3><h3>Fehler beim Laden</h3>Die Streckeninformationen konnten nicht geladen werden.</center>`;
+            document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="./assets/icons/finderror.svg" class="bigicon"><h3>Fehler</h3>Wir konnten keine Streckeninformationen abrufen.</center><br></div></div>`;
         }
     }
 
@@ -618,7 +616,7 @@
             const allStopoversCancelled = trip.stopovers.every(stop => (stop.cancelled === true));
 
             if (isTripCancelled && allStopoversCancelled) {
-                statusElement.innerHTML = `${trip.line.name} ist vollständig ausgefallen.`;
+                statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} ist vollständig ausgefallen.`;
                 return;
             }
 
@@ -644,7 +642,7 @@
 
                 const platformInfo = getPlatformInfo(trip.departurePlatform || trip.plannedDeparturePlatform);
 
-                statusElement.innerHTML = `${trip.line.name} fährt in ${timeString} von <b class="markedstation">${trip.origin.name}</b> ${platformInfo} ab.`;
+                statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} fährt in ${timeString} von <b class="markedstation">${trip.origin.name}</b> ${platformInfo} ab.`;
                 return;
             }
 
@@ -659,7 +657,7 @@
                 const platformInfoDeparture = getPlatformInfo(nextStop.departurePlatform || nextStop.plannedDeparturePlatform);
 
                 if (timeUntilNextStop > 0) {
-                    statusElement.innerHTML = `${trip.line.name} erreicht in ${timeString} <b class="markedstation">${nextStop.stop.name}</b> ${platformInfoArrival}.`;
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} erreicht in ${timeString} <b class="markedstation">${nextStop.stop.name}</b> ${platformInfoArrival}.`;
                 } else {
                     const departureTimeAtNextStop = nextStop.departure ? new Date(nextStop.departure) : new Date(nextStop.plannedDeparture);
                     const timeUntilDeparture = departureTimeAtNextStop - currentTime;
@@ -667,23 +665,23 @@
                     if (timeUntilDeparture > 0) {
                         const departureTimeString = formatTimeDifference(timeUntilDeparture);
 
-                        statusElement.innerHTML = `${trip.line.name} steht aktuell in <b class="markedstation">${nextStop.stop.name}</b> und fährt in ${departureTimeString} ${platformInfoDeparture} ab.`;
+                        statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} steht aktuell in <b class="markedstation">${nextStop.stop.name}</b> und fährt in ${departureTimeString} ${platformInfoDeparture} ab.`;
                     } else {
-                        statusElement.innerHTML = `${trip.line.name} hat <b class="markedstation">${nextStop.stop.name}</b> gerade verlassen und ist auf dem Weg zum nächsten Halt.`;
+                        statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} hat <b class="markedstation">${nextStop.stop.name}</b> gerade verlassen und ist auf dem Weg zum nächsten Halt.`;
                     }
                 }
             } else {
                 if (arrivalTime && currentTime >= arrivalTime && !trip.destination.cancelled) {
-                    statusElement.innerHTML = `${trip.line.name} hat sein Ziel <b class="markedstation">${trip.destination.name}</b> erreicht.`;
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} hat sein Ziel <b class="markedstation">${trip.destination.name}</b> erreicht.`;
                 } else if (trip.destination.cancelled) {
-                    statusElement.innerHTML = `${trip.line.name} endet vorzeitig und erreicht nicht sein geplantes Ziel.`;
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} endet vorzeitig und erreicht nicht sein geplantes Ziel.`;
                 } else {
                     const timeUntilArrival = arrivalTime ? arrivalTime - currentTime : null;
                     const timeString = timeUntilArrival ? formatTimeDifference(timeUntilArrival) : 'unbekannter Zeit';
 
                     const platformInfo = getPlatformInfo(trip.arrivalPlatform || trip.plannedArrivalPlatform);
 
-                    statusElement.innerHTML = `${trip.line.name} ist auf dem Weg zu seinem Endziel <b class="markedstation">${trip.destination.name}</b> und wird in ${timeString} ${platformInfo} ankommen.`;
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} ist auf dem Weg zu seinem Endziel <b class="markedstation">${trip.destination.name}</b> und wird in ${timeString} ${platformInfo} ankommen.`;
                 }
             }
 

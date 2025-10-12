@@ -2342,7 +2342,7 @@ top: 0px;
 
 .trip-stopover {
     position: relative;
-    padding-left: 15px; /* Platz für die linke Border */
+    padding-left: 30px; /* Platz für die linke Border */
     --progress-percentage: 0%; /* Standardwert */
     --progress-px: 40px;
 
@@ -2354,7 +2354,7 @@ top: 0px;
 .trip-stopover::before {
     content: '  ';
     position: absolute;
-    left: 14px;
+    left: 19px;
     top: 0;
     width: 2px; /* Breite der linken Border */
     height: 100%;
@@ -2365,7 +2365,7 @@ top: 0px;
 
 /* Vergangene Haltestellen */
 .trip-stopover.stop-past::before,  .stop-unknown::before {
-    background-color: #2eff00;
+    background-color: #018001;
 
 }
 
@@ -2391,7 +2391,7 @@ top: 0px;
 .trainposition {
     height: 36px;
     position: absolute;
-    margin-left: -12.5px;
+    margin-left: -27.5px;
     margin-top: calc(var(--progress-px) - 5px);
     z-index: 10;
 
@@ -2406,7 +2406,7 @@ top: 0px;
     left: 20px;
     overflow-y: scroll;
     overflow-x: hidden;
-    border-radius: 10px;
+    border-radius: 20px;
     z-index: 10;
     background-color: rgba(217,217,217,0.9);
     backdrop-filter: blur(7px);
@@ -2420,16 +2420,22 @@ top: 0px;
 }
 
 #trainslider {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding-left: 10px;
     width: 100%;
     overflow-x: auto;
     display: flex;
     flex-direction: row;
-    border-bottom: #cecece 1px solid;
+    box-shadow: inset 0px -1px 0px rgb(62, 62, 62);
 }
 
+#trainslider img {
+    margin-top: 20px;
+}
+
+#trainslider img:last-of-type {
+    margin-right: 20px;
+}
 
 .listcontainer {
     width: 100%;
