@@ -314,6 +314,27 @@
 		filter: invert(1);
 		-webkit-filter: invert(1);
 	}
+
+	.popupholder {
+        background-color: #4a4a4a6b;
+    }
+
+	.version-popup {
+        background-color: #141514;
+        border: solid 1px #434343;
+        color: #eaeaea;
+    }
+
+	.gradienttext {
+		background: linear-gradient(90deg, #5f7e9a, #71b798, #9aecdd);
+		-webkit-background-clip: text;
+   		background-clip: text;
+	}
+
+	.popupbutton {
+		background-color: #fff;
+		color: #000;
+	}
 }
 
 

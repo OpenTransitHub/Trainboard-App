@@ -102,3 +102,63 @@
 
 // Call the function to add the widget bar to the DOM
 createWidgetBar();
+
+
+
+// Release information popup
+if (localStorage.getItem('versionpopup') !== 'true') {
+    
+    const handlePopupAction = (shouldReload, targetUrl = '') => {
+        localStorage.setItem('versionpopup', 'true');
+        if (targetUrl) {
+            window.location.href = targetUrl;
+        } else if (shouldReload) {
+            window.location.reload();
+        }
+    };
+    
+    const popupHTML = `
+        <div class="popupholder">
+            <div id="version-popup" class="version-popup">
+                <div class="popupimage"></div>
+
+                <div class="popupcontent">
+                    
+                    <div style="height: 17px"></div>
+
+                    <span class="popuptitle">Wilkommen im <i class="gradienttext">neuen</i> Trainboard</span>
+
+                    <div style="height: 16px"></div>
+
+                    Mehr  Funktionen, neues Design und AI-Komponenten.<br>
+                    Sieh dir an was wir verbessert haben.
+
+                    <div style="height: 30px"></div>
+
+                    <span id="view-changes-btn" class="chip cursorpointer popupbutton">
+                        Neuerungen ansehen
+                    </span><br><br>
+                    <small class="disabled cursorpointer" id="hide-popup-btn">
+                        Nicht mehr anzeigen
+                    </small> 
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('afterbegin', popupHTML);
+
+    const hideBtn = document.getElementById('hide-popup-btn');
+    if (hideBtn) {
+        hideBtn.addEventListener('click', () => {
+            handlePopupAction(true); 
+        });
+    }
+
+    const viewBtn = document.getElementById('view-changes-btn');
+    if (viewBtn) {
+        viewBtn.addEventListener('click', () => {
+            handlePopupAction(false, 'http://version.trainboard.eu/'); 
+        });
+    }
+}
