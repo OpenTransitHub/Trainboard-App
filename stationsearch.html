@@ -137,7 +137,7 @@
 <script>
 	function searchLocations() {
 		const userInput = document.getElementById('searchInput').value;
-		const apiUrl = `https://data.cuzimmartin.dev/v1/db/location?search=${userInput}`;
+		const apiUrl = `https://data.cuzimmartin.dev/oebb-locations?query=${userInput}`;
 
 		fetch(apiUrl)
 		.then(response => response.json())
@@ -151,17 +151,17 @@
 
 		data.forEach(entry => {
 			// Check if suburban is true
-			const isSuburban = entry.products?.includes("SBAHN");
-            const isRegional = entry.products?.includes("REGIONAL");
+			const isSuburban = entry.products?.suburban;
+            const isRegional = entry.products?.regional;
 			
 		
 			if (
-                entry.products?.includes("ICE") ||
-                entry.products?.includes("EC_IC") ||
-                entry.products?.includes("IR") ||
-                entry.products?.includes("REGIONAL") ||
-                entry.products?.includes("SBAHN")
-            ) {
+                    entry.products?.nationalExpress ||
+                    entry.products?.national ||
+                    entry.products?.interregional ||
+                    entry.products?.regional || 
+                    entry.products?.suburban 
+                ) {
 		
 				// Create a div with class "suggestion"
 				const suggestionDiv = document.createElement('div');
@@ -173,7 +173,7 @@
 
 				// Create an anchor element with a link based on the selected search type (departure or arrival)
 				const link = document.createElement('a');
-				link.href = `station.html?station=${entry.extId}`;
+				link.href = `station.html?station=${entry.id}`;
 
 				// If suburban is true, append an image to the link with class "bigicon"
 				if (isSuburban) {

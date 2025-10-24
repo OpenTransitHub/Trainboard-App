@@ -107,7 +107,7 @@
 		const disableTouch = document.getElementById('disableTouchCheckbox').checked;
         let apiUrl;
 
-            apiUrl = `https://data.cuzimmartin.dev/v1/db/location?search=${userInput}`;
+            apiUrl = `https://data.cuzimmartin.dev/oebb-locations?query=${userInput}`;
         
         if (hideNavbar) {
             apiUrl += '&navbar=hide';
@@ -138,15 +138,15 @@
 
         data.forEach(entry => {
             // Check if suburban is true
-            const isSuburban = entry.products?.includes("SBAHN");
-            const isRegional = entry.products?.includes("REGIONAL");    
+            const isSuburban = entry.products?.suburban;
+                const isRegional = entry.products?.regional;
             
-            if (
-                entry.products?.includes("ICE") ||
-                entry.products?.includes("EC_IC") ||
-                entry.products?.includes("IR") ||
-                entry.products?.includes("REGIONAL") ||
-                entry.products?.includes("SBAHN")
+           if (
+                entry.products?.nationalExpress ||
+                entry.products?.national ||
+                entry.products?.interregional ||
+                entry.products?.regional || 
+                entry.products?.suburban 
             ) {
             
                 // Create a div with class "suggestion"
@@ -160,11 +160,11 @@
                 // Create an anchor element with a link based on the selected search type (departure, arrival, or suburban)
                 const link = document.createElement('a');
                 if (searchType === 'departure') {
-                    link.href = `departure.html?station=${entry.extId}`;
+                    link.href = `departure.html?station=${entry.id}`;
                 } else if (searchType === 'arrival') {
-                    link.href = `arrival.html?station=${entry.extId}`;
+                    link.href = `arrival.html?station=${entry.id}`;
                 } else if (searchType === 'suburban') {
-                    link.href = `suburban.html?station=${entry.extId}`;
+                    link.href = `suburban.html?station=${entry.id}`;
                 }
 
                 // Add navbar=hide to the link if hideNavbar is true
