@@ -445,7 +445,7 @@ if (localStorage.getItem('twlng') === 'false') {
     const span = document.getElementById("providerselect");
     span.innerHTML = `
 		<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/provider.svg"></div><div class="listitemtext">Provider<br><small class="disabled">Du kannst verschiedene Datenlieferanten für Trainboard auswählen. Je nach Anbieter sind möglicherweise nicht alle Funktionen verfügbar.</small></div></div>
-		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="providericon noinvert"> </div><div class="listitemtext"><a href="setprovider.html">${provider.providerName}</a><br><small class="disabled">Aktuell ausgewählt</small></div><div class="listimagecontainer"><a href="setprovider.html"><img src="./assets/icons/arrow-right.svg"></a></div></div>
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="listlogo noinvert"> </div><div class="listitemtext"><a href="setprovider.html">${provider.providerName}</a><br><small class="disabled">Aktuell ausgewählt</small></div><div class="listimagecontainer"><a href="setprovider.html"><img src="./assets/icons/arrow-right.svg"></a></div></div>
 		`;
   });
 

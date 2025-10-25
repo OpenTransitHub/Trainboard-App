@@ -2602,6 +2602,7 @@ top: 0px;
 
 .listimagecontainer {
     height: 45px;
+    min-width: 45px;
     width: 45px;
     border-radius: 200px !important;
     display: flex;
@@ -2614,6 +2615,11 @@ top: 0px;
 
 .listimagecontainer img {
     height: 30px;
+}
+
+.listimagecontainer .listlogo {
+    border-radius: 5px;
+    border: 2px solid #fff;
 }
 
 .listimagecontainer .fillimg {

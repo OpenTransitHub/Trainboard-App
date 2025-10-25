@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const span = document.getElementById("providerselect");
 	span.innerHTML = `
-		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="providericon noinvert"> </div><div class="listitemtext">${provider.providerName}<br><small class="disabled">Aktuell ausgewählt</small></div></div>
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="listlogo noinvert"> </div><div class="listitemtext">${provider.providerName}<br><small class="disabled">Aktuell ausgewählt</small></div></div>
 	`;
 });
 
@@ -89,18 +89,18 @@ document.addEventListener("DOMContentLoaded", () => {
 	const container = document.getElementById("providerList");
 
 	providers.forEach(p => {
-		let indicatorHTML = "";
+		let indicatorHTML = `<div class="listimagecontainer"><img src="./assets/icons/checkbox.svg" class="noinvert"></div>`;
 
 		if (p.providerID === currentProvider.providerID) {
 			indicatorHTML = `
-				<div class="listimagecontainer"><img src="./assets/icons/check.svg" class="noinvert"></div>
+				<div class="listimagecontainer"><img src="./assets/icons/checkedimg.svg" class="noinvert"></div>
 			`;
 		}
 
 		container.innerHTML += `
 			<div class="listitem  provider cursorpointer"  data-id="${p.providerID}" data-name="${p.providerName}">
 				<div class="listimagecontainer">
-					<img src="./assets/providerLogos/${p.providerID}.svg" class="providericon noinvert"> 
+					<img src="./assets/providerLogos/${p.providerID}.svg" class="noinvert listlogo"> 
 				</div>
 				<div class="listitemtext">
 					${p.providerName}<br><small class="disabled">${p.region}</small>
