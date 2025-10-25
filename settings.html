@@ -23,6 +23,12 @@
 	
 <div class="textonly">
 
+	<h3>Region</h3>
+	<div class="listcontainer" id="providerselect">
+
+	</div>
+
+	<br>
 	<h3>Style</h3>
 	<div class="listcontainer">
 		<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/wallpaper.svg"></div><div class="listitemtext">Wallpaper<br><small class="disabled">Das gewählte Bild wird auf der Startseite angezeigt.</small></div></div>
@@ -418,6 +424,30 @@ if (localStorage.getItem('twlng') === 'false') {
 
 	// Beim Laden der Seite ausführen
 	document.addEventListener('DOMContentLoaded', checkConnection);
+
+
+
+	// Get the Region
+	document.addEventListener("DOMContentLoaded", () => {
+    const providerKey = "provider";
+    let provider = localStorage.getItem(providerKey);
+
+    if (!provider) {
+      provider = {
+        providerName: "Deutsche Bahn",
+        providerID: "de"
+      };
+      localStorage.setItem(providerKey, JSON.stringify(provider));
+    } else {
+      provider = JSON.parse(provider);
+    }
+
+    const span = document.getElementById("providerselect");
+    span.innerHTML = `
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/provider.svg"></div><div class="listitemtext">Provider<br><small class="disabled">Du kannst verschiedene Datenlieferanten für Trainboard auswählen. Je nach Anbieter sind möglicherweise nicht alle Funktionen verfügbar.</small></div></div>
+		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="providericon noinvert"> </div><div class="listitemtext"><a href="setprovider.html">${provider.providerName}</a><br><small class="disabled">Aktuell ausgewählt</small></div><div class="listimagecontainer"><a href="setprovider.html"><img src="./assets/icons/arrow-right.svg"></a></div></div>
+		`;
+  });
 
 </script>
 

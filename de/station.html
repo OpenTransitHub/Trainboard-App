@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="title">Bahnhof</title>
-    <link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/dark-styles.css">
-    <link rel="stylesheet" href="./assets/css/line-colors.css">
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
     <link rel="manifest" href="/manifest.json" type="application/json">
     <meta name="theme-color" content="#000">
     <meta name="robots" content="noindex">
@@ -18,7 +18,7 @@
 
 <body class="bodyWithPopup coloredbody fixednavbar">
 
-<script src="./assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
 <center>
     <noscript> You need to enable JavaScript to run this app.</noscript>
 
@@ -73,7 +73,7 @@
 
 				<div class="listcontainer">
 					<div class="listitem">
-						<div class="listimagecontainer"><img src="./assets/icons/kichange.svg"></div>
+						<div class="listimagecontainer"><img src="../assets/icons/kichange.svg"></div>
 						<div class="listitemtext">
 							Umsteigezeit<br>
 							<small class="disabled">KI-unterstützte Schätzung</small>
@@ -167,13 +167,13 @@ const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' 
 
 
 						if (data.segments && Array.isArray(data.segments)) {
-							transferwayContainer.innerHTML = `<div class="imagepoint"><img src="./assets/icons/path-start.svg" class="pathicon"><span>Gleis ${startValue}</span><small class="disabled">Losgehen</small></div>`;
+							transferwayContainer.innerHTML = `<div class="imagepoint"><img src="../assets/icons/path-start.svg" class="pathicon"><span>Gleis ${startValue}</span><small class="disabled">Losgehen</small></div>`;
 							data.segments.forEach(segment => {
 								console.log(`Type: ${segment.type}, Distance: ${segment.distance}`);
 
-								transferwayContainer.innerHTML += `<div class="imagepoint"><img src="./assets/icons/path-${segment.type}.svg" class="pathicon"><span>${segment.type.replace('stairs', 'Treppe').replace('elevator', 'Aufzug').replace('escalator', 'Fahrtreppe').replace('walk', 'Gehen')}</span><small class="disabled">${segment.distance}m</small></div>`;
+								transferwayContainer.innerHTML += `<div class="imagepoint"><img src="../assets/icons/path-${segment.type}.svg" class="pathicon"><span>${segment.type.replace('stairs', 'Treppe').replace('elevator', 'Aufzug').replace('escalator', 'Fahrtreppe').replace('walk', 'Gehen')}</span><small class="disabled">${segment.distance}m</small></div>`;
 							});
-							transferwayContainer.innerHTML += `<div class="imagepoint"><img src="./assets/icons/path-end.svg" class="pathicon"><span>Gleis ${endValue}</span><small class="disabled">Ankommen</small></div>`;
+							transferwayContainer.innerHTML += `<div class="imagepoint"><img src="../assets/icons/path-end.svg" class="pathicon"><span>Gleis ${endValue}</span><small class="disabled">Ankommen</small></div>`;
 						}
 
 
@@ -236,7 +236,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	if (localStorage.getItem('maps') === 'false') {
 		document.getElementById('detailscontainer').innerHTML += `
 		<div class="listitem">
-				<div class="listimagecontainer"><img src="./assets/icons/directions.svg"></div>
+				<div class="listimagecontainer"><img src="../assets/icons/directions.svg"></div>
 				<div class="listitemtext">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></div>
 			</a>
 		</div>
@@ -244,7 +244,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	} else {
 		document.getElementById('detailscontainer').innerHTML += `
 		<div class="listitem">
-				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="./assets/icons/directions.svg"></a></div>
+				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="../assets/icons/directions.svg"></a></div>
 				<div class="listitemtext"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}" class="black">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></a></div>
 			</a>
 		</div>
@@ -253,7 +253,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
 	document.getElementById('detailscontainer').innerHTML += `
 		<div class="listitem">
-				<div class="listimagecontainer"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf"><img src="./assets/icons/sevlogo.svg" class="fillimg"></a></div>
+				<div class="listimagecontainer"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf"><img src="../assets/icons/sevlogo.svg" class="fillimg"></a></div>
 				<div class="listitemtext"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf" class="black">Umgebungsplan<br><small class="disabled">Zugang zum SEV</small></a></div>
 			</a>
 		</div>
@@ -279,7 +279,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
 	featureList.forEach(feature => {
 		if (data[feature.key] === true) {
-			features.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainer${feature.color}"><img src="./assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+			features.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainer${feature.color}"><img src="../assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
 		}
 	});
 	
@@ -296,7 +296,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
 	serviceList.forEach(service => {
 		if (data[service.key] === true || (service.key === 'DBinformation' && service.key in data)) {
-			services.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/${service.icon}"></div><div class="listitemtext">${service.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+			services.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="../assets/icons/${service.icon}"></div><div class="listitemtext">${service.text}<br><small class="disabled">Vorhanden</small></div></div>`;
 		}
 	});
 
@@ -315,8 +315,8 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 			
 			document.getElementById('detailscontainer').innerHTML += `
 				<div class="listitem">
-						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
-						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
+						<div class="listimagecontainer"><a href="../weather.html?city=${data.mailingAddress.city}"><img src="../assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listitemtext"><a href="../weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
 					</a>
 				</div>
 			`
@@ -325,7 +325,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 		} else {
 			document.getElementById('detailscontainer').innerHTML += `
 				<div class="listitem">
-						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="./assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="../assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
 						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a></div>
 					</a>
 				</div>
@@ -360,7 +360,7 @@ fetch('https://traincats.io/catsdata.json')
 				<br>
 				<div class="listcontainer">
 					<div class="listitem">
-						<div class="listimagecontainer"><img src="./assets/icons/cat.svg"></div>
+						<div class="listimagecontainer"><img src="../assets/icons/cat.svg"></div>
 						<div class="listitemtext">Bahnhofskatze<br><small class="disabled">Von <a href="${matchingCat.sociallink}"><u class="disabled">@${matchingCat.socialname}</u></a></small></div>
 					</div>
 					<img src="https://traincats.io/assets/cats/${matchingCat.filename}" class="catPic">

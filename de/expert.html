@@ -4,9 +4,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Expertenmodus</title>
-	<link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/line-colors.css">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
+	<link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
 	<link rel="manifest" href="/manifest.json" type="application/json" >
 	<meta name="theme-color" content="#000">
 	<meta name="description" content="Erweiterte Abfahrts- und Ankunftstafel für Deutsche Bahnhöfe.">
@@ -15,9 +15,9 @@
 
 <body class="home fixednavbar">
 
-<script src="./assets/src/widgets.js"></script>
-<script src="./assets/src/pinnedPopup.js"></script>
-<script src="./assets/src/twlngPopup.js"></script>
+<script src="../assets/src/widgets.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/twlngPopup.js"></script>
 
 
 
@@ -26,12 +26,12 @@
 	<nav id="navbar" style="width: calc(100% - 20px); position: fixed; top: 0px;">
         <div class="tabs"><span class="active" id="tabcontent">&nbsp;Legacy Anzeigekonfiguration&nbsp;</span></div>
         <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen&nbsp;&nbsp;&nbsp;</a></div>
-        <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div>
+        <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div>
     </nav>
 	 
-	<br><br><br><br>
+	<br>
 
-    <table class="nameholder"><tr><td><img src="./assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
+    <table class="nameholder"><tr><td><img src="../assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
 
 	<div class="searchcontainer">
 		<div class="container">
@@ -193,7 +193,7 @@
                 // If suburban is true, append an image to the link with class "bigicon"
                 if (isSuburban) {
                     const img = document.createElement('img');
-                    img.src = './assets/icons/sbahn.svg';
+                    img.src = '../assets/icons/sbahn.svg';
                     img.alt = 'Suburban Icon';
                     img.classList.add('bigicon');
 					img.classList.add('inverted');
@@ -202,7 +202,7 @@
                 
                 if (isRegional) {
                     const img = document.createElement('img');
-                    img.src = './assets/icons/rail.svg';
+                    img.src = '../assets/icons/rail.svg';
                     img.alt = 'Rail Icon';
                     img.classList.add('bigicon');
 					img.classList.add('inverted');
@@ -226,7 +226,7 @@
     fetchAndDisplayData();
 </script>
 
-<script type="text/javascript" src="./assets/src/backgroundimage.js"></script>
+<script type="text/javascript" src="../assets/src/backgroundimage.js"></script>
 
 	
 </center>

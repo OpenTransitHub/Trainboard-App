@@ -6,7 +6,7 @@ if (localStorage.getItem("selectedWallpaper") !== null) {
       imgname = 'wallpaper' + (Math.floor(Math.random() * 5) + 1);
     }
 
-    document.body.style.backgroundImage = `url('./assets/wallpapers/${imgname}.jpg')`;
+    document.body.style.backgroundImage = `url('../assets/wallpapers/${imgname}.jpg')`;
   
     if (imgname === 'wallpaper1') {
       document.body.style.backgroundPositionX = 'center';
@@ -29,7 +29,7 @@ if (localStorage.getItem("selectedWallpaper") !== null) {
     
 
 } else {
-    document.body.style.backgroundImage = `url('./assets/wallpapers/wallpaper1.jpg')`;
+    document.body.style.backgroundImage = `url('../assets/wallpapers/wallpaper1.jpg')`;
     document.body.style.backgroundPositionX = 'center';
 }
 

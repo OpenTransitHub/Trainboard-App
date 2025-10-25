@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="title">Zuginformationen</title>
-    <link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/dark-styles.css">
-    <link rel="stylesheet" href="./assets/css/line-colors.css">
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-    <link rel="manifest" href="/manifest.json" type="application/json">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+    <link rel="manifest" href="../manifest.json" type="application/json">
     <meta name="theme-color" content="#000">
     <meta name="robots" content="noindex">
 
@@ -25,7 +25,7 @@
 
 <div id="map"></div>
 <div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
-    <img src="./assets/whiteSpinner.svg" class="loadingspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
+    <img src="../assets/whiteSpinner.svg" class="loadingspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
     <span class="bigonly">Karte laden...</span>
 </div>
 
@@ -37,7 +37,7 @@
                 <div class="blanktable">
                     <div class="tripcontainer wide">
 
-                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-left: 4px;"><small class="disabled" id="trainTitle"></small></td><td class="wide"></td><td><div class="warnchip chip iconchip hidden" id="trip-warning-counter-button">0</div></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important; padding-top: 5px !important;"><img src="./assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
+                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-left: 4px;"><small class="disabled" id="trainTitle"></small></td><td class="wide"></td><td><div class="warnchip chip iconchip hidden" id="trip-warning-counter-button">0</div></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important; padding-top: 5px !important;"><img src="../assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
                         <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
 
                         <br>
@@ -94,7 +94,7 @@
 
 
             <!-- Modal -->
-            <small class="secondary" id="tripStatus"><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></small><br><br>
+            <small class="secondary" id="tripStatus"><img src="../assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></small><br><br>
         </div>
 
 
@@ -119,7 +119,7 @@
         </div>
 
         <div class="tab tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
-            <div id="loadingConstructions"><div class="listcontainer"><div class="listitem"><div class="listitemtext" style="width: 100%;"><center><br><img src="./assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.<br><br></center></div></div></div></div>
+            <div id="loadingConstructions"><div class="listcontainer"><div class="listitem"><div class="listitemtext" style="width: 100%;"><center><br><img src="../assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.<br><br></center></div></div></div></div>
 
             <div class="listcontainer" id="constructions">
 
@@ -349,7 +349,7 @@
                     polylineData.polyline.features.forEach(feature => {
                         if (feature.geometry.type === "Point" && feature.properties.type === "stop") {
                             const stopMarker = document.createElement('img');
-                            stopMarker.src = './assets/icons/stop-marker.svg';
+                            stopMarker.src = '../assets/icons/stop-marker.svg';
                             stopMarker.style.width = '10px';
                             stopMarker.style.height = '10px';
 
@@ -366,7 +366,7 @@
                         const currentLocation = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
 
                         const imageMarker = document.createElement('img');
-                        imageMarker.src = './assets/icons/mapmarker.svg';
+                        imageMarker.src = '../assets/icons/mapmarker.svg';
                         imageMarker.style.width = '40px';
                         imageMarker.style.height = '40px';
 
@@ -466,7 +466,7 @@
 
                     constructionsList.innerHTML += `
                     <div class="listitem">
-                        <div class="listimagecontainer listimagecontainer${constructioncolor}"><img src="./assets/icons/${baustellen.wirkung}.svg"></div>
+                        <div class="listimagecontainer listimagecontainer${constructioncolor}"><img src="../assets/icons/${baustellen.wirkung}.svg"></div>
                         <div class="listitemtext">
                             ${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div>
                         </div>
@@ -479,11 +479,11 @@
                 const baustellenCount = constructionData.baustellen.length;
                 document.getElementById('trackTab').innerHTML = `Strecke <span class=\"pill\">&nbsp;${baustellenCount}&nbsp;</span>`;
             } else {
-                document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="./assets/icons/check.svg" class="bigicon"><h3>Freie Fahrt</h3>Für diese Strecke liegen keine Meldungen vor.</center><br></div></div>`;
+                document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="../assets/icons/check.svg" class="bigicon"><h3>Freie Fahrt</h3>Für diese Strecke liegen keine Meldungen vor.</center><br></div></div>`;
             }
         } catch (error) {
             console.error("Fehler beim Laden der Baustellen:", error);
-            document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="./assets/icons/finderror.svg" class="bigicon"><h3>Fehler</h3>Wir konnten keine Streckeninformationen abrufen.</center><br></div></div>`;
+            document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="../assets/icons/finderror.svg" class="bigicon"><h3>Fehler</h3>Wir konnten keine Streckeninformationen abrufen.</center><br></div></div>`;
         }
     }
 
@@ -555,7 +555,7 @@
             profileUsed = 'dynamic';
         }
 
-        document.getElementById('logo').innerHTML = `<img src="./assets/providerLogos/${data.provider}.svg" class="trip-logo" title="Die Datenquelle steht in keinerlei Verbindung mit diesem Projekt. Die Daten können Fehler aufweisen.">`;
+        document.getElementById('logo').innerHTML = `<img src="../assets/providerLogos/${data.provider}.svg" class="trip-logo" title="${data.provider} Logo">`;
 
         if (!data) {
             console.error('Fehler beim Abrufen der Trip-Daten.');
@@ -564,7 +564,7 @@
                 <nav id="navbar">
                     <div class="tabs"><span class="active">&nbsp;Zuginformationen&nbsp;</span></div>
                     <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
-                    <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div>
+                    <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div>
                 </nav>
 
                 <center>
@@ -777,9 +777,9 @@
                 stopElement.style.setProperty('--progress-px', `${40 / 100 * (progressPercentage - 1) - 45}px`);
                 stopElement.innerHTML = `
                 <picture>
-                    <source srcset="./assets/icons/train-top-dark.svg" media="(prefers-color-scheme: dark)">
-                    <source srcset="./assets/icons/train-top.svg" media="(prefers-color-scheme: light)">
-                    <img src="./assets/icons/train-top.svg" alt="Location" class="trainposition">
+                    <source srcset="../assets/icons/train-top-dark.svg" media="(prefers-color-scheme: dark)">
+                    <source srcset="../assets/icons/train-top.svg" media="(prefers-color-scheme: light)">
+                    <img src="../assets/icons/train-top.svg" alt="Location" class="trainposition">
                 </picture>
                 `;
             }
@@ -824,7 +824,7 @@
                 <span class="trip-platform">${(stop.arrivalPlatform || stop.departurePlatform) ? `Gl&nbsp;${stop.arrivalPlatform || stop.departurePlatform}` : '-'}</span>
             </div>
             <div class="connection-cell">
-                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="./assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="./assets/icons/placeholder.svg">'}
+                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="../assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="../assets/icons/placeholder.svg">'}
             </div>
         `;
             } else {
@@ -851,7 +851,7 @@
                 <span class="trip-platform">${(stop.arrivalPlatform || stop.departurePlatform) ? `Gl&nbsp;${stop.arrivalPlatform || stop.departurePlatform}` : '-'}</span>
             </div>
             <div class="connection-cell">
-                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="./assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="./assets/icons/placeholder.svg">'}
+                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="../assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="../assets/icons/placeholder.svg">'}
             </div>
         `;
             }
@@ -945,7 +945,7 @@
                 const code = remark.code || 'default';
                 remarks.innerHTML += (`
                 <div class="listitem">
-                    <div class="listimagecontainer"><img src="./assets/icons/remark${code}.svg"></div>
+                    <div class="listimagecontainer"><img src="../assets/icons/remark${code}.svg"></div>
                     <div class="listitemtext">${sanitizeText(remark.text)}</div>
                 </div>`);
             });
@@ -1035,7 +1035,7 @@
                 `https://materialtrains.unibits.eu/vehicles/deutschebahn/${category}-${vehicleId}${suffix}.png`,
                 `https://materialtrains.unibits.eu/vehicles/deutschebahn/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
                 `https://materialtrains.unibits.eu/vehicles/deutschebahn/blank-${typeDetailsCategory}${suffix}.png`,
-                `./assets/icons/blankvehicle.png`
+                `../assets/icons/blankvehicle.png`
             ];
 
             const img = document.createElement("img");

@@ -4,11 +4,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Bahnhof</title>
-	<link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/dark-styles.css">
-	<link rel="stylesheet" href="./assets/css/line-colors.css">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-	<link rel="manifest" href="/manifest.json" type="application/json" >
+	<link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+	<link rel="stylesheet" href="../assets/css/line-colors.css">
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+	<link rel="manifest" href="../manifest.json" type="application/json" >
 	<meta name="theme-color" content="#000">
 	<meta name="description" content="Abfahrts- und Ankunftstafel für Deutsche Bahnhöfe.">
 	<meta name="keywords" content="bahn, db, bahnhof, deutschebahn, trainboard, abfahrtstafel, train, abfahrt, ankunft" />
@@ -41,9 +41,9 @@
 
 <body class="home fixednavbar">
 
-<script src="./assets/src/widgets.js"></script>
-<script src="./assets/src/pinnedPopup.js"></script>
-<script src="./assets/src/twlngPopup.js"></script>
+<script src="../assets/src/widgets.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/twlngPopup.js"></script>
 
 <!-- Info Popup -->
 <div class="popuplinks">
@@ -54,7 +54,7 @@
 
     <div class="content">
         
-        <img src="./assets/branding/icon-72x72.png" class="aboutlogo"><br>
+        <img src="../assets/branding/icon-72x72.png" class="aboutlogo"><br>
         <small>Trainboard is a project by <a href="https://github.com/OpenTransitHub"><u>Open Transit Hub</u></a> at <a href="https://unibits.eu/"><u>unibits.eu</u></a></small>
 
         <br><br>
@@ -62,12 +62,12 @@
         <div class="listcontainer">
             <div class="listitem">
                 <div class="listimagecontainer">
-                    <a href="about.html">
-                        <img src="./assets/icons/about.svg">
+                    <a href="../about.html">
+                        <img src="../assets/icons/about.svg">
                     </a>
                 </div>
                 <div class="listitemtext">
-                    <a href="about.html">
+                    <a href="../about.html">
                         About
                     </a>
                 </div>
@@ -75,12 +75,12 @@
 
             <div class="listitem">
                 <div class="listimagecontainer">
-                    <a href="settings.html">
-                        <img src="./assets/icons/settings.svg">
+                    <a href="../settings.html">
+                        <img src="../assets/icons/settings.svg">
                     </a>
                 </div>
                 <div class="listitemtext">
-                    <a href="settings.html">
+                    <a href="../settings.html">
                         Einstellungen
                     </a>
                 </div>
@@ -89,7 +89,7 @@
              <div class="listitem">
                 <div class="listimagecontainer">
                     <a href="https://github.com/hoolycrash/trainboard">
-                        <img src="./assets/icons/github.svg">
+                        <img src="../assets/icons/github.svg">
                     </a>
                 </div>
                 <div class="listitemtext">
@@ -118,11 +118,19 @@
 	 
 	<br> <br class="bigonly">
 
-    <table class="nameholder"><tr><td><img src="./assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
+    <table class="nameholder"><tr><td><img src="../assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
 
 	<div class="searchcontainer">
 		<div class="container">
+
+            <div class="left-div">
+               <div class="switchcontainer">
+                    <a href="../setprovider.html"><div class="spacer"><img src="../assets/providerLogos/DB.svg" class="providericon"> <small><small>Gewählte Datenquelle:</small><br>Deutsche Bahn</small><img src="../assets/icons/configure.svg"></div></a>
+               </div>
+            </div>
+            <div class="right-div stackatbottom">
 				<input class="searchbar" type="text" autocomplete="off" id="searchInput" placeholder="Suche nach Station" oninput="searchLocations()" autofocus>
+            </div>
 
 		</div>
 	
@@ -135,6 +143,15 @@
   <br>
   
 <script>
+
+    // Switch to prefered Provider Suite
+    const id="de"
+    let p=localStorage.getItem("provider")
+    if(!p){p={providerName:"Deutsche Bahn",providerID:"de"};localStorage.setItem("provider",JSON.stringify(p))}
+    else p=JSON.parse(p)
+    if(p.providerID!==id)location.href=`../${p.providerID}/index.html`
+
+
 	function searchLocations() {
 		const userInput = document.getElementById('searchInput').value;
 		const apiUrl = `https://data.cuzimmartin.dev/oebb-locations?query=${userInput}`;
@@ -178,7 +195,7 @@
 				// If suburban is true, append an image to the link with class "bigicon"
 				if (isSuburban) {
 					const img = document.createElement('img');
-					img.src = './assets/icons/sbahn.svg';
+					img.src = '../assets/icons/sbahn.svg';
 					img.alt = 'Suburban Icon';
 					img.classList.add('bigicon');
 					img.classList.add('inverted');
@@ -187,7 +204,7 @@
 				
 				if (isRegional) {
 					const img = document.createElement('img');
-					img.src = './assets/icons/rail.svg';
+					img.src = '../assets/icons/rail.svg';
 					img.alt = 'Rail Icon';
 					img.classList.add('bigicon');
 					img.classList.add('inverted');
@@ -215,7 +232,7 @@
 
   </script>
   
-  <script type="text/javascript" src="./assets/src/backgroundimage.js"></script>
+  <script type="text/javascript" src="../assets/src/backgroundimage.js"></script>
   
 </center>
 </body>

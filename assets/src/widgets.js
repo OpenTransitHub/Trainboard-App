@@ -17,7 +17,7 @@
                         <div class="linebadge" id="Pinnedlinebadge""></div>
                     </div>
                     <div class="chip" style="margin-right: 0px;">
-                        <img src="./assets/icons/addedtrain.svg" class="widgeticon"> <small>Angeheftet</small>
+                        <img src="../assets/icons/addedtrain.svg" class="widgeticon"> <small>Angeheftet</small>
                     </div>
                 </div>
                 <div class="trip-progress-bar">
@@ -63,7 +63,7 @@
                             <div class="linebadge" id="twlnglinebadge"></div>
                         </div>
                         <div class="chip" style="margin-right: 0px;">
-                            <img src="./assets/icons/twlng.png" class="widgeticon"> <small>Träwelling</small>
+                            <img src="../assets/icons/twlng.png" class="widgeticon"> <small>Träwelling</small>
                         </div>
                     </div>
                     <div class="trip-progress-bar">

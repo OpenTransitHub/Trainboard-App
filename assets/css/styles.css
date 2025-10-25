@@ -243,7 +243,7 @@ h3 {
     animation: wiggle 0.5s ease-in-out;
 }
 
-.addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip {
+.addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip, .editChip {
     background-color: #ffffff1f !important;
     color: #fff;  
     flex: 0 0 auto;
@@ -268,7 +268,7 @@ h3 {
     margin-bottom: 4px;
 }
 
-.addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip {
+.addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip, .editChip {
     cursor: pointer;
 
 }
@@ -291,6 +291,11 @@ h3 {
 
 .webfisChip {
     background-image: url(../icons/webFIS.svg);
+}
+
+.editChip {
+    background-image: url(../icons/configure.svg);
+    background-color: #007bff !important;
 }
 
 
@@ -1014,15 +1019,36 @@ input[type=number] {
     outline: none;
 }
 
-.switch-container {
-    display: flex;
-    border-radius: 10px;
-    margin: 17px;
+.switchcontainer {
+    background-color: #ffffff1e;
+    border-radius: 12px;
+    margin: 10px;
+    padding: 10px;
+    overflow: hidden;
+    text-align: left;
 }
 
-input[type="radio"] {
-    display: none;
+.spacer {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+    flex-wrap: nowrap; 
 }
+
+.spacer img {
+    flex-shrink: 0;
+}
+
+.providericon {
+    background-color: #fff;
+    border-radius: 5px !important;
+    height: 26px;
+    width: 26px;
+    border: solid 3px #fff;
+    margin-left: 4px;
+}
+
+
 
 .coacheswrapper {
     width: 100%;
@@ -1322,6 +1348,13 @@ color: #202020;
     margin-left: 20px;
 }
 
+.searchcontainer .container .left-div {
+    flex: unset;
+    min-width: unset;
+    margin-left: unset;
+    width: fit-content;
+}
+
 .right-div {
     flex: 1;
     order: -1; /* Ändert die Reihenfolge, um nach oben zu gehen */
@@ -1558,7 +1591,7 @@ td {
     }
 
     .stacktobottom {
-        order: 1; /* Zurücksetzen der Reihenfolge auf den Standardwert */
+        order: 2 !important; /* Zurücksetzen der Reihenfolge auf den Standardwert */
     }
 
     .left-div, .right-div {

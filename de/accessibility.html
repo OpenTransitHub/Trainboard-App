@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="title">Bahnhof - Barrierefreiheit</title>
-    <link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/dark-styles.css">
-    <link rel="stylesheet" href="./assets/css/line-colors.css">
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
     <link rel="manifest" href="/manifest.json" type="application/json">
     <meta name="theme-color" content="#000">
     <meta name="robots" content="noindex">
@@ -18,7 +18,7 @@
 
 <body class="bodyWithPopup coloredbody fixednavbar">
 
-<script src="./assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
     <noscript> You need to enable JavaScript to run this app.</noscript>
 
     <nav id="navbar">
@@ -86,7 +86,7 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	
 	data.facilities.forEach(facility => {
 		if (facility.state === 'INACTIVE') {
-			facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainerred"><img src="./assets/icons/${facility.type}.svg"></div><div class="listitemtext">${(facility.type === "ESCALATOR" ? "Fahrtreppe" : (facility.type === "ELEVATOR" ? "Aufzug" : facility.type)) + " " + facility.description}<br><small class="disabled">Außer Betrieb - ${facility.operatorname}</small></div></div>`;
+			facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainerred"><img src="../assets/icons/${facility.type}.svg"></div><div class="listitemtext">${(facility.type === "ESCALATOR" ? "Fahrtreppe" : (facility.type === "ELEVATOR" ? "Aufzug" : facility.type)) + " " + facility.description}<br><small class="disabled">Außer Betrieb - ${facility.operatorname}</small></div></div>`;
  			++facilityInactiveCounter;
 		} else {
 			++facilityActiveCounter;
@@ -99,10 +99,10 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 	console.log('Active: '+  facilityActiveCounter)
 	
 	if (facilityActiveCounter === 1) {
-		facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainergreen"><img src="./assets/icons/facilityActive.svg"></div><div class="listitemtext"><b>${facilityActiveCounter}</b> Anlage in Betrieb</div></div>`;
+		facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainergreen"><img src="../assets/icons/facilityActive.svg"></div><div class="listitemtext"><b>${facilityActiveCounter}</b> Anlage in Betrieb</div></div>`;
 
 	} else {
-		facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainergreen"><img src="./assets/icons/facilityActive.svg"></div><div class="listitemtext"><b>${facilityActiveCounter}</b> Anlagen in Betrieb</div></div>`;
+		facilitieslist.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainergreen"><img src="../assets/icons/facilityActive.svg"></div><div class="listitemtext"><b>${facilityActiveCounter}</b> Anlagen in Betrieb</div></div>`;
 	}
 	
 	
@@ -143,14 +143,14 @@ fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
 
           for (const [feature, status] of Object.entries(platformData.accessibility)) {
             if (status === "AVAILABLE") {
-			  document.getElementById('anemeties').innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/${feature}.svg"></div><div class="listitemtext">${feature.replace("audibleSignalsAvailable", "Lautsprecheranlage").replace("passengerInformationDisplay", "Zuganzeiger").replace("standardPlatformHeight", "Bahnsteighöhe ≥ 55cm").replace("platformSign", "Kontrastreiche Wegeleitung").replace("stairsMarking", "Treppenstufenmarkierung").replace("stepFreeAccess", "Stufenfreier Zugang").replace("tactilePlatformAccess", "Taktiler Weg zum Bahnsteig").replace("tactileHandrailLabel", "Taktile Handlaufbeschilderung").replace("tactileGuidingStrips", "Taktiler Weg auf dem Bahnsteig")}<br><small class="disabled">Vorhanden</small></div></div>`;
+			  document.getElementById('anemeties').innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="../assets/icons/${feature}.svg"></div><div class="listitemtext">${feature.replace("audibleSignalsAvailable", "Lautsprecheranlage").replace("passengerInformationDisplay", "Zuganzeiger").replace("standardPlatformHeight", "Bahnsteighöhe ≥ 55cm").replace("platformSign", "Kontrastreiche Wegeleitung").replace("stairsMarking", "Treppenstufenmarkierung").replace("stepFreeAccess", "Stufenfreier Zugang").replace("tactilePlatformAccess", "Taktiler Weg zum Bahnsteig").replace("tactileHandrailLabel", "Taktile Handlaufbeschilderung").replace("tactileGuidingStrips", "Taktiler Weg auf dem Bahnsteig")}<br><small class="disabled">Vorhanden</small></div></div>`;
             }
           }
 
           platformData.heights.forEach(h => {
             console.log("Höhe:", h.height);
 
-			document.getElementById('anemeties').innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="./assets/icons/standardPlatformHeight.svg"></div><div class="listitemtext">${h.height} cm<br><small class="disabled">Bahnsteighöhe</small></div></div>`;
+			document.getElementById('anemeties').innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="../assets/icons/standardPlatformHeight.svg"></div><div class="listitemtext">${h.height} cm<br><small class="disabled">Bahnsteighöhe</small></div></div>`;
 
           });
         }
