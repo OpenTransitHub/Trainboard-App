@@ -1350,7 +1350,6 @@ color: #202020;
 
 .searchcontainer .container .left-div {
     flex: unset;
-    min-width: unset;
     margin-left: unset;
     width: fit-content;
 }
