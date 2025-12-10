@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Bahnhof</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+    <link rel="manifest" href="/manifest.json" type="application/json">
+    <meta name="theme-color" content="#000">
+    <meta name="robots" content="noindex">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body class="bodyWithPopup coloredbody fixednavbar">
+
+<script src="../assets/src/pinnedPopup.js"></script>
+<center>
+    <noscript> You need to enable JavaScript to run this app.</noscript>
+
+    <nav id="navbar">
+			<div class="tabs" id="tabs">
+				<a href="#" class="active">&nbsp;Bahnhof&nbsp;</a>
+				
+			</div>
+            <div class="iconbar"><a class="navsearch" href="stationsearch.html">Bahnhofsuche</a></div>
+	</nav>
+
+    <br><br>
+	
+	<div id="errorbox" class="hidden">
+		<h1>&#128557;</h1>
+		<h3>Es ist ein Fehler aufgetreten.</h3>
+		<p>Bitte überprüfe ob diese Station durch <i>DB Infrago</i> betrieben wird.</p>
+		<p><a href="stationsearch.html"><u>Bahnhofsuche</u></a></p>
+	</div>
+	
+    <div id="blanktext" class="coloredspace">
+        <div class="container blanktext">
+            <div class="left-div">
+			
+				<h3>Ausstattung</h3>
+				<div class="listcontainer" id="features">
+
+				</div>
+
+				<br>
+				
+				<h3 id="serviceheader">Services</h3>
+				<div class="listcontainer" id="services">
+
+				</div>
+				
+            </div>
+            <div class="right-div lineview">
+				<div id="stationimage" class="stationimage">
+					<div class="stationimagecontent" >
+						<span class="stationname" id="stationname">Lade Daten...</span><br>
+						<small id="productline"></small>
+						
+					</div>
+				</div>
+                <br>
+				<div class="listcontainer" id="detailscontainer">
+					
+				</div>
+
+				<br>
+
+				<div class="listcontainer">
+					<div class="listitem">
+						<div class="listimagecontainer"><img src="../assets/icons/kichange.svg"></div>
+						<div class="listitemtext">
+							Umsteigezeit<br>
+							<small class="disabled">KI-unterstützte Schätzung</small>
+						</div>
+					</div>
+					<div class="listitem">
+						<div class="listitemtext">
+			
+							<table><tr><td><small class="disabled">Von</small><br><select name="startplatforms" type="text" id="platStart" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td><td><small class="disabled">Nach</small><br><select name="startplatforms" type="text" id="platEnd" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td></tr></table>
+							
+						</div>
+					</div>
+
+					<div class="listitem hidden noflex" id="transferContainer">
+						<center>
+							<span id="timeSpan"></span>
+							<small id="recomendedTimeSpan" class="disabled"></small>
+						</center>
+					</div>
+
+					<div class="listitem hidden noflex" id="transferwayContainer">
+
+					</div>
+				</div>
+			
+				
+
+				<span id="stationCat"></span>
+				
+                <br><br>
+            </div>
+
+
+        </div>
+        <span id="notice"></span>
+
+        <br>
+
+    </div>
+
+   
+</center>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+
+var stationID = urlParams.get('station');
+
+document.getElementById('tabs').innerHTML += `<a href="accessibility.html?station=${stationID}">Barrierefreiheit</a>`;
+
+//	document.getElementById('tabs').innerHTML += `<a href="shops.html?station=${stationID}">Shops</a>`;
+
+
+/*    KI UMSTEIGEZEIT   */
+const baseTransferUrl = 'https://data.cuzimmartin.dev/calculate-transfer-time/' + stationID;
+
+    
+    const selectStart = document.getElementById('platStart');
+    const selectEnd = document.getElementById('platEnd');
+    const timeSpan = document.getElementById('timeSpan');
+	const transferContainer = document.getElementById('transferContainer');
+	const transferwayContainer = document.getElementById('transferwayContainer');
+
+    function updateTransferTime() {
+        const startValue = selectStart.value;
+        const endValue = selectEnd.value;
+
+        if (startValue && endValue) {
+            if (startValue === endValue) {
+				transferContainer.classList.remove('hidden');
+				transferwayContainer.classList.remove('hidden');
+                timeSpan.innerHTML = `<center>Wähle unterschiedliche Gleise</center>`;
+            } else {
+                const transferUrl = `${baseTransferUrl}/${startValue}/${endValue}`;
+
+                fetch(transferUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        const transferTime = data.minTransferTime;
+                        const isLinked = data.linked;
+
+						document.getElementById('recomendedTimeSpan').innerHTML = `Empfohlen: ${data.recommendedTime}&nbsp;min`;
+
+						transferContainer.classList.remove('hidden');
+						transferwayContainer.classList.remove('hidden');
+                        timeSpan.innerHTML = `<center><span class="transfertime">~${transferTime}&nbsp;min</span></center>`;
+
+						 if (isLinked) {
+                            timeSpan.innerHTML += '<center><smal class="disabled">Gleicher Bahnsteig</small><br><br></center>';
+                        }
+
+
+						if (data.segments && Array.isArray(data.segments)) {
+							transferwayContainer.innerHTML = `<div class="imagepoint"><img src="../assets/icons/path-start.svg" class="pathicon"><span>Gleis ${startValue}</span><small class="disabled">Losgehen</small></div>`;
+							data.segments.forEach(segment => {
+								console.log(`Type: ${segment.type}, Distance: ${segment.distance}`);
+
+								transferwayContainer.innerHTML += `<div class="imagepoint"><img src="../assets/icons/path-${segment.type}.svg" class="pathicon"><span>${segment.type.replace('stairs', 'Treppe').replace('elevator', 'Aufzug').replace('escalator', 'Fahrtreppe').replace('walk', 'Gehen')}</span><small class="disabled">${segment.distance}m</small></div>`;
+							});
+							transferwayContainer.innerHTML += `<div class="imagepoint"><img src="../assets/icons/path-end.svg" class="pathicon"><span>Gleis ${endValue}</span><small class="disabled">Ankommen</small></div>`;
+						}
+
+
+                    })
+                    .catch(error => {
+                        console.error('Fehler beim Abrufen der Umstiegszeit:', error);
+                        timeSpan.textContent = 'Fehler beim Abrufen der Umstiegszeit';
+                    });
+            }
+        } else {
+            timeSpan.textContent = '';
+			transferContainer.classList.add('hidden');
+			transferwayContainer.classList.add('hidden');
+
+        }
+    }
+
+    selectStart.addEventListener('change', updateTransferTime);
+    selectEnd.addEventListener('change', updateTransferTime);
+
+	//Available Platforms
+    const platformsUrl = 'https://data.cuzimmartin.dev/platforms/' + stationID;
+
+    fetch(platformsUrl)
+        .then(response => response.json())
+        .then(data => {
+            const platforms = data.availablePlatforms;
+
+            // Funktion, um Optionen zu beiden select-Elementen hinzuzufügen
+            const addOptions = (selectElement) => {
+                platforms.forEach(platform => {
+					//Würfelsektoren filtern
+					if (!/ \w-\w/.test(platform)) {
+                        const option = document.createElement('option');
+                        option.value = platform;
+                        option.textContent = "Gl. " + platform;
+                        selectElement.appendChild(option);
+                    }
+                });
+            };
+
+            // Optionen zu platStart und platEnd hinzufügen
+            addOptions(selectStart);
+            addOptions(selectEnd);
+        })
+        .catch(error => {
+            console.error('Fehler beim Laden der Plattform-Daten:', error);
+        });
+
+
+	/*-----------------------------*/
+
+fetch(`https://data.cuzimmartin.dev/fetch-station?eva=${stationID}`)
+.then(response => response.json())
+.then(data => {
+	document.getElementById('stationname').innerHTML = data.name + ", " + data.ril100Identifiers[0].rilIdentifier;
+	
+	document.getElementById('productline').textContent = data.productLine.productLine;
+	
+	if (localStorage.getItem('maps') === 'false') {
+		document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem">
+				<div class="listimagecontainer"><img src="../assets/icons/directions.svg"></div>
+				<div class="listitemtext">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></div>
+			</a>
+		</div>
+	`
+	} else {
+		document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem">
+				<div class="listimagecontainer"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}"><img src="../assets/icons/directions.svg"></a></div>
+				<div class="listitemtext"><a href="https://www.google.com/maps/dir/?api=1&=true&destination=${data.mailingAddress.street} ${data.mailingAddress.zipcode} ${data.mailingAddress.city}" class="black">${data.mailingAddress.street}<br><small class="disabled">${data.mailingAddress.zipcode} ${data.mailingAddress.city}</small></a></div>
+			</a>
+		</div>
+	`
+	}
+
+	document.getElementById('detailscontainer').innerHTML += `
+		<div class="listitem">
+				<div class="listimagecontainer"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf"><img src="../assets/icons/sevlogo.svg" class="fillimg"></a></div>
+				<div class="listitemtext"><a href="https://www.bahnhof.de/downloads/replacement-service-maps/${data.number}.pdf" class="black">Umgebungsplan<br><small class="disabled">Zugang zum SEV</small></a></div>
+			</a>
+		</div>
+	`
+	
+
+	var imgurl = data.photoPath;
+	document.getElementById("stationimage").style.backgroundImage = "url(" + imgurl + ")";
+	
+	document.getElementById('title').textContent = `Ausstattung: ${data.name}`;
+	
+	
+	//Features
+	const features = document.getElementById("features");
+	const featureList = [
+		{ key: 'hasWiFi', icon: 'hasWiFi.svg', text: 'Kostenloses WiFi', color: 'lightgreen' },
+		{ key: 'hasParking', icon: 'hasparking.svg', text: 'Parkplatz', color: 'blue' },
+		{ key: 'hasBicycleParking', icon: 'hasBicycleParking.svg', text: 'Fahrradparkplatz', color: 'blue' },
+		{ key: 'hasPublicFacilities', icon: 'hasPublicFacilities.svg', text: 'Öffentliches WC', color: 'lightred' },
+		{ key: 'hasLockerSystem', icon: 'hasLockerSystem.svg', text: 'Schließfächer', color: 'slate' },
+		{ key: 'hasTaxiRank', icon: 'hasTaxiRank.svg', text: 'Taxistand', color: 'yellow' }
+	];
+
+	featureList.forEach(feature => {
+		if (data[feature.key] === true) {
+			features.innerHTML += `<div class="listitem"><div class="listimagecontainer listimagecontainer${feature.color}"><img src="../assets/icons/${feature.icon}"></div><div class="listitemtext">${feature.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+		}
+	});
+	
+	//SERVICES
+	const services = document.getElementById("services");
+	const serviceList = [
+		{ key: 'hasTravelCenter', icon: 'hasTravelCenter.svg', text: 'Reisezentrum' },
+		{ key: 'DBinformation', icon: 'dbinformation.svg', text: 'DB Information' },
+		{ key: 'hasDBLounge', icon: 'hasDBLounge.svg', text: 'DB Lounge' },
+		{ key: 'hasLostAndFound', icon: 'hasLostAndFound.svg', text: 'Fundbüro' },
+		{ key: 'hasRailwayMission', icon: 'hasRailwayMission.svg', text: 'Bahnhofsmission' },
+		{ key: 'hasCarRental', icon: 'hasCarRental.svg', text: 'Autoverleih' }
+	];
+
+	serviceList.forEach(service => {
+		if (data[service.key] === true || (service.key === 'DBinformation' && service.key in data)) {
+			services.innerHTML += `<div class="listitem"><div class="listimagecontainer"><img src="../assets/icons/${service.icon}"></div><div class="listitemtext">${service.text}<br><small class="disabled">Vorhanden</small></div></div>`;
+		}
+	});
+
+	if (services.innerHTML === '') {
+		document.getElementById('serviceheader').classList.add('hidden');
+	}
+	
+	
+	//WEATHER
+	
+	fetch(`https://data.cuzimmartin.dev/weather?city=${data.mailingAddress.city}`)
+	.then(response => response.json())
+	.then(weatherdata => {
+
+		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
+			
+			document.getElementById('detailscontainer').innerHTML += `
+				<div class="listitem">
+						<div class="listimagecontainer"><a href="../weather.html?city=${data.mailingAddress.city}"><img src="../assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listitemtext"><a href="../weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a><br><div class="chip iconchip weatherwarnchip">${weatherdata?.alerts?.[0]?.properties?.EVENT?.replace("VORABINFORMATION", "")}</div></div>
+					</a>
+				</div>
+			`
+
+
+		} else {
+			document.getElementById('detailscontainer').innerHTML += `
+				<div class="listitem">
+						<div class="listimagecontainer"><a href="weather.html?city=${data.mailingAddress.city}"><img src="../assets/weatcherIcons/${weatherdata.weather[0].icon}.svg"></a></div>
+						<div class="listitemtext"><a href="weather.html?city=${data.mailingAddress.city}" class="black">${Math.floor(weatherdata.main.temp)}°C<br><small class="disabled">${weatherdata.weather[0].description}</small></a></div>
+					</a>
+				</div>
+			`		}
+
+	})^
+
+
+	console.log(data.name);
+/// Get Station CAT Images
+
+if (localStorage.getItem("traincats") !== 'false') {
+
+const stationName = data.name;
+
+fetch('https://traincats.io/catsdata.json')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP-Error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+
+		console.log(stationName)
+        const matchingCat = data.find(cat => cat.station === stationName);
+
+        if (matchingCat) {
+            console.log(`Filename: ${matchingCat.filename}`);
+
+			document.getElementById('stationCat').innerHTML += `
+				<br>
+				<div class="listcontainer">
+					<div class="listitem">
+						<div class="listimagecontainer"><img src="../assets/icons/cat.svg"></div>
+						<div class="listitemtext">Bahnhofskatze<br><small class="disabled">Von <a href="${matchingCat.sociallink}"><u class="disabled">@${matchingCat.socialname}</u></a></small></div>
+					</div>
+					<img src="https://traincats.io/assets/cats/${matchingCat.filename}" class="catPic">
+				</div>
+
+			`;
+        } 
+    })
+    .catch(error => {
+        console.error('Keine Bahnhofskatze', error);
+    });
+
+}
+	
+})
+.catch(error => {
+	console.error('Error fetching station data:', error);
+	document.getElementById('container').classList.add('hidden');
+	document.getElementById('errorbox').classList.remove('hidden');
+});
+
+fetchAndDisplayData();
+
+
+
+</script>
+
+</body>
+</html>

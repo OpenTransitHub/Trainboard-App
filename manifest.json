@@ -1,6 +1,6 @@
 {
-  "name": "Trainboard",
-  "short_name": "Trainboard",
+  "name": "Playground Trainboard",
+  "short_name": "Playground Trainboard",
   "display": "standalone",
   "background_color": "#000000",
   "scope": "/",

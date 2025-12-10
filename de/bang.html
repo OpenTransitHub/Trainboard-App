@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title id="title">!Trainboard</title>
+        <link rel="stylesheet" href="../assets/css/styles.css">
+        <link rel="stylesheet" href="../assets/css/dark-styles.css">
+        <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+        <link rel="manifest" href="../manifest.json" type="application/json" >
+        <meta name="theme-color" content="#000">
+        <meta name="robots" content="noindex">
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    </head>
+    <body>
+        <small id="snippet"></small>
+        <script>
+            (async()=>{
+            const params=new URLSearchParams(location.search);
+            const q=params.get('station');
+            if(!q){document.getElementById('snippet').innerText='Keine Station angegeben';return}
+            try{
+            const res=await fetch('https://data.cuzimmartin.dev/locations?query='+encodeURIComponent(q));
+            if(!res.ok)throw new Error('network');
+            const data=await res.json();
+            const id=data?.[0]?.location?.id;
+            if(id)location.href='departure.html?station='+encodeURIComponent(id);
+            else{document.getElementById('snippet').innerText='Keine Station gefunden';};
+            }catch(e){
+            {document.getElementById('snippet').innerText='Error';return;}
+            }
+            })();
+
+        </script>
+    </body>
+</html>

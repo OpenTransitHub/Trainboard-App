@@ -12,7 +12,7 @@ if (hiddennavbar === "hide") {
 }
 
 if (localStorage.getItem('shownavbar') === 'false') {
-	document.getElementById('navbar').classList.add('hidden');
+    document.getElementById('navbar').classList.add('hidden');
 } 
 
 
@@ -23,14 +23,14 @@ if (hiddenclock === "hide") {
 }
 
 if (localStorage.getItem('showclock') === 'false') {
-	document.getElementById('clock').classList.add('hidden');
+    document.getElementById('clock').classList.add('hidden');
 } 
 
 // Show Trainnumber
 let hiddentrainnumbers = urlParams.get('trainnumbers');
 
 if (localStorage.getItem('showtrainnumbers') === 'true') {
-	hiddentrainnumbers = "show";
+    hiddentrainnumbers = "show";
 } 
 
 // Prevent Touch
@@ -40,13 +40,13 @@ if (notouch === "no") {
 }
 
 if (localStorage.getItem('disabletouch') === 'true') {
-	document.getElementById('notouch').classList.remove('hidden');
+    document.getElementById('notouch').classList.remove('hidden');
 } 
 
 let showsuburban = urlParams.get('suburban');
 
 if (localStorage.getItem('showsuburbans') === 'true') {
-	showsuburban = "show";
+    showsuburban = "show";
 } 
 // END EXPERTMODE
 
@@ -58,8 +58,12 @@ if (!stationID) {
 	console.error('Keine Station ID in der URL gefunden');
 	document.getElementById('tableBody').innerHTML = '<tr><td colspan="4">Fehler: Keine Station ausgewählt</td></tr>';
 } else {
+	// Load station Data
 	fetchStationData(stationID);
+
+	// Start loading data
 	loadData();
+	// reload every 5 seconds
 	setInterval(loadData, 5000);
 }
 
@@ -171,12 +175,12 @@ async function loadData() {
 		await loadDepartures();
 		await loadArrivals();
 	} else {
-		const apiUrl = `https://prod.cuzimmartin.dev/api/de/${siteType === 'A' ? 'arrivals' : 'departures'}?stationId=${stationID}`;
+		const apiUrl = `https://data.cuzimmartin.dev/dynamic-${siteType === 'A' ? 'arrivals' : 'departures'}?stationID=${stationID}`;
 		try {
 			const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 			const jsonData = await response.json();
-			const data = jsonData.data;
+			const data = siteType === 'A' ? jsonData.arrivals : jsonData.departures;
 			if (Array.isArray(data)) {
 				updateTable(data, "tableBody", siteType === 'A');
 			} else {
@@ -192,13 +196,13 @@ async function loadData() {
 }
 
 async function loadDepartures() {
-	const apiUrl = `https://prod.cuzimmartin.dev/api/de/departures?stationId=${stationID}`;
+	const apiUrl = `https://data.cuzimmartin.dev/dynamic-departures?stationID=${stationID}`;
 	try {
 		const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 		const jsonData = await response.json();
-		if (Array.isArray(jsonData.data)) {
-			updateTable(jsonData.data, "tableBody", false);
+		if (Array.isArray(jsonData.departures)) {
+			updateTable(jsonData.departures, "tableBody", false);
 		}
 	} catch {
 		if (document.getElementById('tableBody').children.length === 0) {
@@ -208,13 +212,13 @@ async function loadDepartures() {
 }
 
 async function loadArrivals() {
-	const apiUrl = `https://prod.cuzimmartin.dev/api/de/arrivals?stationId=${stationID}`;
+	const apiUrl = `https://data.cuzimmartin.dev/dynamic-arrivals?stationID=${stationID}`;
 	try {
 		const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 		const jsonData = await response.json();
-		if (Array.isArray(jsonData.data)) {
-			updateTable(jsonData.data, "tableBodyarrival", true);
+		if (Array.isArray(jsonData.arrivals)) {
+			updateTable(jsonData.arrivals, "tableBodyarrival", true);
 		}
 	} catch {
 		if (document.getElementById('tableBodyarrival').children.length === 0) {
@@ -227,8 +231,8 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 	if (!data || !Array.isArray(data)) return;
 
 	data.sort((a, b) => {
-		const timeA = new Date(a.scheduledTime);
-		const timeB = new Date(b.scheduledTime);
+		const timeA = a.plannedWhen ? new Date(a.plannedWhen) : new Date(a.when);
+		const timeB = b.plannedWhen ? new Date(b.plannedWhen) : new Date(b.when);
 		return timeA - timeB;
 	});
 
@@ -241,22 +245,21 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 	data.forEach(entry => {
 		if (!entry.line) return;
 
-		const product = entry.metadata?.lineDetails?.product || '';
-
+		// Filter products
 		if (siteType !== 'L') {
 			const skipProducts = ["bus", "ferry", "subway", "tram", "taxi"];
-			if (skipProducts.includes(product)) return;
+			if (skipProducts.includes(entry.line.product)) return;
 		}
 		if (siteType === 'L') {
-			const skipProducts = ["national", "nationalexpress"];
-			if (skipProducts.includes(product)) return;
+			const skipProducts = ["national", "nationalExpress"];
+			if (skipProducts.includes(entry.line.product)) return;
 		}
-		if ((siteType === 'C' || siteType === 'D' || siteType === 'A') && product === "suburban" &&  showsuburban !== 'show') return;
-		if (siteType === 'S' && product !== "suburban") return;
+		if ((siteType === 'C' || siteType === 'D' || siteType === 'A') && (entry.line.product === "suburban" &&  showsuburban !== 'show')) return;
+		if (siteType === 'S' && entry.line.product !== "suburban") return;
 
-		const isCancelled = entry.cancelled === true;
-		const plannedDepartureTime = new Date(entry.scheduledTime);
-		const realTime = new Date(entry.actualTime || entry.estimatedTime || entry.scheduledTime);
+		// Cancelled
+		const isCancelled = entry.remarks?.some(r => r.type === "status" && r.code === "cancelled") || false;
+		const plannedDepartureTime = new Date(entry.plannedWhen);
 		const diffPlannedMinutes = Math.round((now - plannedDepartureTime) / (1000 * 60));
 		if (isCancelled && diffPlannedMinutes > 0) return;
 
@@ -264,24 +267,27 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 		const row = tableBody.insertRow();
 		if (isCancelled) row.classList.add('cancelled');
 
-		const abMessage = (isCancelled) ? "" : getAbMessage(entry.actualTime || entry.estimatedTime);
+		const abMessage = (isCancelled) ? "" : getAbMessage(entry.when);
 
-		const lineParts = entry.line.split(" ");
+		// Line badge
+		const lineParts = entry.line.name.split(" ");
 		const lineName = lineParts[0] + (lineParts[1] ? " " + lineParts[1] : "");
-		const trainnumber = hiddentrainnumbers === "show" ? `<br><small>${entry.tripNumber}</small>` : '';
-		let linebadge = `<a href="trip.html?tripId=${encodeURIComponent(entry.tripId)}&departureTime=${encodeURIComponent(entry.scheduledTime)}&stationID=${encodeURIComponent(stationID)}">`;
-		linebadge += `<div class="linebadge ${product} ${lineName.replace(/\s/g, '')}">`;
+		const trainnumber = hiddentrainnumbers === "show" ? `<br><small>${entry.line.fahrtNr}</small>` : '';
+		const operatorId = entry.line.operator?.id || '';
+		let linebadge = `<a href="trip.html?tripId=${encodeURIComponent(entry.tripId)}&departureTime=${encodeURIComponent(entry.plannedWhen)}&stationID=${encodeURIComponent(stationID)}">`;
+		linebadge += `<div class="linebadge ${entry.line.product} ${lineName.replace(/\s/g, '')}${operatorId} ${operatorId} ${entry.line.productName}">`;
 		linebadge += lineName + trainnumber;
 		linebadge += `</div></a>`;
 		row.insertCell(0).innerHTML = linebadge;
 
-		const departureTime = realTime;
+		// Time / countdown
+		const departureTime = new Date(entry.when || entry.plannedWhen);
 		const timediff = Math.round((departureTime - now) / (1000 * 60));
 		const countdownCell = row.insertCell(1);
-		const delayDifference = Math.abs(realTime - plannedDepartureTime) / (1000 * 60);
-		const tripUrl = `trip.html?stationID=${encodeURIComponent(stationID)}&departureTime=${encodeURIComponent(entry.scheduledTime)}&tripId=${encodeURIComponent(entry.tripId)}`;
+		const delayDifference = Math.abs(departureTime - plannedDepartureTime) / (1000 * 60);
+		const tripUrl = `trip.html?stationID=${encodeURIComponent(stationID)}&departureTime=${encodeURIComponent(entry.plannedWhen)}&tripId=${encodeURIComponent(entry.tripId)}`;
 
-		if ((siteType === 'S' || siteType === 'L') && timediff <= 60 && entry.estimatedTime !== null && !isArrival) {
+		if ((siteType === 'S' || siteType === 'L') && timediff <= 60 && entry.when !== null && !isArrival) {
 			if (timediff <= 0) {
 				countdownCell.innerHTML = `<a href="${tripUrl}">jetzt</a>`;
 			} else {
@@ -289,39 +295,54 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 				countdownCell.innerHTML = `<a href="${tripUrl}"><span ${delayClass}>${timediff}<span class="additional">&nbsp;min.</span></span></a>`;
 			}
 		} else {
-			if (entry.estimatedTime) {
+			if (entry.when !== null) {
 				if (delayDifference > 0) {
-					countdownCell.innerHTML = `<a href="${tripUrl}"><nobr><s class='disabled'>${formatTime(entry.scheduledTime)}</s><br> ${formatTime(realTime)}</nobr></a>`;
+					countdownCell.innerHTML = `<a href="${tripUrl}"><nobr><s class='disabled'>${formatTime(entry.plannedWhen)}</s><br> ${formatTime(entry.when)}</nobr></a>`;
 				} else {
-					countdownCell.innerHTML = `<a href="${tripUrl}"><span class="timetable">${formatTime(realTime)}</span></a>`;
+					countdownCell.innerHTML = `<a href="${tripUrl}"><span class="timetable">${formatTime(entry.when)}</span></a>`;
 				}
 			} else {
-				countdownCell.innerHTML = `<a href="${tripUrl}"><span class="timetable">${formatTime(entry.scheduledTime)}</span></a>`;
+				countdownCell.innerHTML = `<a href="${tripUrl}"><span class="timetable">${formatTime(entry.plannedWhen)}</span></a>`;
 			}
 		}
 
 		const wideCell2 = row.insertCell(2);
-		const destination = !isArrival ? entry.destination || 'Unbekannt' : entry.stationName || 'Unbekannt';
+		const destination = !isArrival ? entry.destination?.name || 'Unbekannt' : entry.provenance || 'Unbekannt';
 		const prefix = isArrival ? '<span class="prefix">Von&nbsp;</span>' : '';
 
 		wideCell2.innerHTML = `${prefix}<a href="${tripUrl}"><span class="scrolling-wrapper"><span class="scrolling-text station-name">${destination}</span></span></a>`;
 		wideCell2.classList.add("wide");
 
-		const platformCell = row.insertCell(3);
-		if (isCancelled) {
-			platformCell.innerHTML = `<a href="${tripUrl}"><s>${entry.platform || ''}</s></a>`;
-		} else {
-			if (!entry.platform) {
-				platformCell.innerHTML = `<a href="${tripUrl}">-</a>`;
-			} else {
-				if (entry.platformChanged) {
-					platformCell.innerHTML = `<a href="${tripUrl}"><span class="red">${entry.platform}</span></a>`;
-				} else {
-					platformCell.innerHTML = `<a href="${tripUrl}">${entry.platform}</a>`;
-				}
+
+
+		if (entry.remarks && entry.remarks.length > 0) {
+			if (localStorage.getItem("showremarks") !== null && localStorage.getItem("showremarks") === "true") {
+				const infoMessages = entry.remarks.map(r => r.text).join(' +++ ');
+				wideCell2.innerHTML += `<div class="remark bigonly">${infoMessages}</div>`;
 			}
 		}
 
+		// Platform
+		const platformCell = row.insertCell(3);
+		if (isCancelled) {
+			if (entry.plannedPlatform === null) {
+				platformCell.innerHTML = entry.platform ? `<a href="${tripUrl}"><s>${entry.platform}</s></a>` : `<a href="${tripUrl}"></a>`;
+			} else {
+				platformCell.innerHTML = `<a href="${tripUrl}"><s class='disabled'>${entry.plannedPlatform}</s></a>`;
+			}
+		} else {
+			if (entry.platform == null) {
+				platformCell.innerHTML = `<a href="${tripUrl}">-</a>`;
+			} else if (entry.platform == entry.plannedPlatform) {
+				platformCell.innerHTML = `<a href="${tripUrl}">${entry.plannedPlatform}</a>`;
+			} else if (entry.plannedPlatform === null) {
+				platformCell.innerHTML = `<a class="red" href="${tripUrl}">${entry.platform}</a>`;
+			} else {
+				platformCell.innerHTML = `<a href="${tripUrl}"><s class='disabled'>${entry.plannedPlatform}</s><br><span class="red"> ${entry.platform}</span></a>`;
+			}
+		}
+
+		// Status cell
 		const statusCell = row.insertCell(4);
 		statusCell.classList.add("zerotable");
 		statusCell.innerHTML = isCancelled ? `<img src="./assets/cancelled.webp" class="mini">` : abMessage;
@@ -329,6 +350,7 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 
 	if (findtrain === 0) {
 		tableBody.innerHTML = `<tr><td colspan="4">Keine Daten verfügbar</td></tr>`;
+		window.location.replace(`suburban.html?station=${stationID}`);
 	}
 }
 
