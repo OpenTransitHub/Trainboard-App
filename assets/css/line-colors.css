@@ -3,7 +3,7 @@ Please read comments carefully.
 */
 
 /* The following classes create standard signets for different types of public transport. You may not change them */
-.suburban {
+.suburban, .S {
 	background-color: #639830;
 	border-radius: 200px;
 	color: #fff;
@@ -25,12 +25,12 @@ Please read comments carefully.
 	background-color: #00a5df!important;
 }
 
-.nationalExpress, .national, .westbahn.WB, .regiojet.IC {
+.nationalExpress, .national, .westbahn.WB, .regiojet.IC, .RJX {
 	background-color: #ec0016;
 	color: #fff;
 }
 
-.regional {
+.regional, .IR {
 	background-color: #00a099;
 	color: #fff;
 }
