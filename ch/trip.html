@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Zuginformationen</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+    <link rel="manifest" href="../manifest.json" type="application/json">
+    <meta name="theme-color" content="#000">
+    <meta name="robots" content="noindex">
+
+   <link href="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body id="body">
+
+<noscript> You need to enable JavaScript to run this app.</noscript>
+
+<div id="map"></div>
+<div id="map-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 15px 25px; border-radius: 5px; font-size: 14px; z-index: 1000; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
+    <img src="../assets/whiteSpinner.svg" class="loadingspinner" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 10px;">
+    <span class="bigonly">Karte laden...</span>
+</div>
+
+<div class="TRIPcontent">
+    <center>
+        <div class="coloredSpace" id="bigheaderbox">
+            <div class="darker">
+                <div class="dragbar"></div>
+                <div class="blanktable">
+                    <div class="tripcontainer wide">
+
+                        <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-left: 4px;"><small class="disabled" id="trainTitle"></small></td><td class="wide"></td><td><div class="warnchip chip iconchip hidden" id="trip-warning-counter-button">0</div></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important; padding-top: 5px !important;"><img src="../assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
+                        <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
+
+                        <br>
+                        <small class="disabled"><span id="lauf"></span></small>
+
+                    </div>
+                </div>
+                <div class="chipfloater">
+                    <div class="chip addtrainchip iconchip" id="pinChip">
+                        Anheften
+                    </div>
+
+                    <div class="chip removetrainchip iconchip hidden" id="unpinChip">
+                        Angeheftet
+                    </div>
+
+                    <a id="wagonorderbutton">
+                        <div class="chip reihungchip iconchip">
+                            Wagenreihung
+                        </div>
+                    </a>
+
+                    <a id="webfisbutton" class="bigonly">
+                        <div class="chip webfisChip iconchip">
+                            webFIS
+                        </div>
+                    </a>
+
+                    <a href="https://www.bahn.de/buchung/jetzt-einchecken?dbkanal_007=tutorialSlider_14-1_link_KomfortCheckinimBrowseraufrufen">
+                        <div class="chip iconchip checkinChip hidden" id="comfortbutton">
+                            Einchecken
+                        </div>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+
+        <div id="trainslider"></div>
+        
+
+      
+
+        <div class="coloredSpace displayflex center">
+
+        </div>
+
+
+        <div class="trip-container-centered">
+
+            <div class="trip-status-container"></div>
+            <!-- Header der Seite mit Zugdetails -->
+
+
+
+            <!-- Modal -->
+            <small class="secondary" id="tripStatus"><img src="../assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></small><br><br>
+        </div>
+
+
+        <!-- Liste der Haltestellen -->
+        <div class="trip-stopovers">
+            <!-- Dynamisch generierte Stopover-Elemente werden hier eingefügt -->
+        </div>
+
+        <!-- Warnungen und Hinweise -->
+        <div class="tab">
+            <button class="tablinks tabActive trainTab" onclick="openCity(event, 'Zug')" id="trainTab">Zug</button>
+            <button class="tablinks trackTab" onclick="openCity(event, 'Strecke')" id="trackTab">Strecke</button>
+        </div>
+
+        <div class="tab tabcontent" style="display: block; padding: 0px; overflow:hidden;" id="Zug">
+
+            <div class="listcontainer" id="remarks">
+
+            </div>
+
+            <br>
+        </div>
+
+        <div class="tab tabcontent"  style="padding: 0px; overflow:hidden;" id="Strecke">
+            <div id="loadingConstructions"><div class="listcontainer"><div class="listitem"><div class="listitemtext" style="width: 100%;"><center><br><img src="../assets/blackSpinner.svg" class="loadingspinner multicolorspinner"><br><br><b>Streckeninfos werden geladen.</b><br>Dies kann einen Moment dauern.<br><br></center></div></div></div></div>
+
+            <div class="listcontainer" id="constructions">
+
+            </div>
+            
+            <table cellpadding="10"><tbody id="constructionsTable"></tbody></table>
+
+            <br>
+        </div>
+        
+
+        <br>
+
+        <small>Datenquelle:</small><br>
+        <span id="logo"></span>
+
+
+
+        <br><br><br>
+    </center>
+</div>
+</div>
+
+
+<script type="text/javascript" src="../assets/src/ch/trip.js"></script>
+
+</body>
+</html>

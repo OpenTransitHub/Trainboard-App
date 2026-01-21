@@ -1,0 +1,262 @@
+async function fetchTrainData() {
+
+        const trainnumber = new URLSearchParams(window.location.search).get('trainnumber');
+        const station = new URLSearchParams(window.location.search).get('station');
+        const producttype = new URLSearchParams(window.location.search).get('producttype');
+        const departure = new URLSearchParams(window.location.search).get('departure');
+
+        const response = await fetch(`https://data.cuzimmartin.dev/wagenreihung?train_number=${trainnumber}&eva=${station}&train_type=${producttype}&departure_time=${departure}`);
+        const data = await response.json();
+
+        
+
+        if (data.departureID) {
+            console.log(data.departureID)
+
+        } else {
+            document.getElementById('body').innerHTML= `
+                <nav id="navbar">
+                    <div class="tabs"><span class="active">&nbsp;Wagenreihung&nbsp;</span></div>
+                    <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
+                    <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div>
+                </nav>
+
+                <center>
+                <br><br>
+                <h1>🚂</h1>
+                <h3>Wagenreihung nicht verfügbar.</h3>
+
+                <p>Für diese Fahrt liegen keine Informationen vor.</p>
+
+                <br>
+
+                <div onClick=\"history.go(-1)\" class="maxwidthbutton button">Zurück</div>
+            
+            `;
+        }
+
+        // Navbar Tab Text
+        const transportcategory = data.groups[0].transport.category;
+        const transportnumber = data.groups[0].transport.number;
+        fetch('https://data.cuzimmartin.dev/locations?query=' + station)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            let stationName = '';
+            data.forEach(location => {
+                    stationName = location.name;
+                    console.log(stationName)
+                });
+                document.getElementById('tabcontent').innerHTML = `&nbsp;${transportcategory} ${transportnumber} in ${stationName}&nbsp;`;
+        });
+
+        
+
+        const sectorsColumn = document.getElementById('sectorsColumn');
+        const vehiclesColumn = document.getElementById('vehiclesColumn');
+
+        // Check if platform and sectors are available
+        if (data.platform && data.platform.sectors) {
+            const sectors = data.platform.sectors;
+
+            // Create a div for each sector and append it to the sectors column
+            sectors.forEach((sector) => {
+                const sectorDiv = document.createElement('div');
+                sectorDiv.classList.add('cubesector');
+                sectorDiv.innerHTML = `<div class="sectoricon">${sector.name}</div>`;
+
+                // Calculate height as 2 times the absolute difference between end and start
+                const height = Math.abs(sector.end - sector.start) * 6;
+                sectorDiv.style.height = `${Math.floor(height)}px`;    // Apply height in pixels
+
+                sectorsColumn.appendChild(sectorDiv);
+            });
+        }
+
+        // Process all groups and their vehicles
+
+        let isFirstPlaceholder = true;
+        let isFirstInfoPlaceholder = true;
+        data.groups.forEach((group) => {
+
+            if (data.platform.sectors) {
+
+
+                if (isFirstPlaceholder) {
+                    const placeholderDiv = document.createElement('div');
+                    const placeholderHeight = Math.abs(data.platform.end - (group.vehicles[0].platformPosition.end));
+                    placeholderDiv.style.height = `${Math.floor(placeholderHeight)}px`;
+                    vehiclesColumn.appendChild(placeholderDiv);
+                    isFirstPlaceholder = false;   // Danach wird das Flag auf 'false' gesetzt
+                }
+
+            } else {
+                if (isFirstPlaceholder) {
+                    const placeholderDiv = document.createElement('div');
+                    placeholderDiv.style.height = `0px`;
+                    vehiclesColumn.appendChild(placeholderDiv);
+                    isFirstPlaceholder = false;
+                }
+            }
+
+            if (data.platform.sectors) {
+                if (isFirstInfoPlaceholder) {
+                    const infoplaceholderDiv = document.createElement('div');
+                    const infoplaceholderHeight = Math.abs(data.platform.end - (group.vehicles[0].platformPosition.end));
+                    infoplaceholderDiv.style.height = `${Math.floor(infoplaceholderHeight)}px`;
+                    vehiclesDescriptionColumn.appendChild(infoplaceholderDiv);
+                    isFirstInfoPlaceholder = false;
+                }
+            }
+
+            let isFirstVehicle = true;
+            const vehicles = group.vehicles || [];
+            vehicles.forEach((vehicle) => {
+                const vehicleDiv = document.createElement('div');
+
+                if (isFirstVehicle === true) {
+                    vehicleDiv.id = 'start';  // Nur beim ersten Durchlauf wird die ID 'start' gesetzt
+                    // Danach wird das Flag auf 'false' gesetzt
+                    isFirstVehicle = false;
+                }
+
+                vehicleDiv.classList.add('vehicle');
+                vehicleDiv.classList.add('classes' + vehicle.typeDetails.hasEconomyClass + vehicle.typeDetails.hasFirstClass)
+                vehicleDiv.classList.add(vehicle.typeDetails.category)
+
+
+                if (vehicle.wagonIdentificationNumber){
+                    vehicleDiv.innerHTML += '<h2 style=\"display: unset!important;\">' + (vehicle.wagonIdentificationNumber) + '</h2>';
+                }
+
+                // Calculate height as 2 times the absolute difference between end and start for platformPosition
+                if (vehicle.platformPosition) {
+                    const vehicleHeight = Math.abs(vehicle.platformPosition.end - vehicle.platformPosition.start) * 6;
+                    vehicleDiv.style.height = `${Math.floor(vehicleHeight)}px`; // Apply height in pixels
+                }
+
+
+                vehiclesColumn.appendChild(vehicleDiv);
+                document.getElementById('start').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Nach einer kurzen Verzögerung, um das erste smooth scrolling abzuwarten
+                setTimeout(() => {
+                    // Smooth scroll um 100px nach oben
+                    window.scrollBy({
+                        top: -90,    // Scrollt 100px nach oben
+                        behavior: 'smooth'  // Smooth scrolling
+                    });
+                }, 800);
+
+
+            });
+
+            isFirstVehicle = 1;
+        });
+
+        // Process all groups and their vehicles
+        data.groups.forEach((group) => {
+            const vehicles = group.vehicles || [];
+            vehicles.forEach((vehicle) => {
+                const vehicleDiv = document.createElement('div');
+                vehicleDiv.classList.add('vehicledescription');
+
+                // Map für die Amenities
+                const amenityNames = {
+                    "AIR_CONDITION": "Klimaanlage",
+                    "ZONE_QUIET": "Ruhebereich",
+                    "SEATS_BAHN_COMFORT": "BahnComfort Sitzplätze",
+                    "SEATS_SEVERELY_DISABLED": "Vorrangplätze für Reisende mit eingeschränkter Mobilität",
+                    "INFO": "Info-Abteil",
+                    "WHEELCHAIR_SPACE": "Rollstuhlstellplätze",
+                    "ZONE_FAMILY": "Familienbereich",
+                    "CABIN_INFANT": "Kleinkindabteil",
+                    "TOILET_WHEELCHAIR": "Rollstuhlgerechte Toilette",
+                    "BIKE_SPACE": "Fahrradstellplatz",
+                    "ZONE_MULTI_PURPOSE": "Mehrzweckbereich"
+                    // Weitere Ameneties hier hinzufügen
+                };
+
+                // Map für die Kategorienamen
+                const categoryNames = {
+                    "PASSENGERCARRIAGE_FIRST_CLASS": "Sitzwagen",
+                    "PASSENGERCARRIAGE_ECONOMY_CLASS": "Sitzwagen",
+                    "LOCOMOTIVE": "Lokomotive",
+                    "HALFDININGCAR_FIRST_CLASS": "Speisewagen & Sitzwagen",
+                    "CONTROLCAR_FIRST_CLASS": "Steuerwagen & Sitzwagen",
+                    "HALFDININGCAR_ECONOMY_CLASS": "Speisewagen & Sitzwagen",
+                    "CONTROLCAR_ECONOMY_CLASS": "Steuerwagen",
+                    "CONTROLCAR_FIRST_ECONOMY_CLASS": "Steuerwagen",
+                    "DOUBLEDECK_CONTROLCAR_FIRST_ECONOMOY_CLASS": "Doppelstocksteuerwagen",
+                    "DOUBLEDECK_CONTROLCAR_ECONOMY_CLASS": "Doppelstocksteuerwagen",
+                    "DOUBLEDECK_ECONOMY_CLASS": "Doppelstockwagen",
+                    "DOUBLEDECK_FIRST_CLASS": "Doppelstockwagen",
+                    "DOUBLEDECK_FIRST_ECONOMY_CLASS": "Doppelstockwagen",
+                    "SLEEPER_FIRST_ECONOMY_CLASS": "Schlafwagen",
+                    "COUCHETTE_ECONOMY_CLASS": "Liegewagen"
+                    // Weitere Kategorien hier hinzufügen
+                };
+
+                
+
+
+                if ((vehicle.typeDetails.category === 'DININGCAR') || (vehicle.typeDetails.category === 'HALFDININGCAR_FIRST_CLASS') || (vehicle.typeDetails.category === 'HALFDININGCAR_ECONOMY')) {
+                    vehicleDiv.innerHTML += `<span class=\"diningcarBadge\" title=\"Speisewagen\"><img src=\"../assets/icons/RESTAURANT.svg\" class=\"badgeicon\"> Speisewagen</span><br>`;
+                }
+
+                if (vehicle.type.hasEconomyClass === true) {
+                    vehicleDiv.innerHTML += `<img src=\"../assets/icons/badgeEconomy.svg\" class=\"serviceicon\ noinvert" title=\"2. Klasse\">`;
+                }
+
+
+                if (vehicle.type.hasFirstClass === true) {
+                    vehicleDiv.innerHTML += `<img src=\"../assets/icons/badgeFirstclass.svg\" class=\"serviceicon noinvert\" title=\"1. Klasse\">`;
+                }
+
+
+                const amenities = vehicle.amenities || [];
+                amenities.forEach((amenitie) => {
+                    const amenityName = amenityNames[amenitie.type] || amenitie.type;
+                    vehicleDiv.innerHTML += `<img src=\"../assets/icons/${amenitie.type}.svg\" class=\"serviceicon\" title=\"${amenityName}\">`;
+                });
+
+                vehicleDiv.innerHTML += `<br>`;
+
+                if (vehicle.typeDetails.customType !== 'Unknown') {
+                    vehicleDiv.innerHTML += `${vehicle.typeDetails.customType} <br>`;
+                } else if (vehicle.typeDetails.series !== '') {
+                    vehicleDiv.innerHTML += `BR ${vehicle.typeDetails.series} Test<br>`;
+
+                } else {
+                    // Kategorietitel umbenennen, falls erforderlich
+                    const categoryDisplayName = categoryNames[vehicle.typeDetails.category] || vehicle.typeDetails.category;
+                    vehicleDiv.innerHTML += `<span title="${vehicle.vehicleID}">${categoryDisplayName}</span><br>`;
+                };
+
+                if (localStorage.getItem('google') === 'false') {
+                    vehicleDiv.innerHTML += `<small class=\"disabled\">${vehicle.typeDetails.constructionType}<span class="fzg-${vehicle.vehicleID}"></span></small>`;
+                } else {
+                    vehicleDiv.innerHTML += `<small class=\"disabled\"><a style="padding: 0px;" class="disabled" href="https://google.com/search?q=${vehicle.typeDetails.constructionType}+${vehicle.typeDetails.series}+bahn&udm=2">${vehicle.typeDetails.constructionType}<img src="./assets/icons/search.svg" style="margin-left: 7px; height: 10px;"></a><span class="fzg-${vehicle.vehicleID}"></span></small>`;
+
+                }
+
+
+
+
+                // Calculate height as 2 times the absolute difference between end and start for platformPosition
+                if (vehicle.platformPosition) {
+                    const vehicleHeight = Math.abs(vehicle.platformPosition.end - vehicle.platformPosition.start) * 6;
+                    vehicleDiv.style.height = `${Math.floor(vehicleHeight)}px`; // Apply height in pixels
+                }
+
+                vehiclesDescriptionColumn.appendChild(vehicleDiv);
+            });
+
+            
+        });
+
+    }
+
+    // Fetch and display the train data
+    fetchTrainData();

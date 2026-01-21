@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Expertenmodus</title>
+	<link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+	<link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+	<link rel="manifest" href="/manifest.json" type="application/json" >
+	<meta name="theme-color" content="#000">
+	<meta name="description" content="Erweiterte Abfahrts- und Ankunftstafel für Deutsche Bahnhöfe.">
+	<meta name="keywords" content="bahn, db, bahnhof, deutschebahn, trainboard, abfahrtstafel, train, abfahrt, ankunft" />
+</head>
+
+<body class="home fixednavbar">
+
+<script src="../assets/src/widgets.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/twlngPopup.js"></script>
+
+
+
+<center>
+
+	<nav id="navbar" style="width: calc(100% - 20px); position: fixed; top: 0px;">
+        <div class="tabs"><span class="active" id="tabcontent">&nbsp;Legacy Anzeigekonfiguration&nbsp;</span></div>
+        <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen&nbsp;&nbsp;&nbsp;</a></div>
+        <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div>
+    </nav>
+	 
+	<br>
+
+    <table class="nameholder"><tr><td><img src="../assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
+
+	<div class="searchcontainer">
+		<div class="container">
+			<div class="left-div">
+				<div class="switch-container">
+					<input type="radio" name="searchType" id="departure" value="departure" checked>
+					<label for="departure" class="switchlabel left">Abfahrt</label>
+                    
+					<input type="radio" name="searchType" id="arrival" value="arrival">					
+					<label for="arrival" class="switchlabel">Ankunft</label>
+
+					<input type="radio" name="searchType" id="suburban" value="suburban">
+					<label for="suburban" class="switchlabel right">S-Bahn</label>
+				</div>  
+			</div>
+			<div class="right-div stacktobottom">
+				<input class="searchbar" type="text" autocomplete="off" id="searchInput" placeholder="Suche nach Station" oninput="searchLocations()" autofocus>
+			</div>
+		</div>
+        	
+		<div id="results"></div>
+         <!---
+        <hr>
+       
+        <div style="margin: 15px;">
+            <span style="color: yellow;"><b>Wilkommen zurück 👋</b></span><br>
+            Auch große Teile von Trainboard sind weiterhin von der HAFAS-Abschaltung betroffen.<br>
+            Bitte beachtet dazu den Beitrag auf <a href="https://github.com/hoolycrash/trainboard/wiki/Unterbrechungen-durch-Abschaltung-von-HAFAS"><u>Github</u>.</a>
+        </div>   
+        -->
+	</div>
+   	<br>
+	<div class="searchcontainer leftalign">
+		<br>
+		<input type="checkbox" class="checkbox" id="hideNavbarCheckbox" onchange="searchLocations()">
+		<label for="hideNavbarCheckbox">Navbar verbergen</label>
+	
+		<br><br>
+		<input type="checkbox" class="checkbox" id="hideClockCheckbox" onchange="searchLocations()">
+		<label for="hideClockCheckbox">Uhrzeit verbergen</label>
+
+		<br><br>
+		<input type="checkbox" class="checkbox" id="showTrainnumbersCheckbox" onchange="searchLocations()">
+		<label for="showTrainnumbersCheckbox">Zugnummern anzeigen</label>
+				
+		<!--<br><br>
+		<input type="checkbox" class="checkbox" id="hideSearchbuttonCheckbox" onchange="searchLocations()">
+		<label for="hideSearchbuttonCheckbox">Suchbutton verbergen</label>-->
+	
+		<br><br>
+		<input type="checkbox" class="checkbox" id="disableTouchCheckbox" onchange="searchLocations()">
+		<label for="disableTouchCheckbox">Toucheingabe deaktivieren</label>
+		
+		<br><br>
+		<input type="checkbox" class="checkbox" id="showSuburbans" onchange="searchLocations()">
+		<label for="showSuburbans">S-Bahnen in Abfahrt / Ankunft anzeigen</label>
+
+		<br><br>
+	</div>
+	
+	<br>
+
+
+
+
+<script>
+    function searchLocations() {
+        const userInput = document.getElementById('searchInput').value;
+        const searchType = document.querySelector('input[name="searchType"]:checked').value;
+        const hideNavbar = document.getElementById('hideNavbarCheckbox').checked;
+		const hideClock = document.getElementById('hideClockCheckbox').checked;
+		const showTrainnumbers = document.getElementById('showTrainnumbersCheckbox').checked;
+		const disableTouch = document.getElementById('disableTouchCheckbox').checked;
+        let apiUrl;
+
+            apiUrl = `https://data.cuzimmartin.dev/oebb-locations?query=${userInput}`;
+        
+        if (hideNavbar) {
+            apiUrl += '&navbar=hide';
+        }
+
+		if (hideClock) {
+            apiUrl += '&clock=hide';
+        }
+		
+		if (disableTouch) {
+            apiUrl += '&touch=no';
+        }
+		
+		if (showSuburbans) {
+            apiUrl += '&suburban=show';
+        }
+		
+
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => displayResults(data, searchType, hideNavbar, hideClock, showTrainnumbers, disableTouch, showSuburbans))
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function displayResults(data, searchType, hideNavbar, hideClock, showTrainnumbers, disableTouch, showSuburbans) {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        data.forEach(entry => {
+            // Check if suburban is true
+            const isSuburban = entry.products?.suburban;
+                const isRegional = entry.products?.regional;
+            
+           if (
+                entry.products?.nationalExpress ||
+                entry.products?.national ||
+                entry.products?.interregional ||
+                entry.products?.regional || 
+                entry.products?.suburban 
+            ) {
+            
+                // Create a div with class "suggestion"
+                const suggestionDiv = document.createElement('div');
+                suggestionDiv.classList.add('suggestion');
+
+                // Create a span for the name
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = entry.name;
+
+                // Create an anchor element with a link based on the selected search type (departure, arrival, or suburban)
+                const link = document.createElement('a');
+                if (searchType === 'departure') {
+                    link.href = `departure.html?station=${entry.id}`;
+                } else if (searchType === 'arrival') {
+                    link.href = `arrival.html?station=${entry.id}`;
+                } else if (searchType === 'suburban') {
+                    link.href = `suburban.html?station=${entry.id}`;
+                }
+
+                // Add navbar=hide to the link if hideNavbar is true
+                if (hideNavbar) {
+                    link.href += '&navbar=hide';
+                }
+
+		 		// clock=hide to the link if hideClock is true
+                if (hideClock) {
+                    link.href += '&clock=hide';
+                }
+				
+				if (showTrainnumbers) {
+                    link.href += '&trainnumbers=show';
+                }
+				
+				if (disableTouch) {
+                    link.href += '&touch=no';
+                }
+				
+				if (showSuburbans) {
+                    link.href += '&suburban=show';
+                }
+				
+
+                // If suburban is true, append an image to the link with class "bigicon"
+                if (isSuburban) {
+                    const img = document.createElement('img');
+                    img.src = '../assets/icons/sbahn.svg';
+                    img.alt = 'Suburban Icon';
+                    img.classList.add('bigicon');
+					img.classList.add('inverted');
+                    link.appendChild(img);
+                }
+                
+                if (isRegional) {
+                    const img = document.createElement('img');
+                    img.src = '../assets/icons/rail.svg';
+                    img.alt = 'Rail Icon';
+                    img.classList.add('bigicon');
+					img.classList.add('inverted');
+                    link.appendChild(img);
+                }
+        
+                // Append the nameSpan and link to the suggestionDiv
+                suggestionDiv.appendChild(nameSpan);
+                suggestionDiv.appendChild(link);
+
+                // Add a click event listener to the suggestionDiv
+                suggestionDiv.addEventListener('click', () => {
+                    window.location.href = link.href; // Redirect to the link when the div is clicked
+                });
+
+                // Append the suggestionDiv to the results container
+                resultsContainer.appendChild(suggestionDiv);
+            }
+        });
+    }
+    fetchAndDisplayData();
+</script>
+
+<script type="text/javascript" src="../assets/src/backgroundimage.js"></script>
+
+	
+</center>
+</body>
+</html>

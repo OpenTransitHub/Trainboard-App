@@ -1,0 +1,935 @@
+    if (localStorage.getItem('webfis') === 'false') {
+        document.getElementById('webfisbutton').classList.add('hidden')
+    } 
+
+
+    // Globale Variablen
+    let map;
+    let marker;
+    let intervalId;
+    let stationId;
+    let constructionsLoaded = false; // Flag für Lazy Loading
+    let updateIntervalId = null; // Für Page Visibility API
+    const tripId = decodeURIComponent(getParameterByName('tripId'));
+
+    // Funktion, um Parameter aus der URL zu extrahieren
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        const results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Page Visibility API für Update-Interval Management
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            // Tab ist nicht aktiv - stoppe Updates
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            if (updateIntervalId) {
+                clearInterval(updateIntervalId);
+                updateIntervalId = null;
+            }
+        } else {
+            // Tab ist wieder aktiv - starte Updates neu
+            if (!intervalId && marker) {
+                intervalId = setInterval(() => updateCurrentPosition(tripId), 10000);
+            }
+            if (!updateIntervalId) {
+                updateIntervalId = setInterval(fetchAndDisplayData, 30000);
+            }
+            // Führe sofort ein Update durch
+            updateCurrentPosition(tripId);
+            fetchAndDisplayData();
+        }
+    }
+
+    // Event Listener für Page Visibility
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Initialisiere Map sofort beim Seitenaufruf
+    function initializeMap() {
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY3V6aW1tYXJ0aW4iLCJhIjoiY204dGRyb3AxMDgxcDJrc2VjeXVwNXN3NyJ9.VR8xzsuQJ_-0h95CN_UD8g';
+    
+        const mapStyle = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+        ? 'dusk'
+        : '';  
+
+        // Karte mit Standardposition initialisieren (Österreich)
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/standard', 
+            config: {
+                basemap: {
+                    lightPreset: mapStyle,
+                    font: "Roboto",
+                    showPlaceLabels: false,
+                    showPointOfInterestLabels: false,
+                    backgroundPointOfInterestLabels: "none",
+                    fuelingStationModePointOfInterestLabels: "none",
+                    showRoadLabels: false,
+                    showLandmarkIconLabels: false
+                }
+            },
+            center: [13.3, 47.8],
+            zoom: 2,
+            pitch: 47,
+            bearing: 0,
+            antialias: true
+        });
+
+        // Zeige Ladeindikator
+        document.getElementById('map-loading').style.display = 'block';
+
+        // Map ist bereit, lade die Daten
+        map.once('load', () => {
+            loadMapData();
+
+            
+        });
+    }
+
+    // Lade Kartendaten parallel
+    async function loadMapData() {
+        stationId = getParameterByName('stationID');
+
+        if (!tripId) {
+            alert("Keine tripId in der URL gefunden.");
+            document.getElementById('map-loading').style.display = 'none';
+            return;
+        }
+
+        try {
+            // Lade nur Polyline und Trip-Daten - Baustellen werden lazy geladen
+            const [polylineData, tripData] = await Promise.all([
+                fetch(`https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/polyline?stationID=${stationId}`).then(r => r.json()),
+                fetch(`https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`).then(r => r.json())
+            ]);
+
+            // Verarbeite Polyline-Daten
+            if (polylineData.polyline && polylineData.polyline.features) {
+                const coordinates = polylineData.polyline.features
+                    .filter(feature => feature.geometry.type === "Point")
+                    .map(feature => [feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
+
+                if (coordinates.length > 0) {
+                    // Füge Route hinzu
+                    const fullRoute = {
+                        'type': 'Feature',
+                        'geometry': {
+                            'type': 'LineString',
+                            'coordinates': coordinates
+                        }
+                    };
+
+                    map.addSource('fullRoute', {
+                        'type': 'geojson',
+                        'data': fullRoute
+                    });
+
+                    const routeLineColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                    ? '#ffffff'
+                    : '#343332'; 
+
+                    map.addLayer({
+                        'id': 'fullRoute',
+                        'type': 'line',
+                        'source': 'fullRoute',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': routeLineColor,
+                            'line-width': 4,
+                            'line-emissive-strength': 50,
+                        },
+                        
+                    });
+
+                    // Stopps hinzufügen
+                    const stopFeatures = polylineData.polyline.features
+                        .filter(feature => feature.geometry.type === 'Point' && feature.properties.type === 'stop')
+                        .map(feature => ({
+                            type: 'Feature',
+                            geometry: feature.geometry,
+                            properties: {
+                                description: feature.properties.name || 'Unbekannter Halt',
+                            }
+                        }));
+
+                    if (stopFeatures.length > 0) {
+
+                        map.addSource('stops', {
+                            'type': 'geojson',
+                            'data': {
+                                'type': 'FeatureCollection',
+                                'features': stopFeatures
+                            }
+                        });
+
+                        const textColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                        ? '#ffffff'
+                        : '#000000';
+                        
+                        const textHaloColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches 
+                        ? '#445a59'
+                        : '#ffffff';
+
+                        map.addLayer({
+                            'id': 'poi-labels',
+                            'type': 'symbol',
+                            'source': 'stops',
+                            'layout': {
+                                'text-field': ['get', 'description'],
+                                'text-variable-anchor': ['left'],
+                                'text-radial-offset': 1,
+                                'text-justify': 'auto'
+                            },
+                            'paint': {
+                                'text-color': textColor,
+                                'text-halo-color': textHaloColor,
+                                'text-halo-width': 2
+                            }
+                        });
+                    }
+
+                    // Stop-Marker hinzufügen
+                    polylineData.polyline.features.forEach(feature => {
+                        if (feature.geometry.type === "Point" && feature.properties.type === "stop") {
+                            const stopMarker = document.createElement('img');
+                            stopMarker.src = '../assets/icons/stop-marker.svg';
+                            stopMarker.style.width = '10px';
+                            stopMarker.style.height = '10px';
+
+                            new mapboxgl.Marker({
+                                element: stopMarker
+                            })
+                                .setLngLat(feature.geometry.coordinates)
+                                .addTo(map);
+                        }
+                    });
+
+                    // Aktueller Standort des Zuges
+                    if (tripData.trip.currentLocation) {
+                        const currentLocation = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
+
+                        const imageMarker = document.createElement('img');
+                        imageMarker.src = '../assets/icons/mapmarker.svg';
+                        imageMarker.style.width = '40px';
+                        imageMarker.style.height = '40px';
+
+                        marker = new mapboxgl.Marker({
+                            element: imageMarker
+                        })
+                            .setLngLat(currentLocation)
+                            .addTo(map);
+
+                        // Starte Intervall für Updates nur wenn Tab aktiv ist
+                        if (!document.hidden) {
+                            intervalId = setInterval(() => updateCurrentPosition(tripId), 10000);
+                        }
+                    }
+
+                    // Karte auf Route zoomen
+                    const bounds = coordinates.reduce(function (bounds, coord) {
+                        return bounds.extend(coord);
+                    }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+                    map.fitBounds(bounds, {
+                        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+                        duration: 800
+                    });
+
+                    
+                }
+            }
+
+            // Verstecke Ladeindikator
+            document.getElementById('map-loading').style.display = 'none';
+        } catch (error) {
+            console.error("Fehler beim Laden der Kartendaten:", error);
+            document.getElementById('map-loading').style.display = 'none';
+        }
+    }
+
+    // Lazy Loading für Baustellen-Daten
+    async function loadConstructions() {
+        if (constructionsLoaded) return; // Bereits geladen
+
+        constructionsLoaded = true;
+
+        try {
+            let constructionsUrl = `https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/baustellen`;
+            let response = await fetch(constructionsUrl);
+            let constructionData = await response.json();
+
+            const constructionsList = document.getElementById('constructions');
+            constructionsList.innerHTML = ''; // Clear existing content
+
+            if (constructionData.baustellen && constructionData.baustellen.length > 0) {
+                document.getElementById('loadingConstructions').classList.add('hidden');
+
+                // Füge Baustellen-Marker zur Karte hinzu
+                //if (map && map.loaded()) {
+                  //  constructionData.baustellen.forEach(baustelle => {
+                    //    const baustellenMarker = document.createElement('img');
+                      //  baustellenMarker.src = './assets/icons/' + baustelle.wirkung + '-marker.svg';
+                        //baustellenMarker.style.width = '10px';
+                        //baustellenMarker.style.height = '10px';
+
+                        //new mapboxgl.Marker({
+                        //    element: baustellenMarker
+                      //  })
+                     //       .setLngLat([baustelle.koordinaten.von.x, baustelle.koordinaten.von.y])
+                     //       .addTo(map);
+                  //  });
+              //  }
+
+                constructionData.baustellen.forEach((baustellen) => {
+                    let wirkung;
+
+                    if (baustellen.wirkung == 'ABWEICHUNG_VOM_FPL') {
+                        wirkung = 'Abweichung vom Fahrplan'
+                    } else if (baustellen.wirkung == 'FAHRZEITVERLAENGERUNG') {
+                        wirkung = 'Fahrzeitverlängerung auf Regellaufweg'
+                    } else if (baustellen.wirkung == 'SONSTIGES') {
+                        wirkung = 'Sonstiges'
+                    } else if (baustellen.wirkung == 'TOTALSPERRUNG') {
+                        wirkung = 'Totalsperrung'
+                    } else if (baustellen.wirkung == 'GGL_MIT_ZS_6') {
+                        wirkung = 'Fahrt auf Gegengleis mit Signal Zs 6'
+                    } else if (baustellen.wirkung == 'GGL_MIT_ZS8') {
+                        wirkung = 'Fahrt auf Gegengleis mit Signal Zs 8'
+                    } else {
+                        wirkung = baustellen.wirkung;
+                    }
+
+                    let constructioncolor;
+
+                    if (['ABWEICHUNG_VOM_FPL', 'SONSTIGES', 'GGL_MIT_ZS_6', 'GGL_MIT_ZS_8'].includes(baustellen.wirkung)) {
+                        constructioncolor = 'yellow';
+                    } else if (['FAHRZEITVERLAENGERUNG', 'TOTALSPERRUNG'].includes(baustellen.wirkung)) {
+                        constructioncolor = 'lightred';
+                    } 
+
+                    constructionsList.innerHTML += `
+                    <div class="listitem">
+                        <div class="listimagecontainer listimagecontainer${constructioncolor}"><img src="../assets/icons/${baustellen.wirkung}.svg"></div>
+                        <div class="listitemtext">
+                            ${wirkung}<br><small class="disabled">${baustellen.arbeiten}</small><br><div class="startStation"><small class="disabled">Von </small>${baustellen.langnameVon}</div><div class="endStation"><small class="disabled">Bis </small>${baustellen.langnameBis}</div>
+                        </div>
+                    </div>
+
+                    `   
+                    
+                });
+
+                const baustellenCount = constructionData.baustellen.length;
+                document.getElementById('trackTab').innerHTML = `Strecke <span class=\"pill\">&nbsp;${baustellenCount}&nbsp;</span>`;
+            } else {
+                document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="../assets/icons/check.svg" class="bigicon"><h3>Freie Fahrt</h3>Für diese Strecke liegen keine Meldungen vor.</center><br></div></div>`;
+            }
+        } catch (error) {
+            console.error("Fehler beim Laden der Baustellen:", error);
+            document.getElementById('loadingConstructions').innerHTML = `<div class="listcontainer"><div class="listitem" style="display: block"><br><center><img src="../assets/icons/finderror.svg" class="bigicon"><h3>Fehler</h3>Wir konnten keine Streckeninformationen abrufen.</center><br></div></div>`;
+        }
+    }
+
+    // Funktion zur Aktualisierung der aktuellen Position auf der Karte
+    async function updateCurrentPosition(tripId) {
+        // Nur updaten wenn Tab aktiv ist
+        if (document.hidden) return;
+
+        try {
+            const tripApiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
+            const response = await fetch(tripApiUrl);
+            const tripData = await response.json();
+
+            if (tripData.trip.currentLocation && marker) {
+                const newPosition = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
+                marker.setLngLat(newPosition);
+            }
+        } catch (error) {
+            console.error("Fehler beim Aktualisieren der Position:", error);
+        }
+    }
+
+    // Starte Map-Initialisierung sofort
+    initializeMap();
+
+    // Scroll-Animation
+    window.scroll({
+        top: 300,
+        behavior: "smooth",
+    });
+
+    // Tabs Störungen - modifiziert für Lazy Loading
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" tabActive", "");
+        }
+
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " tabActive";
+
+        // Lazy Loading: Lade Baustellen beim ersten Klick auf "Strecke" Tab
+        if (cityName === 'Strecke' && !constructionsLoaded) {
+            loadConstructions();
+        }
+    }
+
+    async function fetchAndDisplayData() {
+        // Nur updaten wenn Tab aktiv ist
+        if (document.hidden) return;
+
+        const currentUrl = window.location.href;
+        const tripId = decodeURIComponent(getParameterByName('tripId', currentUrl));
+        stationId = getParameterByName('stationID', currentUrl);
+
+        let data;
+
+        if (stationId !== null) {
+            let apiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
+            let response = await fetch(apiUrl);
+            data = await response.json();
+            profileUsed = 'dynamic';
+        }
+
+        document.getElementById('logo').innerHTML = `<img src="../assets/providerLogos/${data.provider}.svg" class="trip-logo" title="${data.provider} Logo">`;
+
+        if (!data) {
+            console.error('Fehler beim Abrufen der Trip-Daten.');
+            const statusElement = document.getElementById('tripStatus');
+            document.getElementById('body').innerHTML = `
+                <nav id="navbar">
+                    <div class="tabs"><span class="active">&nbsp;Zuginformationen&nbsp;</span></div>
+                    <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
+                    <div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div>
+                </nav>
+
+                <center>
+                <br><br>
+                <h1>⛓️‍💥</h1>
+                <h3>Fehler beim Abrufen der Daten</h3>
+
+                <p>Dieser Link ist ungültig oder deine Internet-Verbindung wurde unterbrochen.</p>
+
+                <br>
+
+                <div onClick=\"history.go(0)\" class="button reload">Erneut laden</div>
+
+            `;
+            return;
+        }
+
+        // Funktion zur Aktualisierung des Zugstatus
+        function updateTrainStatus(trip) {
+            let currentTime = new Date();
+            let departureTime = trip.departure ? new Date(trip.departure) : null;
+            let arrivalTime = trip.arrival ? new Date(trip.arrival) : null;
+
+            const statusElement = document.getElementById('tripStatus');
+
+            function formatTimeDifference(timeDiffMillis) {
+                const totalMinutes = Math.round(timeDiffMillis / 60000);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+
+                let timeString = '';
+                if (hours > 0) {
+                    timeString = `${hours} Stunde${hours > 1 ? 'n' : ''}`;
+                    if (minutes > 0) {
+                        timeString += ` und ${minutes} Minute${minutes !== 1 ? 'n' : ''}`;
+                    }
+                } else {
+                    timeString = `${minutes} Minute${minutes !== 1 ? 'n' : ''}`;
+                }
+
+                return timeString;
+            }
+
+            function getPlatformInfo(platform) {
+                return platform ? `auf Gleis ${platform}` : 'ohne festgelegtes Gleis';
+            }
+
+            const isTripCancelled = trip.cancelled === true;
+            const allStopoversCancelled = trip.stopovers.every(stop => (stop.cancelled === true));
+
+            if (isTripCancelled && allStopoversCancelled) {
+                statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} ist vollständig ausgefallen.`;
+                return;
+            }
+
+            const cancelledStopovers = trip.stopovers.filter(stop => ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)));
+            const activeStopovers = trip.stopovers.filter(stop => ((!stop.cancelled) && (stop.arrival !== null) && (stop.departure !== null)));
+
+            function findNextActiveStopover() {
+                for (let i = 0; i < activeStopovers.length; i++) {
+                    const stop = activeStopovers[i];
+                    const plannedDeparture = stop.plannedDeparture ? new Date(stop.plannedDeparture) : null;
+                    const actualDeparture = stop.departure ? new Date(stop.departure) : null;
+
+                    if ((plannedDeparture && plannedDeparture > currentTime) || (actualDeparture && actualDeparture > currentTime)) {
+                        return stop;
+                    }
+                }
+                return null;
+            }
+
+            if (departureTime && currentTime < departureTime && !trip.origin.cancelled) {
+                const timeUntilDeparture = departureTime - currentTime;
+                const timeString = formatTimeDifference(timeUntilDeparture);
+
+                const platformInfo = getPlatformInfo(trip.departurePlatform || trip.plannedDeparturePlatform);
+
+                statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} fährt in ${timeString} von <b class="markedstation">${trip.origin.name}</b> ${platformInfo} ab.`;
+                return;
+            }
+
+            let nextStop = findNextActiveStopover();
+
+            if (nextStop) {
+                const arrivalTimeAtNextStop = nextStop.arrival ? new Date(nextStop.arrival) : new Date(nextStop.plannedArrival);
+                const timeUntilNextStop = arrivalTimeAtNextStop - currentTime;
+                const timeString = formatTimeDifference(timeUntilNextStop);
+
+                const platformInfoArrival = getPlatformInfo(nextStop.arrivalPlatform || nextStop.plannedArrivalPlatform);
+                const platformInfoDeparture = getPlatformInfo(nextStop.departurePlatform || nextStop.plannedDeparturePlatform);
+
+                if (timeUntilNextStop > 0) {
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} erreicht in ${timeString} <b class="markedstation">${nextStop.stop.name}</b> ${platformInfoArrival}.`;
+                } else {
+                    const departureTimeAtNextStop = nextStop.departure ? new Date(nextStop.departure) : new Date(nextStop.plannedDeparture);
+                    const timeUntilDeparture = departureTimeAtNextStop - currentTime;
+
+                    if (timeUntilDeparture > 0) {
+                        const departureTimeString = formatTimeDifference(timeUntilDeparture);
+
+                        statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} steht aktuell in <b class="markedstation">${nextStop.stop.name}</b> und fährt in ${departureTimeString} ${platformInfoDeparture} ab.`;
+                    } else {
+                        statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} hat <b class="markedstation">${nextStop.stop.name}</b> gerade verlassen und ist auf dem Weg zum nächsten Halt.`;
+                    }
+                }
+            } else {
+                if (arrivalTime && currentTime >= arrivalTime && !trip.destination.cancelled) {
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} hat sein Ziel <b class="markedstation">${trip.destination.name}</b> erreicht.`;
+                } else if (trip.destination.cancelled) {
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} endet vorzeitig und erreicht nicht sein geplantes Ziel.`;
+                } else {
+                    const timeUntilArrival = arrivalTime ? arrivalTime - currentTime : null;
+                    const timeString = timeUntilArrival ? formatTimeDifference(timeUntilArrival) : 'unbekannter Zeit';
+
+                    const platformInfo = getPlatformInfo(trip.arrivalPlatform || trip.plannedArrivalPlatform);
+
+                    statusElement.innerHTML = `${trip.line.name.split("(Zug-Nr")[0]} ist auf dem Weg zu seinem Endziel <b class="markedstation">${trip.destination.name}</b> und wird in ${timeString} ${platformInfo} ankommen.`;
+                }
+            }
+
+            if (cancelledStopovers.length > 0) {
+                const cancelledStopsNames = cancelledStopovers.map(stop => stop.stop.name).join(', ');
+                statusElement.innerHTML += `\nDie folgenden Halte entfallen: ${cancelledStopsNames}.`;
+            }
+        }
+
+        if ((data.trip.line.productName === 'ICE') || (data.trip.line.productName === 'IC')) {
+            document.getElementById('comfortbutton').classList.remove('hidden');
+        }
+
+        document.getElementById('trainTitle').innerHTML = `(${data.trip.line.fahrtNr})`;
+
+        var lineName = data.trip.line.name.split('(')[0];
+        document.getElementById('linebadge').innerHTML = `${lineName}`;
+
+        document.getElementById('operatorName').innerHTML = `${data.trip.line.operator.name}`;
+
+        document.getElementById('title').innerHTML = `${data.trip.line.productName} ${data.trip.line.fahrtNr} 🡺 ${data.trip.destination.name}`;
+
+        const departureTime = new Date(data.trip.plannedDeparture);
+
+        const tripDate = departureTime.toLocaleDateString('de-DE', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        document.getElementById('trip-date').innerHTML = tripDate;
+
+        document.getElementById('lauf').innerHTML = data.trip.origin.name + ' → ' + data.trip.destination.name;
+
+        function getStopStatus(stop, currentTime, isLastStop) {
+            if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
+                return 'cancelled';
+            }
+
+            const plannedArrival = stop.plannedArrival ? new Date(stop.plannedArrival) : null;
+            const actualArrival = stop.arrival ? new Date(stop.arrival) : null;
+            const plannedDeparture = stop.plannedDeparture ? new Date(stop.plannedDeparture) : null;
+            const actualDeparture = stop.departure ? new Date(stop.departure) : null;
+
+            const arrivalTime = actualArrival || plannedArrival;
+            const departureTime = actualDeparture || plannedDeparture;
+
+            if (isLastStop && arrivalTime && arrivalTime < currentTime) {
+                return 'past';
+            }
+
+            if (departureTime && departureTime < currentTime) {
+                return 'past';
+            } else if (!stop.nextToCurrent && arrivalTime && arrivalTime > currentTime) {
+                return 'future';
+            } else {
+                return 'unknown';
+            }
+        }
+
+        const stopoversContainer = document.querySelector('.trip-stopovers');
+        stopoversContainer.innerHTML = '';
+
+        const currentTime = new Date();
+
+        let currentStopFound = false;
+
+        data.trip.stopovers.forEach((stop, index) => {
+            const stopElement = document.createElement('div');
+            stopElement.classList.add('trip-stopover');
+
+            const isLastStop = index === data.trip.stopovers.length - 1;
+            let stopStatus = getStopStatus(stop, currentTime, isLastStop);
+
+            if (!currentStopFound && stopStatus === 'future') {
+                stopStatus = 'current';
+
+                let progressPercentage = 0;
+
+                if (index > 0) {
+                    const previousStop = data.trip.stopovers[index - 1];
+                    const previousDepartureTime = previousStop.departure ? new Date(previousStop.departure) : new Date(previousStop.plannedDeparture);
+                    const arrivalTime = stop.arrival ? new Date(stop.arrival) : new Date(stop.plannedArrival);
+                    const departureTime = stop.departure ? new Date(stop.departure) : new Date(stop.plannedDeparture);
+
+                    const totalTime = arrivalTime - previousDepartureTime;
+                    const timePassed = currentTime - previousDepartureTime;
+
+                    progressPercentage = (timePassed / totalTime) * 100;
+                    progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
+                }
+
+                stopElement.style.setProperty('--progress-percentage', `${progressPercentage}%`);
+                stopElement.style.setProperty('--progress-px', `${40 / 100 * (progressPercentage - 1) - 45}px`);
+                stopElement.innerHTML = `
+                <picture>
+                    <source srcset="../assets/icons/train-top-dark.svg" media="(prefers-color-scheme: dark)">
+                    <source srcset="../assets/icons/train-top.svg" media="(prefers-color-scheme: light)">
+                    <img src="../assets/icons/train-top.svg" alt="Location" class="trainposition">
+                </picture>
+                `;
+            }
+
+            stopElement.classList.add(`stop-${stopStatus}`);
+
+            if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
+                stopElement.innerHTML += `
+            <div class="trip-stop-time">
+                <div class="trip-delay" style="font-size: 16px">Entfällt</div>
+            </div>
+            <div class="trip-stop-info">
+                <span class="trip-stop-name">${stop.stop.name}</span>
+            </div>
+            <div class="connection-cell">
+                &nbsp;
+            </div>
+        `;
+            } else if (stopStatus === 'current') {
+                currentStopFound = true;
+
+                const plannedArrivalTime = stop.plannedArrival ? new Date(stop.plannedArrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const actualArrivalTime = stop.arrival ? new Date(stop.arrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const plannedDepartureTime = stop.plannedDeparture ? new Date(stop.plannedDeparture).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const actualDepartureTime = stop.departure ? new Date(stop.departure).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                const arrivalTimeDisplay = plannedArrivalTime === actualArrivalTime || !actualArrivalTime ? plannedArrivalTime : `<s class="disabled">${plannedArrivalTime}</s>&nbsp;<span>${actualArrivalTime}</span>`;
+                const departureTimeDisplay = plannedDepartureTime === actualDepartureTime || !actualDepartureTime ? plannedDepartureTime : `<s class="disabled">${plannedDepartureTime}</s>&nbsp;<span>${actualDepartureTime}</span>`;
+
+                let stopname = stop.stop.name;
+                if (stationId === stop.stop.id) {
+                    stopElement.classList.add('marked-stopover');
+                }
+
+                stopElement.innerHTML += `
+            <div class="trip-stop-time">
+                <div>${arrivalTimeDisplay}</div>
+                <div>${departureTimeDisplay}</div>
+            </div>
+            <div class="trip-stop-info">
+                <span class="trip-stop-name">${stopname}</span>
+                <span class="trip-platform">${(stop.arrivalPlatform || stop.departurePlatform) ? `Gl&nbsp;${stop.arrivalPlatform || stop.departurePlatform}` : '-'}</span>
+            </div>
+            <div class="connection-cell">
+                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="../assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="../assets/icons/placeholder.svg">'}
+            </div>
+        `;
+            } else {
+                const plannedArrivalTime = stop.plannedArrival ? new Date(stop.plannedArrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const actualArrivalTime = stop.arrival ? new Date(stop.arrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const plannedDepartureTime = stop.plannedDeparture ? new Date(stop.plannedDeparture).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+                const actualDepartureTime = stop.departure ? new Date(stop.departure).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                const arrivalTimeDisplay = plannedArrivalTime === actualArrivalTime || !actualArrivalTime ? plannedArrivalTime : `<s class="disabled">${plannedArrivalTime}</s>&nbsp;<span>${actualArrivalTime}</span>`;
+                const departureTimeDisplay = plannedDepartureTime === actualDepartureTime || !actualDepartureTime ? plannedDepartureTime : `<s class="disabled">${plannedDepartureTime}</s>&nbsp;<span>${actualDepartureTime}</span>`;
+
+                let stopname = stop.stop.name;
+                if (stationId === stop.stop.id) {
+                    stopElement.classList.add('marked-stopover');
+                }
+
+                stopElement.innerHTML += `
+            <div class="trip-stop-time">
+                <div>${arrivalTimeDisplay}</div>
+                <div>${departureTimeDisplay}</div>
+            </div>
+            <div class="trip-stop-info">
+                <span class="trip-stop-name">${stopname}</span>
+                <span class="trip-platform">${(stop.arrivalPlatform || stop.departurePlatform) ? `Gl&nbsp;${stop.arrivalPlatform || stop.departurePlatform}` : '-'}</span>
+            </div>
+            <div class="connection-cell">
+                ${stop.arrival !== null ? `<a href="connections.html?stop=${stop.stop.location.id}&tripID=${encodeURIComponent(tripId)}">&nbsp;<img src="../assets/icons/connectingTrain.svg"></a>` : '&nbsp;<img src="../assets/icons/placeholder.svg">'}
+            </div>
+        `;
+            }
+
+            stopoversContainer.appendChild(stopElement);
+        });
+
+        updateTrainStatus(data.trip);
+
+        var wagonorderbutton = document.getElementById('wagonorderbutton');
+
+        var test = '2';
+
+        const tripdepartureTime = new Date(new URLSearchParams(window.location.search).get('departureTime')).toISOString();
+
+        if ((stationId === null) || tripdepartureTime === null) {
+            var choosenstation = data.trip.stopovers[0].stop.id;
+            const tripdepartureTime = data.trip.stopovers[0].plannedDeparture;
+        } else {
+            var choosenstation = stationId;
+            const tripdepartureTime = new URLSearchParams(window.location.search).get('departureTime');
+        }
+
+        if (wagonorderbutton) {
+            wagonorderbutton.href = `wagonorder.html?trainnumber=${data.trip.line.fahrtNr}&station=${choosenstation}&producttype=${data.trip.line.productName}&departure=${tripdepartureTime}`;
+        }
+
+        document.getElementById('webfisbutton').href = `./webfis/screen.html?trip=${encodeURIComponent(tripId)}&station=${choosenstation}`;
+
+        function sanitizeText(text) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = text;
+            return tempDiv.textContent || tempDiv.innerText || '';
+        }
+
+        function sanitizeAndNormalizeText(text) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = text;
+            let sanitizedText = tempDiv.textContent || tempDiv.innerText || '';
+            sanitizedText = sanitizedText.toLowerCase().trim();
+            sanitizedText = sanitizedText.replace(/\s+/g, ' ');
+            sanitizedText = sanitizedText.replace(/\d+/g, '#');
+            return sanitizedText;
+        }
+
+        const warningsList = document.getElementById('remarks');
+        warningsList.innerHTML = '';
+
+        const warningCounterElement = document.getElementById('trip-warning-counter-button');
+
+        let stationRemarks = [];
+        if (stationId) {
+            const stationStopover = data.trip.stopovers.find(stopover => stopover.stop.id === stationId);
+            if (stationStopover && stationStopover.remarks && stationStopover.remarks.length > 0) {
+                stationRemarks = stationStopover.remarks;
+            }
+        }
+
+        const tripRemarks = data.trip.remarks || [];
+
+        const combinedRemarks = [...stationRemarks, ...tripRemarks];
+
+        if (combinedRemarks.length > 0) {
+
+            document.getElementById('trip-warning-counter-button').classList.remove('hidden');
+
+            const uniqueMessages = new Set();
+            const uniqueRemarks = [];
+
+            combinedRemarks.forEach(remark => {
+                const normalizedText = sanitizeAndNormalizeText(remark.text);
+                let code = 'default';
+                if (remark.code) {
+                    code = sanitizeText(remark.code.replace(/\./g, ''));
+                }
+                if (!uniqueMessages.has(normalizedText)) {
+                    uniqueMessages.add(normalizedText);
+                    uniqueRemarks.push({ ...remark, code });
+                }
+            });
+
+            const warningCount = uniqueRemarks.length;
+
+            warningCounterElement.innerHTML = `${warningCount}`;
+
+            const WarningHeaderItem = document.createElement('tr');
+            document.getElementById('trainTab').innerHTML = `Zug <span class=\"pill\">&nbsp;${warningCount}&nbsp;</span>`;
+            warningsList.appendChild(WarningHeaderItem);
+
+            uniqueRemarks.forEach(remark => {
+                const code = remark.code || 'default';
+                remarks.innerHTML += (`
+                <div class="listitem">
+                    <div class="listimagecontainer"><img src="../assets/icons/remark${code}.svg"></div>
+                    <div class="listitemtext">${sanitizeText(remark.text)}</div>
+                </div>`);
+            });
+        } else {
+            warningCounterElement.innerHTML = '&nbsp;Keine&nbsp;';
+            document.getElementById('remarks').classList.add('hidden');
+        }
+
+        const badgeClassProductName = encodeURIComponent(data.trip.line.productName);
+        const badgeClassProduct = encodeURIComponent(data.trip.line.product);
+        const badgeClassLineOperator = encodeURIComponent(lineName.replace(/\s+/g, '')) + encodeURIComponent(data.trip.line.operator.id);
+        const badgeClassOperator = encodeURIComponent(data.trip.line.operator.id);
+        const tripID = encodeURIComponent(data.trip.id);
+
+        document.getElementById('bigheaderbox').classList.add(badgeClassProductName);
+        document.getElementById('bigheaderbox').classList.add(badgeClassProduct);
+        document.getElementById('bigheaderbox').classList.add(badgeClassLineOperator);
+        document.getElementById('bigheaderbox').classList.add(badgeClassOperator);
+
+        document.getElementById('linebadge').classList.add(badgeClassProductName);
+        document.getElementById('linebadge').classList.add(badgeClassProduct);
+        document.getElementById('linebadge').classList.add(badgeClassLineOperator);
+        document.getElementById('linebadge').classList.add(badgeClassOperator);
+
+        let $number = encodeURIComponent(data.trip.id);
+
+        document.getElementById('pinChip').addEventListener('click', function () {
+            console.log('Angeheftet')
+            document.getElementById('pinChip').classList.add('hidden')
+            document.getElementById('unpinChip').classList.remove('hidden')
+            localStorage.setItem("pinnedJourney", $number);
+            localStorage.setItem("pinnedJourneyStation", stationId);
+            console.log($number);
+            console.log(stationId);
+
+        });
+
+        if ((localStorage.getItem("pinnedJourney")) === $number){
+            console.log('Angeheftete Journey')
+                document.getElementById('pinChip').classList.add('hidden')
+                document.getElementById('unpinChip').classList.remove('hidden')
+                localStorage.setItem("pinnedJourney", $number);
+                localStorage.setItem("pinnedJourneyStation", stationId);
+                console.log($number);
+                console.log(stationId);
+        }
+
+        document.getElementById('unpinChip').addEventListener('click', function () {
+            console.log('Abgeheftet')
+            document.getElementById('pinChip').classList.remove('hidden')
+            document.getElementById('unpinChip').classList.add('hidden')
+            localStorage.removeItem("pinnedJourney");
+            localStorage.removeItem("pinnedJourneyStation");
+
+        });
+
+        // WAGONORDER GRAPHIC             
+        async function loadTrainData() {
+        const url = `https://data.cuzimmartin.dev/wagenreihung?train_number=${data.trip.line.fahrtNr}&eva=${choosenstation}&train_type=${data.trip.line.productName}&departure_time=${tripdepartureTime}`;
+        const response = await fetch(url);
+        const traindata = await response.json();
+
+        const container = document.getElementById("trainslider");
+
+        if (localStorage.getItem('materialtrains') === 'false') {
+            container.classList.add('hidden')
+        } 
+
+        container.innerHTML = ""; 
+
+        traindata.groups.forEach(group => {
+            const transportCategory = group.transport.category;
+            const vehicles = group.vehicles;
+
+            vehicles.forEach((vehicle, index) => {
+            const vehicleId = vehicle.vehicleID;
+            const category = vehicle.type.category;
+            const constructionType = vehicle.type.constructionType || "";
+            const series = vehicle.typeDetails.series || "";
+            const typeDetailsCategory = vehicle.typeDetails.category;
+
+            let suffix = "";
+            if (index === 0) suffix = "-firstgroupvehicle";
+            if (index === vehicles.length - 1) suffix = "-lastgroupvehicle";
+
+            const sources = [
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/${category}-${vehicleId}${suffix}.png`,
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/${transportCategory}-${category}-${constructionType}-${series}${suffix}.png`,
+                `https://materialtrains.unibits.eu/vehicles/deutschebahn/blank-${typeDetailsCategory}${suffix}.png`,
+                `../assets/icons/blankvehicle.png`
+            ];
+
+            const img = document.createElement("img");
+            img.alt = `${category} (${vehicleId})`;
+            img.dataset.fallbacks = JSON.stringify(sources);
+            img.dataset.index = 0;
+            img.src = sources[0];
+            img.classList.add('vehicle');
+
+            // Fallback-Mechanismus
+            img.onerror = function () {
+                let index = parseInt(this.dataset.index, 10);
+                const fallbacks = JSON.parse(this.dataset.fallbacks);
+
+                if (index < fallbacks.length - 1) {
+                index++;
+                this.dataset.index = index;
+                this.src = fallbacks[index]; // Nächstes Bild probieren
+                } else {
+                this.onerror = null; // Keine Endlosschleife
+                }
+            };
+
+            container.appendChild(img);
+            });
+        });
+        }
+        loadTrainData();
+        
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchAndDisplayData();
+        // Starte Intervall nur wenn Tab aktiv ist
+        if (!document.hidden) {
+            updateIntervalId = setInterval(fetchAndDisplayData, 30000);
+        }
+    });
+
+    fetchAndDisplayData();
+
+
+
+

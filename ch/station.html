@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Bahnhof</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+    <link rel="manifest" href="/manifest.json" type="application/json">
+    <meta name="theme-color" content="#000">
+    <meta name="robots" content="noindex">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body class="bodyWithPopup coloredbody fixednavbar">
+
+<script src="../assets/src/pinnedPopup.js"></script>
+<center>
+    <noscript> You need to enable JavaScript to run this app.</noscript>
+
+    <nav id="navbar">
+			<div class="tabs" id="tabs">
+				<a href="#" class="active">&nbsp;Bahnhof&nbsp;</a>
+				
+			</div>
+            <div class="iconbar"><a class="navsearch" href="stationsearch.html">Bahnhofsuche</a></div>
+	</nav>
+
+    <br><br>
+	
+	<div id="errorbox" class="hidden">
+		<h1>&#128557;</h1>
+		<h3>Es ist ein Fehler aufgetreten.</h3>
+		<p>Bitte überprüfe ob diese Station durch <i>DB Infrago</i> betrieben wird.</p>
+		<p><a href="stationsearch.html"><u>Bahnhofsuche</u></a></p>
+	</div>
+	
+    <div id="blanktext" class="coloredspace">
+        <div class="container blanktext">
+            <div class="left-div">
+			
+				<h3>Ausstattung</h3>
+				<div class="listcontainer" id="features">
+
+				</div>
+
+				<br>
+				
+				<h3 id="serviceheader">Services</h3>
+				<div class="listcontainer" id="services">
+
+				</div>
+				
+            </div>
+            <div class="right-div lineview">
+				<div id="stationimage" class="stationimage">
+					<div class="stationimagecontent" >
+						<span class="stationname" id="stationname">Lade Daten...</span><br>
+						<small id="productline"></small>
+						
+					</div>
+				</div>
+                <br>
+				<div class="listcontainer" id="detailscontainer">
+					
+				</div>
+
+				<br>
+
+				<div class="listcontainer">
+					<div class="listitem">
+						<div class="listimagecontainer"><img src="../assets/icons/kichange.svg"></div>
+						<div class="listitemtext">
+							Umsteigezeit<br>
+							<small class="disabled">KI-unterstützte Schätzung</small>
+						</div>
+					</div>
+					<div class="listitem">
+						<div class="listitemtext">
+			
+							<table><tr><td><small class="disabled">Von</small><br><select name="startplatforms" type="text" id="platStart" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td><td><small class="disabled">Nach</small><br><select name="startplatforms" type="text" id="platEnd" class="platformselect selectnopadding"><option value="" disabled selected hidden>Gleis</option></select></td></tr></table>
+							
+						</div>
+					</div>
+
+					<div class="listitem hidden noflex" id="transferContainer">
+						<center>
+							<span id="timeSpan"></span>
+							<small id="recomendedTimeSpan" class="disabled"></small>
+						</center>
+					</div>
+
+					<div class="listitem hidden noflex" id="transferwayContainer">
+
+					</div>
+				</div>
+			
+				
+
+				<span id="stationCat"></span>
+				
+                <br><br>
+            </div>
+
+
+        </div>
+        <span id="notice"></span>
+
+        <br>
+
+    </div>
+
+   
+</center>
+
+<script type="text/javascript" src="../assets/src/ch/station.js"></script>
+</body>
+</html>

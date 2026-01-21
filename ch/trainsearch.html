@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Zugsuche | Trainboard</title>
+        <link rel="stylesheet" href="../assets/css/styles.css">
+        <link rel="stylesheet" href="../assets/css/dark-styles.css">
+        <link rel="stylesheet" href="../assets/css/line-colors.css">
+        <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+        <link rel="manifest" href="../manifest.json" type="application/json">
+        <meta name="theme-color" content="#000">
+        <meta name="description" content="Erhalten Sie aktuelle Informationen zu ihrer Zugfahrt.">
+        <meta name="keywords" content="zugsuche, zugnummer, wagenreihung, db, bahnhof, deutschebahn, trainboard, abfahrtstafel, abfahrtsmonitor, ankunftsmonitor, stationsinformation, zugtafel, abfahrt, ankunft, deutsche bahnhöfe">
+    
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="Zugsuche | Trainboard">
+        <meta property="og:description" content="Erhalten Sie aktuelle Informationen zu ihrer Zugfahrt.">
+        <meta property="og:image" content="https://trainboard.eu/assets/branding/icon-512x512.png">
+        <meta property="og:url" content="https://trainboard.eu/trainsearch.html">
+        <meta property="og:type" content="website">
+    
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Zugsuche | Trainboard">
+        <meta name="twitter:description" content="Erhalten Sie aktuelle Informationen zu ihrer Zugfahrt.">
+        <meta name="twitter:image" content="https://trainboard.eu/assets/branding/bigtrainsearchbanner.png">
+        <meta name="twitter:url" content="https://trainboard.eu/trainsearch.html">
+    
+        <!-- Schema.org Markup -->
+        <script type="application/ld+json">
+            {
+                "@context": "http://schema.org",
+                "@type": "WebSite",
+                "name": "Trainboard",
+                "url": "https://trainboard.eu",
+                "description": "Interaktive Abfahrts- und Ankunftstafel für Deutsche Bahnhöfe.",
+            }
+        </script>
+    </head>
+
+<body class="home fixednavbar">
+
+<script src="../assets/src/widgets.js"></script>
+<script src="../assets/src/pinnedPopup.js"></script>
+<script src="../assets/src/twlngPopup.js"></script>
+
+<!-- Info Popup -->
+<div class="popuplinks">
+    
+    <input type="checkbox" id="toggle">
+    
+    <label for="toggle" class="toggle-label"></label>
+
+    <div class="content">
+        
+        <img src="../assets/branding/icon-72x72.png" class="aboutlogo"><br>
+        <small>Trainboard is a project by <a href="https://github.com/OpenTransitHub"><u>Open Transit Hub</u></a> at <a href="https://unibits.eu/"><u>unibits.eu</u></a></small>
+
+        <br><br>
+
+        <div class="listcontainer">
+            <div class="listitem">
+                <div class="listimagecontainer">
+                    <a href="../about.html">
+                        <img src="../assets/icons/about.svg">
+                    </a>
+                </div>
+                <div class="listitemtext">
+                    <a href="../about.html">
+                        About
+                    </a>
+                </div>
+            </div>
+
+            <div class="listitem">
+                <div class="listimagecontainer">
+                    <a href="../settings.html">
+                        <img src="../assets/icons/settings.svg">
+                    </a>
+                </div>
+                <div class="listitemtext">
+                    <a href="../settings.html">
+                        Einstellungen
+                    </a>
+                </div>
+            </div>
+
+             <div class="listitem">
+                <div class="listimagecontainer">
+                    <a href="https://github.com/hoolycrash/trainboard">
+                        <img src="../assets/icons/github.svg">
+                    </a>
+                </div>
+                <div class="listitemtext">
+                    <a href="https://github.com/hoolycrash/trainboard">
+                        Github
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        </a>
+    </div>
+</div>
+
+<center>
+
+	<nav id="navbar">
+		<div class="tabs">
+			<a href="index.html" class="">&nbsp;Zugtafel&nbsp;</a>
+            <!---<a href="localsearch.html" class="">&nbsp;Nahverkehr&nbsp;</a>-->
+			<a href="stationsearch.html" class="">&nbsp;Bahnhof&nbsp;</a>
+            <span class="active">&nbsp;Zugsuche&nbsp;</span>
+		</div>
+	</nav>
+	 
+	<br> <br class="bigonly">
+
+    <table class="nameholder"><tr><td><img src="../assets/branding/icon-72x72.png" class="logo"></td><td class="wide bigtext">Trainboard</td></tr></table>
+
+    <div class="searchcontainer">
+		<div class="container">
+
+             <div class="left-div">
+               <div class="switchcontainer">
+                    <a href="../setprovider.html"><div class="spacer"><img src="../assets/providerLogos/ch.svg" class="providericon"> <small class="wide"><small>Gewählte Datenquelle:</small><br>Schweierische Bundesbahn</small><img src="../assets/icons/configure.svg"></div></a>
+               </div>
+            </div>
+            <div class="right-div stacktobottom">
+				<input class="searchbar datebar" type="date" autocomplete="off" id="dateInput">
+            </div>
+
+
+                
+				<input class="searchbar" type="text" autocomplete="off" id="searchInput" placeholder="Suche nach Zugnummer" oninput="searchLocations()" autofocus>
+
+		</div>
+	
+		
+		<div id="results"></div>
+
+
+  </div>
+  
+  <br>
+  
+
+<script type="text/javascript" src="../assets/src/ch/trainsearch.js"></script>
+    
+<script type="text/javascript" src="../assets/src/backgroundimage.js"></script>
+
+<script type="text/javascript" src="../assets/src/providersettings.js"></script>
+  
+</center>
+</body>
+</html>
