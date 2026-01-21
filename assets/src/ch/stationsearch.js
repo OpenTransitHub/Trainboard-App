@@ -1,10 +1,3 @@
-    // Switch to prefered Provider Suite
-    const id="de"
-    let p=localStorage.getItem("provider")
-    if(!p){p={providerName:"Deutsche Bahn",providerID:"de"};localStorage.setItem("provider",JSON.stringify(p))}
-    else p=JSON.parse(p)
-    if(p.providerID!==id)location.href=`../${p.providerID}/index.html`
-
 
 	function searchLocations() {
 		const userInput = document.getElementById('searchInput').value;
