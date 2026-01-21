@@ -1,127 +1,149 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Datenlieferant</title>
-	<link rel="stylesheet" href="./assets/css/styles.css">
-	<link rel="stylesheet" href="./assets/css/dark-styles.css">
-	<link rel="stylesheet" href="./assets/css/line-colors.css">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-	<link rel="manifest" href="/manifest.json" type="application/json" >
-	<meta name="theme-color" content="#000">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datenlieferant</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/dark-styles.css">
+    <link rel="stylesheet" href="./assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
+    <link rel="manifest" href="/manifest.json" type="application/json">
+    <meta name="theme-color" content="#000">
 </head>
 
 <body class="bodyWithPopup coloredbody fixednavbar">
 
 <center>
+    <nav id="navbar">
+        <div class="tabs"><span class="active">&nbsp;Datenlieferant&nbsp;</span></div>
+        <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
+        <div class="iconbar">
+            <a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a>
+        </div>
+    </nav>
 
-<nav id="navbar"><div class="tabs"><span class="active">&nbsp;Datenlieferant&nbsp;</span></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
+    <br>
 
-<br>
+    <div class="textonly">
+        <h3>Aktuell gewählt</h3>
+        <div class="listcontainer" id="providerselect"></div>
 
-	
-<div class="textonly">
-
-	<h3>Aktuell gewählt</h3>
-	<div class="listcontainer" id="providerselect">
-
-	</div>
-
-	<br>
-	<h3>Verfügbar</h3>
-	<div class="listcontainer" id="providerList">
-	</div>
-	
+        <br>
+        <div id="dynamicLists">
+            <div id="loading"><img src="assets/blackSpinner.svg"></div>
+        </div>
+    </div>
 </center>
 
 <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const providerKey = "provider";
+        const apiUrl = "https://prod.cuzimmartin.dev/api/providers/";
 
+        // 1. Aktuellen Provider aus LocalStorage holen
+        let currentProvider = JSON.parse(localStorage.getItem(providerKey)) || { 
+            providerName: "Deutsche Bahn", 
+            providerID: "db" 
+        };
 
-// Get the Region
-document.addEventListener("DOMContentLoaded", () => {
-	const providerKey = "provider";
-	let provider = localStorage.getItem(providerKey);
+        // Anzeige "Aktuell gewählt"
+        const selectContainer = document.getElementById("providerselect");
+        selectContainer.innerHTML = `
+            <div class="listitem">
+                <div class="listimagecontainer">
+                    <img src="./assets/providerLogos/${currentProvider.providerID}.svg" class="listlogo noinvert">
+                </div>
+                <div class="listitemtext">
+                    ${currentProvider.providerName}<br>
+                    <small class="disabled">Aktuell ausgewählt</small>
+                </div>
+            </div>
+        `;
 
-	if (!provider) {
-		provider = {
-			providerName: "Deutsche Bahn",
-			providerID: "de"
-		};
-		
-		localStorage.setItem(providerKey, JSON.stringify(provider));
-	} else {
-		provider = JSON.parse(provider);
-	}
+        try {
+            const response = await fetch(apiUrl);
+            const result = await response.json();
 
-	const span = document.getElementById("providerselect");
-	span.innerHTML = `
-		<div class="listitem"><div class="listimagecontainer"><img src="./assets/providerLogos/${provider.providerID}.svg" class="listlogo noinvert"> </div><div class="listitemtext">${provider.providerName}<br><small class="disabled">Aktuell ausgewählt</small></div></div>
-	`;
-});
+            if (result.success && result.data.grouped) {
+                const mainContainer = document.getElementById("dynamicLists");
+                mainContainer.innerHTML = ""; // Lade-Text entfernen
 
+                // Alle Provider in eine flache Liste extrahieren für einfacheres Filtern
+                const allProviders = [];
+                result.data.grouped.forEach(group => {
+                    group.providers.forEach(p => {
+                        allProviders.push({ ...p, regionDisplay: group.regionCode });
+                    });
+                });
 
-  // Region switch
+                // Gruppierung definieren
+                const sections = [
+                    { 
+                        title: "Nationale Betreiber", 
+                        filter: p => p.scope === "NATIONAL" || p.scope === "INTERNATIONAL" 
+                    },
+					
+                    { 
+                        title: "Lokale Betreiber", 
+                        filter: p => p.scope === "CITY" || p.scope === "REGIONAL" 
+                    }
+                ];
 
-	document.addEventListener("DOMContentLoaded", () => {
-	const providerKey = "provider";
+                sections.forEach(section => {
+                    const filtered = allProviders.filter(section.filter);
+                    
+                    if (filtered.length > 0) {
+                        // Überschrift hinzufügen
+                        const heading = document.createElement("h3");
+                        heading.textContent = section.title;
+                        mainContainer.appendChild(heading);
 
-	const providers = [
-		{ providerName: "Deutsche Bahn (DB)", providerID: "de", region: "Germany" },
-		{ providerName: "Flixbus", providerID: "flixbus", region: "Europe" },
-		{ providerName: "Nationale Maatschappij der Belgische Spoorwegen (NMBS)", providerID: "be", region: "Belgium" },
-		{ providerName: "Nederlandse Spoorwegen (NS)", providerID: "nl", region: "Netherlands" },
-		{ providerName: "Schweizerische Bundesbahnen (SBB)", providerID: "ch", region: "Switzerland" },
-		{ providerName: "Société nationale des chemins de fer français (SNCF)", providerID: "fr", region: "France" },
-		{ providerName: "Statens Järnvägar (SJ)", providerID: "se", region: "Sweden" },
-		{ providerName: "VR-Yhtymä (VR)", providerID: "fi", region: "Finland" },
-		{ providerName: "Vygruppen (VY)", providerID: "no", region: "Norway" },
-	];
+                        // Container für die Liste
+                        const listDiv = document.createElement("div");
+                        listDiv.className = "listcontainer";
 
-	let currentProvider = localStorage.getItem(providerKey);
-	if (!currentProvider) {
-		currentProvider = { providerName: "Deutsche Bahn", providerID: "de" };
-		localStorage.setItem(providerKey, JSON.stringify(currentProvider));
-	} else {
- 		currentProvider = JSON.parse(currentProvider);
-	}
+                        filtered.forEach(p => {
+                            const isSelected = p.regionDisplay === currentProvider.regionDisplay;
+                            const indicatorHTML = isSelected 
+                                ? `<div class="listimagecontainer"><img src="./assets/icons/checkedimg.svg" class="noinvert"></div>`
+                                : `<div class="listimagecontainer"><img src="./assets/icons/checkbox.svg" class="noinvert"></div>`;
 
-	const container = document.getElementById("providerList");
+                            const item = document.createElement("div");
+                            item.className = "listitem provider cursorpointer";
+                            item.innerHTML = `
+                                <div class="listimagecontainer">
+                                    <img src="./assets/providerLogos/${p.operatorId}.svg" class="noinvert listlogo" alt="${p.operatorId}.svg"> 
+                                </div>
+                                <div class="listitemtext">
+                                    ${p.displayName || p.name}<br>
+                                    <small class="disabled">${p.regionDisplay.toUpperCase()}</small>
+                                </div>
+                                ${indicatorHTML}
+                            `;
 
-	providers.forEach(p => {
-		let indicatorHTML = `<div class="listimagecontainer"><img src="./assets/icons/checkbox.svg" class="noinvert"></div>`;
+                            item.addEventListener("click", () => {
+                                localStorage.setItem(providerKey, JSON.stringify({
+                                    providerName: p.name,
+                                    providerID: p.operatorId,
+									regionDisplay: p.regionDisplay
+                                }));
+                                location.reload();
+                            });
 
-		if (p.providerID === currentProvider.providerID) {
-			indicatorHTML = `
-				<div class="listimagecontainer"><img src="./assets/icons/checkedimg.svg" class="noinvert"></div>
-			`;
-		}
+                            listDiv.appendChild(item);
+                        });
 
-		container.innerHTML += `
-			<div class="listitem  provider cursorpointer"  data-id="${p.providerID}" data-name="${p.providerName}">
-				<div class="listimagecontainer">
-					<img src="./assets/providerLogos/${p.providerID}.svg" class="noinvert listlogo"> 
-				</div>
-				<div class="listitemtext">
-					${p.providerName}<br><small class="disabled">${p.region}</small>
-				</div>
-				${indicatorHTML}
-			</div>
-		`;
-	});
-
-	document.querySelectorAll(".provider").forEach(div => {
-		div.addEventListener("click", () => {
-			const newProvider = {
-				providerName: div.getAttribute("data-name"),
-				providerID: div.getAttribute("data-id")
-			};
-			localStorage.setItem(providerKey, JSON.stringify(newProvider));
-			location.reload();
-			});
-		});
-	});
-
+                        mainContainer.appendChild(listDiv);
+                        mainContainer.appendChild(document.createElement("br"));
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("API Fehler:", error);
+            document.getElementById("dynamicLists").innerHTML = "<p>Fehler beim Laden der Anbieter.</p>";
+        }
+    });
 </script>
 
 </body>

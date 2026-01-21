@@ -57,7 +57,8 @@
             // Wenn noch kein Eintrag vorhanden ist → Standardwert setzen
             provider = {
                 providerName: "Deutsche Bahn",
-                providerID: "de"
+                providerID: "de",
+                regionDisplay: "DE"
             };
             localStorage.setItem(providerKey, JSON.stringify(provider));
             } else {
@@ -66,7 +67,7 @@
             }
 
             // Weiterleiten auf ./PROVIDERID
-            window.location.href = `./${provider.providerID}/index.html`;
+            window.location.href = `./${provider.regionDisplay}/index.html`;
         });
         </script>
 
