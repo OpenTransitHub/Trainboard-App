@@ -47,6 +47,10 @@
 <center>
 <div class="textonly">
     <br><br>
+
+    <div class="listcontainer" id="providerselect"></div>
+
+    <br>
 	<h3>This region is following soon</h3>
 	<div class="listcontainer" id="providerselect">
 
@@ -59,37 +63,32 @@
 </div>
 
 
+<script src="../assets/src/providersettings.js"></script>
+
 <script>
-// Get the Region
-document.addEventListener("DOMContentLoaded", () => {
-	const providerKey = "provider";
-	let provider = localStorage.getItem(providerKey);
+    document.addEventListener("DOMContentLoaded", async () => {
+        const providerKey = "provider";
+        const apiUrl = "https://prod.cuzimmartin.dev/api/providers/";
 
-	if (!provider) {
-		provider = {
-			providerName: "Deutsche Bahn",
-			providerID: "de"
-		};
-		
-		localStorage.setItem(providerKey, JSON.stringify(provider));
-	} else {
-		provider = JSON.parse(provider);
-	}
+        let currentProvider = JSON.parse(localStorage.getItem(providerKey)) || { 
+            providerName: "Deutsche Bahn", 
+            providerID: "db" 
+        };
 
-	const span = document.getElementById("providerselect");
-	span.innerHTML = `
-		<div class="listitem"><div class="listimagecontainer"><img src="../assets/providerLogos/${provider.providerID}.svg" class="providericon noinvert"> </div><div class="listitemtext">${provider.providerName}</div></div>
+        const selectContainer = document.getElementById("providerselect");
+        selectContainer.innerHTML = `
+            <div class="listitem">
+                <div class="listimagecontainer">
+                    <img src="../assets/providerLogos/${currentProvider.providerID}.svg" class="listlogo noinvert">
+                </div>
+                <div class="listitemtext">
+                    ${currentProvider.providerName}<br>
+                    <small class="disabled">Aktuell ausgewählt</small>
+                </div>
+            </div>
+        `;
+        }) 
 
-	`;
-});
-
-// Switch to prefered Provider Suite
-const id="flixbus"
-let p=localStorage.getItem("provider")
-if(!p){p={providerName:"Deutsche Bahn",providerID:"de"};localStorage.setItem("provider",JSON.stringify(p))}
-else p=JSON.parse(p)
-if(p.providerID!==id)location.href=`../${p.providerID}/index.html`
 </script>
-
 </body>
 </html>
