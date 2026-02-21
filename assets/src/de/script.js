@@ -366,7 +366,35 @@ function isRailByProductOrMode(productNormalized, modeNormalized) {
 }
 
 function isAtProvider() {
-    return provider && (provider.apiPath === "at" || provider.operatorId === "oebb");
+    if (!provider) {
+        return false;
+    }
+    const apiPath = String(provider.apiPath || "").toLowerCase();
+    const operatorId = String(provider.operatorId || "").toLowerCase();
+    const providerId = String(provider.providerID || "").toLowerCase();
+    const providerName = String(provider.providerName || "").toLowerCase();
+    return apiPath === "at" ||
+        operatorId === "oebb" ||
+        providerId === "oebb" ||
+        providerName.includes("öbb") ||
+        providerName.includes("oebb");
+}
+
+function isSuburbanLineByName(lineName) {
+    const normalized = String(lineName || "").trim();
+    if (!normalized) {
+        return false;
+    }
+    if (/^s[\s-]*bahn/i.test(normalized)) {
+        return true;
+    }
+    if (/^s(?:\s*[-/]?\s*)?\d{1,3}[a-z0-9-]*$/i.test(normalized)) {
+        return true;
+    }
+    if (/^s\d{1,3}[a-z0-9-]*$/i.test(normalized)) {
+        return true;
+    }
+    return false;
 }
 
 function shouldFilterForOebb(entry, productNormalized) {
@@ -402,7 +430,7 @@ function isSuburbanEntry(entry, productNormalized) {
         return true;
     }
     const lineName = getEntryLineName(entry).trim();
-    return /^s\s*\d+[a-z]?$/i.test(lineName) || /^s\d+[a-z]?$/i.test(lineName);
+    return isSuburbanLineByName(lineName);
 }
 
 function normalizeOperatorToken(value) {
@@ -580,6 +608,7 @@ function updateTable(data, tbodyId, isArrival) {
         const product = getEntryProduct(entry);
         const productNormalized = String(product).toLowerCase();
         const suburbanEntry = isSuburbanEntry(entry, productNormalized);
+        const suburbanByLine = isSuburbanLineByName(getEntryLineName(entry));
         if (siteType === "L") {
             if (["national", "nationalexpress", "ice", "ic", "ec"].includes(productNormalized)) {
                 return;
@@ -587,7 +616,7 @@ function updateTable(data, tbodyId, isArrival) {
         }
         if (siteType === "C" || siteType === "D" || siteType === "A") {
             if (isAtProvider()) {
-                if (suburbanEntry) {
+                if (suburbanEntry || suburbanByLine) {
                     return;
                 }
             } else if (suburbanEntry && showsuburban !== "show") {
@@ -595,7 +624,7 @@ function updateTable(data, tbodyId, isArrival) {
             }
         }
         if (siteType === "S") {
-            if (!suburbanEntry) {
+            if (!(suburbanEntry || suburbanByLine)) {
                 return;
             }
         }
