@@ -1,30 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const providerKey = "provider";
-
-    const providerCheck = () => {
-        let providerData = localStorage.getItem(providerKey);
-        let provider;
-
-        if (!providerData) {
-            provider = {
-                providerName: "Deutsche Bahn",
-                providerID: "db",
-                regionDisplay: "de" 
-            };
-            localStorage.setItem(providerKey, JSON.stringify(provider));
-        } else {
-            provider = JSON.parse(providerData);
+    if (window.ProviderStore) {
+        const provider = window.ProviderStore.getProvider();
+        const targetRoute = window.ProviderStore.getProviderRoute(provider);
+        const pathSegments = window.location.pathname.split("/").filter(Boolean);
+        const currentFolder = pathSegments.length > 1 ? pathSegments[pathSegments.length - 2].toLowerCase() : "";
+        if (currentFolder && currentFolder !== targetRoute) {
+            window.location.href = `../${targetRoute}/index.html`;
         }
-
-        const pathSegments = window.location.pathname.split('/').filter(segment => segment !== "");
-        const currentFolder = pathSegments[pathSegments.length - 2];
-        
-        if (currentFolder !== provider.regionDisplay.toLocaleLowerCase()) {
-            window.location.href = `../${provider.regionDisplay}/index.html`;
-        }
-    };
-
-    providerCheck();
-
-    setInterval(providerCheck, 1000); 
+    }
 });

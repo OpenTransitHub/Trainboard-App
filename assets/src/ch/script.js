@@ -171,7 +171,7 @@ async function loadData() {
 		await loadDepartures();
 		await loadArrivals();
 	} else {
-		const apiUrl = `https://prod.cuzimmartin.dev/api/ch/${siteType === 'A' ? 'arrivals' : 'departures'}?stationId=${stationID}&limit=20`;
+		const apiUrl = `https://prod.cuzimmartin.dev/api/ch/${siteType === 'A' ? 'arrivals' : 'departures'}?stationId=${stationID}&limit=100`;
 		try {
 			const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 			if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -192,7 +192,7 @@ async function loadData() {
 }
 
 async function loadDepartures() {
-	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/departures?stationId=${stationID}&limit=20`;
+	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/departures?stationId=${stationID}&limit=100`;
 	try {
 		const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -208,7 +208,7 @@ async function loadDepartures() {
 }
 
 async function loadArrivals() {
-	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/arrivals?stationId=${stationID}&limit=20`;
+	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/arrivals?stationId=${stationID}&limit=100`;
 	try {
 		const response = await fetch(apiUrl, { method: "GET", mode: "cors" });
 		if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -322,7 +322,7 @@ function updateTable(data, tbodyId = "tableBody", isArrival = false) {
 
 		const statusCell = row.insertCell(4);
 		statusCell.classList.add("zerotable");
-		statusCell.innerHTML = isCancelled ? `<img src="./assets/cancelled.webp" class="mini">` : abMessage;
+		statusCell.innerHTML = isCancelled ? `<img src="../assets/cancelled.webp" class="mini">` : abMessage;
 	});
 
 	if (findtrain === 0) {
@@ -343,5 +343,5 @@ function getAbMessage(dateTimeString) {
 	const now = new Date();
 	const timediff = Math.round((dateTime - now) / (1000 * 60));
 
-	return timediff <= 0 ? '<img src="./assets/depart.gif" class="mini">' : '';
+	return timediff <= 0 ? '<img src="../assets/depart.gif" class="mini">' : '';
 }

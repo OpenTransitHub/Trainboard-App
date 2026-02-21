@@ -1,6 +1,6 @@
 async function searchLocations() {
 	const userInput = document.getElementById('searchInput').value;
-	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/stations?query=${encodeURIComponent(userInput)}&limit=10`;
+	const apiUrl = `https://prod.cuzimmartin.dev/api/ch/stations?query=${encodeURIComponent(userInput)}&limit=100`;
 
 	try {
 		const response = await fetch(apiUrl, {

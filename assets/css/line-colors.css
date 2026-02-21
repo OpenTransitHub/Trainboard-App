@@ -25,9 +25,48 @@ Please read comments carefully.
 	background-color: #00a5df!important;
 }
 
-.nationalExpress, .national, .westbahn.WB, .regiojet.IC, .RJX {
+.nationalExpress, .national, .westbahn.WB, .regiojet.IC, .RJX, .ICE, .ice, .ECE, .ece, .IC, .ic, .EC, .ec {
 	background-color: #ec0016;
 	color: #fff;
+}
+
+.linebadge.oebb,
+.linebadge.oebb-badge {
+	background-color: #e3000f;
+	color: #fff;
+}
+
+.linebadge.oebb.oebb-RJX,
+.linebadge.oebb.oebb-RJ,
+.linebadge.oebb.oebb-IC,
+.linebadge.oebb.oebb-EC,
+.linebadge.oebb.oebb-NJ,
+.linebadge.oebb.oebb-EN,
+.linebadge.oebb-badge.oebb-RJX,
+.linebadge.oebb-badge.oebb-RJ,
+.linebadge.oebb-badge.oebb-IC,
+.linebadge.oebb-badge.oebb-EC,
+.linebadge.oebb-badge.oebb-NJ,
+.linebadge.oebb-badge.oebb-EN {
+	background-color: #e3000f;
+	color: #fff;
+}
+
+.linebadge.oebb.oebb-REX,
+.linebadge.oebb.oebb-CJX,
+.linebadge.oebb.oebb-R,
+.linebadge.oebb-badge.oebb-REX,
+.linebadge.oebb-badge.oebb-CJX,
+.linebadge.oebb-badge.oebb-R {
+	background-color: #1455c0;
+	color: #fff;
+}
+
+.linebadge.oebb.oebb-S,
+.linebadge.oebb-badge.oebb-S {
+	background-color: #639830;
+	color: #fff;
+	border-radius: 200px;
 }
 
 .regional, .IR {
@@ -50,7 +89,7 @@ Please read comments carefully.
 	color: #fff ;
 }
 
-.IRE, .RE, .MEX, .TLX, .REX, .CJX, .FEX {
+.IRE, .RE, .RB, .RS, .MEX, .TLX, .REX, .CJX, .FEX {
 	background-color: #1455c0;
 	color: #fff;
 }
@@ -747,6 +786,47 @@ Individual design on Signets is limited to color to keep a consistent look. Plea
 /* S-Bahn Basel */
 .S1schweizerische-bundesbahnen {
 	background-color: #45b248;
+	color: #fff;
+}
+
+.linebadge.vr,
+.linebadge.fi-commuter {
+	background-color: #5a2ca0;
+	color: #fff;
+}
+
+.linebadge.fi-A {
+	background-color: #1f7aeb;
+	color: #fff;
+}
+
+.linebadge.fi-E {
+	background-color: #1da05e;
+	color: #fff;
+}
+
+.linebadge.fi-I {
+	background-color: #e05a18;
+	color: #fff;
+}
+
+.linebadge.fi-K {
+	background-color: #b7226d;
+	color: #fff;
+}
+
+.linebadge.fi-P {
+	background-color: #6f47dc;
+	color: #fff;
+}
+
+.linebadge.fi-R {
+	background-color: #0b7d74;
+	color: #fff;
+}
+
+.linebadge.fi-Z {
+	background-color: #1557b0;
 	color: #fff;
 }
 

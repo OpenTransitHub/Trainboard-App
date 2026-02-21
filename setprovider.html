@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -11,140 +11,112 @@
     <link rel="manifest" href="/manifest.json" type="application/json">
     <meta name="theme-color" content="#000">
 </head>
-
 <body class="bodyWithPopup coloredbody fixednavbar">
-
 <center>
     <nav id="navbar">
         <div class="tabs"><span class="active">&nbsp;Datenlieferant&nbsp;</span></div>
-        <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
+        <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schliessen</a></div>
         <div class="iconbar">
             <a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a>
         </div>
     </nav>
-
     <br>
-
     <div class="textonly">
         <h3>Aktuell gewählt</h3>
         <div class="listcontainer" id="providerselect"></div>
-
         <br>
         <div id="dynamicLists">
             <div id="loading"><img src="assets/blackSpinner.svg"></div>
         </div>
     </div>
 </center>
-
+<script src="./assets/src/provider.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        const providerKey = "provider";
-        const apiUrl = "https://prod.cuzimmartin.dev/api/providers/";
-
-        // 1. Aktuellen Provider aus LocalStorage holen
-        let currentProvider = JSON.parse(localStorage.getItem(providerKey)) || { 
-            providerName: "Deutsche Bahn", 
-            providerID: "db" 
-        };
-
-        // Anzeige "Aktuell gewählt"
+        const currentProvider = ProviderStore.getProvider();
         const selectContainer = document.getElementById("providerselect");
         selectContainer.innerHTML = `
             <div class="listitem">
                 <div class="listimagecontainer">
-                    <img src="./assets/providerLogos/${currentProvider.providerID}.svg" class="listlogo noinvert">
+                    <img src="${ProviderStore.getProviderLogoPath(currentProvider.providerID, './assets/providerLogos')}" class="listlogo noinvert" onerror="this.onerror=null;this.src='./assets/icons/provider.svg'">
                 </div>
                 <div class="listitemtext">
-                    ${currentProvider.providerName}<br>
+                    ${ProviderStore.escapeHtml(currentProvider.providerName)}<br>
                     <small class="disabled">Aktuell ausgewählt</small>
                 </div>
             </div>
         `;
-
         try {
-            const response = await fetch(apiUrl);
-            const result = await response.json();
-
-            if (result.success && result.data.grouped) {
-                const mainContainer = document.getElementById("dynamicLists");
-                mainContainer.innerHTML = ""; // Lade-Text entfernen
-
-                // Alle Provider in eine flache Liste extrahieren für einfacheres Filtern
-                const allProviders = [];
-                result.data.grouped.forEach(group => {
-                    group.providers.forEach(p => {
-                        allProviders.push({ ...p, regionDisplay: group.regionCode });
-                    });
-                });
-
-                // Gruppierung definieren
-                const sections = [
-                    { 
-                        title: "Nationale Betreiber", 
-                        filter: p => p.scope === "NATIONAL" || p.scope === "INTERNATIONAL" 
-                    },
-					
-                    { 
-                        title: "Lokale Betreiber", 
-                        filter: p => p.scope === "CITY" || p.scope === "REGIONAL" 
-                    }
-                ];
-
-                sections.forEach(section => {
-                    const filtered = allProviders.filter(section.filter);
-                    
-                    if (filtered.length > 0) {
-                        // Überschrift hinzufügen
-                        const heading = document.createElement("h3");
-                        heading.textContent = section.title;
-                        mainContainer.appendChild(heading);
-
-                        // Container für die Liste
-                        const listDiv = document.createElement("div");
-                        listDiv.className = "listcontainer";
-
-                        filtered.forEach(p => {
-                            const isSelected = p.regionDisplay === currentProvider.regionDisplay;
-                            const indicatorHTML = isSelected 
-                                ? `<div class="listimagecontainer"><img src="./assets/icons/checkedimg.svg" class="noinvert"></div>`
-                                : `<div class="listimagecontainer"><img src="./assets/icons/checkbox.svg" class="noinvert"></div>`;
-
-                            const item = document.createElement("div");
-                            item.className = "listitem provider cursorpointer";
-                            item.innerHTML = `
-                                <div class="listimagecontainer">
-                                    <img src="./assets/providerLogos/${p.operatorId}.svg" class="noinvert listlogo" alt="${p.operatorId}.svg"> 
-                                </div>
-                                <div class="listitemtext">
-                                    ${p.displayName || p.name}<br>
-                                    <small class="disabled">${p.regionDisplay.toUpperCase()}</small>
-                                </div>
-                                ${indicatorHTML}
-                            `;
-
-                            item.addEventListener("click", () => {
-                                localStorage.setItem(providerKey, JSON.stringify({
-                                    providerName: p.name,
-                                    providerID: p.operatorId,
-									regionDisplay: p.regionDisplay
-                                }));
-                                location.reload();
-                            });
-
-                            listDiv.appendChild(item);
-                        });
-
-                        mainContainer.appendChild(listDiv);
-                        mainContainer.appendChild(document.createElement("br"));
-                    }
-                });
+            const response = await fetch("https://prod.cuzimmartin.dev/api/providers");
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
             }
+            const result = await response.json();
+            const grouped = result && result.success && result.data && Array.isArray(result.data.grouped)
+                ? result.data.grouped
+                : [];
+            const allProviders = [];
+            grouped.forEach((group) => {
+                (group.providers || []).forEach((provider) => {
+                    allProviders.push(ProviderStore.fromApiEntry(provider, group.regionCode));
+                });
+            });
+            const sections = [
+                {
+                    title: "Nationale Betreiber",
+                    filter: (provider) => provider.scope === "NATIONAL" || provider.scope === "INTERNATIONAL"
+                },
+                {
+                    title: "Lokale Betreiber",
+                    filter: (provider) => provider.scope === "CITY" || provider.scope === "REGIONAL"
+                }
+            ];
+            const mainContainer = document.getElementById("dynamicLists");
+            mainContainer.innerHTML = "";
+            sections.forEach((section) => {
+                const filtered = allProviders.filter(section.filter);
+                if (filtered.length === 0) {
+                    return;
+                }
+                const heading = document.createElement("h3");
+                heading.textContent = section.title;
+                mainContainer.appendChild(heading);
+                const listDiv = document.createElement("div");
+                listDiv.className = "listcontainer";
+                filtered.forEach((provider) => {
+                    const isSelected = provider.key === currentProvider.key;
+                    const indicatorSrc = isSelected
+                        ? "./assets/icons/checkedimg.svg"
+                        : "./assets/icons/checkbox.svg";
+                    const item = document.createElement("div");
+                    item.className = `listitem provider cursorpointer${provider.maintenance ? " disabled" : ""}`;
+                    item.innerHTML = `
+                        <div class="listimagecontainer">
+                            <img src="${ProviderStore.getProviderLogoPath(provider.providerID, './assets/providerLogos')}" class="noinvert listlogo" onerror="this.onerror=null;this.src='./assets/icons/provider.svg'">
+                        </div>
+                        <div class="listitemtext">
+                            ${ProviderStore.escapeHtml(provider.providerName)}<br>
+                            <small class="disabled">${ProviderStore.escapeHtml(provider.regionDisplay.toUpperCase())}${provider.maintenance ? " · Wartung" : ""}</small>
+                        </div>
+                        <div class="listimagecontainer"><img src="${indicatorSrc}" class="noinvert"></div>
+                    `;
+                    if (!provider.maintenance) {
+                        item.addEventListener("click", () => {
+                            const selected = ProviderStore.setProvider(provider);
+                            const route = ProviderStore.getProviderRoute(selected);
+                            window.location.href = `./${route}/index.html`;
+                        });
+                    }
+                    listDiv.appendChild(item);
+                });
+                mainContainer.appendChild(listDiv);
+                mainContainer.appendChild(document.createElement("br"));
+            });
         } catch (error) {
             console.error("API Fehler:", error);
             document.getElementById("dynamicLists").innerHTML = "<p>Fehler beim Laden der Anbieter.</p>";
         }
     });
 </script>
-
 </body>
 </html>

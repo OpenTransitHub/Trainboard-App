@@ -11,6 +11,19 @@
     let constructionsLoaded = false; // Flag für Lazy Loading
     let updateIntervalId = null; // Für Page Visibility API
     const tripId = decodeURIComponent(getParameterByName('tripId'));
+    const mapLoadingElement = document.getElementById('map-loading');
+
+    function showMapLoading() {
+        if (mapLoadingElement) {
+            mapLoadingElement.style.display = 'block';
+        }
+    }
+
+    function hideMapLoading() {
+        if (mapLoadingElement) {
+            mapLoadingElement.style.display = 'none';
+        }
+    }
 
     // Funktion, um Parameter aus der URL zu extrahieren
     function getParameterByName(name, url = window.location.href) {
@@ -20,6 +33,369 @@
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    function isValidCoordinate(coord) {
+        return Array.isArray(coord) &&
+            coord.length >= 2 &&
+            Number.isFinite(Number(coord[0])) &&
+            Number.isFinite(Number(coord[1])) &&
+            Math.abs(Number(coord[0])) <= 180 &&
+            Math.abs(Number(coord[1])) <= 90;
+    }
+
+    function hasJsonContentType(response) {
+        const contentType = response && response.headers ? response.headers.get('content-type') : '';
+        if (!contentType) {
+            return false;
+        }
+        return contentType.includes('application/json') || contentType.includes('+json') || contentType.includes('text/json');
+    }
+
+    async function fetchJsonStrict(url) {
+        const response = await fetch(url, { method: 'GET', mode: 'cors' });
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        if (!hasJsonContentType(response)) {
+            const snippet = (await response.text()).slice(0, 80);
+            throw new Error(`Non-JSON response: ${snippet}`);
+        }
+        return response.json();
+    }
+
+    async function fetchFirstJson(urls) {
+        let lastError = null;
+        for (const url of urls) {
+            try {
+                return await fetchJsonStrict(url);
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw lastError || new Error('Request failed');
+    }
+
+    function normalizeTripFromApi(payload) {
+        if (payload && payload.trip) {
+            return payload;
+        }
+        if (!(payload && payload.success && payload.data && typeof payload.data === 'object')) {
+            return null;
+        }
+
+        const rawTrip = payload.data;
+        const stops = Array.isArray(rawTrip.stops) ? rawTrip.stops : [];
+        const routeStations = rawTrip && rawTrip.metadata && rawTrip.metadata.route && Array.isArray(rawTrip.metadata.route.stations)
+            ? rawTrip.metadata.route.stations
+            : [];
+        const stationCoordinateById = new Map();
+        routeStations.forEach((station) => {
+            const id = station && (station.stationId || station.id);
+            const lon = Number(station && (station.longitude || station.lon || station.lng || station.x));
+            const lat = Number(station && (station.latitude || station.lat || station.y));
+            if (id && isValidCoordinate([lon, lat])) {
+                stationCoordinateById.set(String(id), { longitude: lon, latitude: lat });
+            }
+        });
+        const firstStop = stops[0] || null;
+        const lastStop = stops.length > 0 ? stops[stops.length - 1] : null;
+        const lineRaw = rawTrip && rawTrip.line ? rawTrip.line : null;
+        const lineRawName = typeof lineRaw === 'string'
+            ? lineRaw
+            : (lineRaw && typeof lineRaw === 'object'
+                ? String(lineRaw.name || lineRaw.label || lineRaw.display || lineRaw.shortName || lineRaw.line || '').trim()
+                : '');
+        const lineName = String(lineRawName || rawTrip.lineName || rawTrip.tripNumber || '').trim();
+        const derivedNumber = lineName.replace(/[^\d]/g, '');
+        const fahrtNr = String(
+            rawTrip.tripNumber ||
+            (lineRaw && typeof lineRaw === 'object' ? (lineRaw.fahrtNr || lineRaw.number || lineRaw.trainNumber || '') : '') ||
+            derivedNumber ||
+            lineName ||
+            ''
+        );
+        const productName = String(
+            (lineRaw && typeof lineRaw === 'object' ? (lineRaw.productName || lineRaw.product || '') : '') ||
+            rawTrip.productName ||
+            rawTrip.trainType ||
+            (lineName.split(/\s+/)[0] || String(rawTrip.category || 'zug'))
+        ).toUpperCase();
+        const product = String(
+            (lineRaw && typeof lineRaw === 'object' ? (lineRaw.product || lineRaw.mode || '') : '') ||
+            rawTrip.category ||
+            ''
+        ).toLowerCase();
+        const operatorRaw =
+            (lineRaw && typeof lineRaw === 'object' ? lineRaw.operator : null) ||
+            rawTrip.operator ||
+            {};
+        const operatorId = String(
+            operatorRaw.id ||
+            operatorRaw.operatorId ||
+            operatorRaw.shortCode ||
+            (payload.meta && payload.meta.operator ? payload.meta.operator : 'db')
+        ).toLowerCase();
+        const operatorName = String(
+            operatorRaw.name ||
+            operatorRaw.displayName ||
+            (payload.meta && payload.meta.source ? payload.meta.source : 'Deutsche Bahn')
+        );
+
+        const stopovers = stops.map((stop) => {
+            const locationSource = stop && stop.location ? stop.location : null;
+            const directLon = Number(stop && (stop.longitude || stop.lon || stop.lng || stop.x));
+            const directLat = Number(stop && (stop.latitude || stop.lat || stop.y));
+            const locLon = Number(locationSource && (locationSource.longitude || locationSource.lon || locationSource.lng || locationSource.x));
+            const locLat = Number(locationSource && (locationSource.latitude || locationSource.lat || locationSource.y));
+            const fallback = stationCoordinateById.get(String(stop.stationId || ""));
+            const longitude = Number.isFinite(locLon) ? locLon : (Number.isFinite(directLon) ? directLon : (fallback ? fallback.longitude : NaN));
+            const latitude = Number.isFinite(locLat) ? locLat : (Number.isFinite(directLat) ? directLat : (fallback ? fallback.latitude : NaN));
+            const hasCoord = isValidCoordinate([longitude, latitude]);
+
+            return {
+                stop: {
+                    id: stop.stationId || '',
+                    name: stop.stationName || '',
+                    location: {
+                        id: stop.stationId || '',
+                        longitude: hasCoord ? Number(longitude) : undefined,
+                        latitude: hasCoord ? Number(latitude) : undefined
+                    }
+                },
+                plannedArrival: stop.scheduledArrival || null,
+                arrival: stop.estimatedArrival || stop.scheduledArrival || null,
+                plannedDeparture: stop.scheduledDeparture || null,
+                departure: stop.estimatedDeparture || stop.scheduledDeparture || null,
+                plannedArrivalPlatform: stop.platform || null,
+                plannedDeparturePlatform: stop.platform || null,
+                arrivalPlatform: stop.platform || null,
+                departurePlatform: stop.platform || null,
+                platformChanged: false,
+                cancelled: stop.cancelled === true,
+                remarks: []
+            };
+        });
+
+        const remarks = Array.isArray(rawTrip.messages)
+            ? rawTrip.messages.map((message) => ({
+                text: typeof message === 'string' ? message : (message && message.text ? message.text : ''),
+                type: message && message.type ? message.type : 'info'
+            })).filter((entry) => entry.text)
+            : [];
+
+        const normalizedTrip = {
+            id: rawTrip.id || '',
+            line: {
+                fahrtNr,
+                name: lineName || fahrtNr,
+                productName,
+                product,
+                operator: {
+                    id: operatorId,
+                    name: operatorName
+                }
+            },
+            direction: rawTrip.destination && rawTrip.destination.stationName ? rawTrip.destination.stationName : '',
+            origin: {
+                name: rawTrip.origin && rawTrip.origin.stationName ? rawTrip.origin.stationName : (firstStop ? firstStop.stationName : ''),
+                departurePlatform: rawTrip.origin && rawTrip.origin.platform ? rawTrip.origin.platform : (firstStop && firstStop.platform ? firstStop.platform : null)
+            },
+            destination: {
+                name: rawTrip.destination && rawTrip.destination.stationName ? rawTrip.destination.stationName : (lastStop ? lastStop.stationName : ''),
+                arrivalPlatform: rawTrip.destination && rawTrip.destination.platform ? rawTrip.destination.platform : (lastStop && lastStop.platform ? lastStop.platform : null)
+            },
+            plannedDeparture: rawTrip.origin && rawTrip.origin.scheduledTime ? rawTrip.origin.scheduledTime : (firstStop ? firstStop.scheduledDeparture || firstStop.scheduledArrival : null),
+            plannedArrival: rawTrip.destination && rawTrip.destination.scheduledTime ? rawTrip.destination.scheduledTime : (lastStop ? lastStop.scheduledArrival || lastStop.scheduledDeparture : null),
+            stopovers,
+            remarks,
+            currentLocation: rawTrip.currentPosition
+                ? {
+                    latitude: rawTrip.currentPosition.latitude,
+                    longitude: rawTrip.currentPosition.longitude
+                }
+                : null,
+            _raw: rawTrip
+        };
+
+        return {
+            provider: payload.meta && payload.meta.operator ? String(payload.meta.operator).toLowerCase() : 'db',
+            trip: normalizedTrip
+        };
+    }
+
+    async function fetchTripPayload(requestTripId, requestStationId) {
+        const encodedTripId = encodeURIComponent(requestTripId || '');
+        const urls = [`https://prod.cuzimmartin.dev/api/de/trip?tripId=${encodedTripId}`];
+
+        let lastError = null;
+        for (const url of urls) {
+            try {
+                const payload = await fetchJsonStrict(url);
+                const normalized = normalizeTripFromApi(payload);
+                if (normalized && normalized.trip) {
+                    return normalized;
+                }
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw lastError || new Error('Trip request failed');
+    }
+
+    async function fetchPolylinePayload(requestTripId, requestStationId) {
+        const encodedTripId = encodeURIComponent(requestTripId || '');
+        const encodedStation = requestStationId ? encodeURIComponent(requestStationId) : '';
+        const urls = [];
+        if (encodedStation) {
+            urls.push(`https://data.cuzimmartin.dev/trip/${encodedTripId}/polyline?stationID=${encodedStation}`);
+        }
+        urls.push(`https://data.cuzimmartin.dev/trip/${encodedTripId}/polyline`);
+        return fetchFirstJson(urls);
+    }
+
+    function parseLatLonPairString(value) {
+        if (typeof value !== 'string' || !value.includes(',') || !value.includes(';')) {
+            return [];
+        }
+        const points = [];
+        value.split(';').forEach((pair) => {
+            const parts = pair.trim().split(',');
+            if (parts.length < 2) {
+                return;
+            }
+            const first = Number(parts[0]);
+            const second = Number(parts[1]);
+            if (Number.isFinite(first) && Number.isFinite(second)) {
+                const asLatLon = [second, first];
+                const asLonLat = [first, second];
+                if (isValidCoordinate(asLatLon)) {
+                    points.push(asLatLon);
+                } else if (isValidCoordinate(asLonLat)) {
+                    points.push(asLonLat);
+                }
+            }
+        });
+        return points;
+    }
+
+    function extractPolylineCoordinates(value) {
+        if (!value) {
+            return [];
+        }
+        if (typeof value === 'string') {
+            return parseLatLonPairString(value);
+        }
+        if (Array.isArray(value)) {
+            if (value.length > 0 && Array.isArray(value[0])) {
+                return value
+                    .map((coord) => [Number(coord[0]), Number(coord[1])])
+                    .filter((coord) => isValidCoordinate(coord));
+            }
+            return [];
+        }
+        if (value.type === 'LineString' && Array.isArray(value.coordinates)) {
+            return value.coordinates
+                .map((coord) => [Number(coord[0]), Number(coord[1])])
+                .filter((coord) => isValidCoordinate(coord));
+        }
+        if (Array.isArray(value.features)) {
+            return value.features
+                .filter((feature) => feature && feature.geometry && feature.geometry.type === 'Point' && isValidCoordinate(feature.geometry.coordinates))
+                .map((feature) => [Number(feature.geometry.coordinates[0]), Number(feature.geometry.coordinates[1])]);
+        }
+        if (value.polyline) {
+            return extractPolylineCoordinates(value.polyline);
+        }
+        if (value.geometry) {
+            return extractPolylineCoordinates(value.geometry);
+        }
+        return [];
+    }
+
+    function buildFeatureCollectionFromNormalizedTrip(tripPayload) {
+        const raw = tripPayload && tripPayload.trip && tripPayload.trip._raw ? tripPayload.trip._raw : null;
+        const features = [];
+        const polylineCoordinates = extractPolylineCoordinates(raw && raw.polyline ? raw.polyline : null);
+        polylineCoordinates.forEach((coord) => {
+            if (isValidCoordinate(coord)) {
+                features.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [Number(coord[0]), Number(coord[1])]
+                    },
+                    properties: { type: 'line' }
+                });
+            }
+        });
+
+        const stopovers = tripPayload && tripPayload.trip && Array.isArray(tripPayload.trip.stopovers)
+            ? tripPayload.trip.stopovers
+            : [];
+        stopovers.forEach((stopover) => {
+            const location = stopover && stopover.stop && stopover.stop.location ? stopover.stop.location : null;
+            if (!location) {
+                return;
+            }
+            const lon = Number(location.longitude || location.lon || location.lng || location.x);
+            const lat = Number(location.latitude || location.lat || location.y);
+            const coord = [lon, lat];
+            if (isValidCoordinate(coord)) {
+                features.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: coord
+                    },
+                    properties: {
+                        type: 'stop',
+                        name: stopover.stop && stopover.stop.name ? stopover.stop.name : 'Halt'
+                    }
+                });
+            }
+        });
+        return features;
+    }
+
+    function getStopFeaturesFromTrip(tripData, fallbackFeatures) {
+        const byCoord = new Map();
+        const pushStop = (lon, lat, name) => {
+            const coord = [Number(lon), Number(lat)];
+            if (!isValidCoordinate(coord)) {
+                return;
+            }
+            const key = `${coord[0].toFixed(6)},${coord[1].toFixed(6)}`;
+            if (!byCoord.has(key)) {
+                byCoord.set(key, {
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: coord },
+                    properties: { description: name || 'Halt' }
+                });
+            }
+        };
+
+        const stopovers = tripData && tripData.trip && Array.isArray(tripData.trip.stopovers) ? tripData.trip.stopovers : [];
+        stopovers.forEach((stopover) => {
+            const location = stopover && stopover.stop && stopover.stop.location ? stopover.stop.location : null;
+            if (!location) {
+                return;
+            }
+            const lon = location.longitude || location.lon || location.lng || location.x;
+            const lat = location.latitude || location.lat || location.y;
+            pushStop(lon, lat, stopover.stop && stopover.stop.name ? stopover.stop.name : 'Halt');
+        });
+
+        if (byCoord.size === 0 && Array.isArray(fallbackFeatures)) {
+            fallbackFeatures
+                .filter((feature) => feature && feature.geometry && feature.geometry.type === 'Point' && feature.properties && feature.properties.type === 'stop')
+                .forEach((feature) => {
+                    const coord = feature.geometry.coordinates || [];
+                    pushStop(coord[0], coord[1], feature.properties.name || 'Halt');
+                });
+        }
+
+        return Array.from(byCoord.values());
     }
 
     // Page Visibility API für Update-Interval Management
@@ -82,14 +458,20 @@
             antialias: true
         });
 
-        // Zeige Ladeindikator
-        document.getElementById('map-loading').style.display = 'block';
+        showMapLoading();
+
+        map.on('error', () => {
+            hideMapLoading();
+        });
+
+        setTimeout(() => {
+            hideMapLoading();
+        }, 15000);
 
         // Map ist bereit, lade die Daten
-        map.once('load', () => {
+        map.once('load', async () => {
             loadMapData();
-
-            
+            hideMapLoading();
         });
     }
 
@@ -99,20 +481,22 @@
 
         if (!tripId) {
             alert("Keine tripId in der URL gefunden.");
-            document.getElementById('map-loading').style.display = 'none';
+            hideMapLoading();
             return;
         }
 
         try {
-            // Lade nur Polyline und Trip-Daten - Baustellen werden lazy geladen
-            const [polylineData, tripData] = await Promise.all([
-                fetch(`https://data.cuzimmartin.dev/trip/${encodeURIComponent(tripId)}/polyline?stationID=${stationId}`).then(r => r.json()),
-                fetch(`https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`).then(r => r.json())
+            const [tripData, polylineData] = await Promise.all([
+                fetchTripPayload(tripId, stationId),
+                fetchPolylinePayload(tripId, stationId).catch(() => null)
             ]);
 
-            // Verarbeite Polyline-Daten
-            if (polylineData.polyline && polylineData.polyline.features) {
-                const coordinates = polylineData.polyline.features
+            const polylineFeatures = polylineData && polylineData.polyline && Array.isArray(polylineData.polyline.features)
+                ? polylineData.polyline.features
+                : buildFeatureCollectionFromNormalizedTrip(tripData);
+
+            if (Array.isArray(polylineFeatures) && polylineFeatures.length > 0) {
+                const coordinates = polylineFeatures
                     .filter(feature => feature.geometry.type === "Point")
                     .map(feature => [feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
 
@@ -152,15 +536,7 @@
                     });
 
                     // Stopps hinzufügen
-                    const stopFeatures = polylineData.polyline.features
-                        .filter(feature => feature.geometry.type === 'Point' && feature.properties.type === 'stop')
-                        .map(feature => ({
-                            type: 'Feature',
-                            geometry: feature.geometry,
-                            properties: {
-                                description: feature.properties.name || 'Unbekannter Halt',
-                            }
-                        }));
+                    const stopFeatures = getStopFeaturesFromTrip(tripData, polylineFeatures);
 
                     if (stopFeatures.length > 0) {
 
@@ -199,7 +575,7 @@
                     }
 
                     // Stop-Marker hinzufügen
-                    polylineData.polyline.features.forEach(feature => {
+                    polylineFeatures.forEach(feature => {
                         if (feature.geometry.type === "Point" && feature.properties.type === "stop") {
                             const stopMarker = document.createElement('img');
                             stopMarker.src = '../assets/icons/stop-marker.svg';
@@ -215,7 +591,7 @@
                     });
 
                     // Aktueller Standort des Zuges
-                    if (tripData.trip.currentLocation) {
+                    if (tripData.trip && tripData.trip.currentLocation) {
                         const currentLocation = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
 
                         const imageMarker = document.createElement('img');
@@ -249,11 +625,10 @@
                 }
             }
 
-            // Verstecke Ladeindikator
-            document.getElementById('map-loading').style.display = 'none';
         } catch (error) {
             console.error("Fehler beim Laden der Kartendaten:", error);
-            document.getElementById('map-loading').style.display = 'none';
+        } finally {
+            hideMapLoading();
         }
     }
 
@@ -346,11 +721,9 @@
         if (document.hidden) return;
 
         try {
-            const tripApiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
-            const response = await fetch(tripApiUrl);
-            const tripData = await response.json();
+            const tripData = await fetchTripPayload(tripId, stationId);
 
-            if (tripData.trip.currentLocation && marker) {
+            if (tripData.trip && tripData.trip.currentLocation && marker) {
                 const newPosition = [tripData.trip.currentLocation.longitude, tripData.trip.currentLocation.latitude];
                 marker.setLngLat(newPosition);
             }
@@ -395,25 +768,32 @@
         // Nur updaten wenn Tab aktiv ist
         if (document.hidden) return;
 
-        const currentUrl = window.location.href;
-        const tripId = decodeURIComponent(getParameterByName('tripId', currentUrl));
-        stationId = getParameterByName('stationID', currentUrl);
+        try {
+            const currentUrl = window.location.href;
+            const tripId = decodeURIComponent(getParameterByName('tripId', currentUrl));
+            stationId = getParameterByName('stationID', currentUrl);
 
-        let data;
+            if (!tripId) {
+                document.getElementById('tripStatus').textContent = 'Keine gültige tripId gefunden.';
+                return;
+            }
 
-        if (stationId !== null) {
-            let apiUrl = `https://data.cuzimmartin.dev/dynamic-trip?tripId=${encodeURIComponent(tripId)}&stationID=${stationId}`;
-            let response = await fetch(apiUrl);
-            data = await response.json();
-            profileUsed = 'dynamic';
-        }
+            const data = await fetchTripPayload(tripId, stationId);
 
-        document.getElementById('logo').innerHTML = `<img src="../assets/providerLogos/${data.provider}.svg" class="trip-logo" title="${data.provider} Logo">`;
+            if (!data || !data.trip) {
+                throw new Error('Trip payload invalid');
+            }
 
-        if (!data) {
-            console.error('Fehler beim Abrufen der Trip-Daten.');
-            const statusElement = document.getElementById('tripStatus');
-            document.getElementById('body').innerHTML = `
+            if (data.provider) {
+                document.getElementById('logo').innerHTML = `<img src="../assets/providerLogos/${data.provider}.svg" class="trip-logo" title="${data.provider} Logo">`;
+            }
+
+            profileUsed = 'api';
+
+            if (!data) {
+                console.error('Fehler beim Abrufen der Trip-Daten.');
+                const statusElement = document.getElementById('tripStatus');
+                document.getElementById('body').innerHTML = `
                 <nav id="navbar">
                     <div class="tabs"><span class="active">&nbsp;Zuginformationen&nbsp;</span></div>
                     <div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div>
@@ -432,8 +812,8 @@
                 <div onClick=\"history.go(0)\" class="button reload">Erneut laden</div>
 
             `;
-            return;
-        }
+                return;
+            }
 
         // Funktion zur Aktualisierung des Zugstatus
         function updateTrainStatus(trip) {
@@ -550,10 +930,10 @@
 
         document.getElementById('trainTitle').innerHTML = `(${data.trip.line.fahrtNr})`;
 
-        var lineName = data.trip.line.name.split('(')[0];
+        var lineName = String(data.trip.line.name || data.trip.line.fahrtNr || '').split('(')[0].trim();
         document.getElementById('linebadge').innerHTML = `${lineName}`;
 
-        document.getElementById('operatorName').innerHTML = `${data.trip.line.operator.name}`;
+        document.getElementById('operatorName').innerHTML = `${(data.trip.line.operator && data.trip.line.operator.name) ? data.trip.line.operator.name : 'Deutsche Bahn'}`;
 
         document.getElementById('title').innerHTML = `${data.trip.line.productName} ${data.trip.line.fahrtNr} 🡺 ${data.trip.destination.name}`;
 
@@ -568,30 +948,55 @@
 
         document.getElementById('lauf').innerHTML = data.trip.origin.name + ' → ' + data.trip.destination.name;
 
-        function getStopStatus(stop, currentTime, isLastStop) {
-            if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null)) {
+        function parseStopTime(value) {
+            if (!value) {
+                return null;
+            }
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function getStopTimes(stop) {
+            return {
+                plannedArrival: parseStopTime(stop.plannedArrival),
+                actualArrival: parseStopTime(stop.arrival),
+                plannedDeparture: parseStopTime(stop.plannedDeparture),
+                actualDeparture: parseStopTime(stop.departure)
+            };
+        }
+
+        function getPreferredEventTime(stop) {
+            const times = getStopTimes(stop);
+            return times.actualDeparture || times.plannedDeparture || times.actualArrival || times.plannedArrival;
+        }
+
+        function getArrivalEventTime(stop) {
+            const times = getStopTimes(stop);
+            return times.actualArrival || times.plannedArrival || times.actualDeparture || times.plannedDeparture;
+        }
+
+        function getStopStatus(stop, currentTime) {
+            const times = getStopTimes(stop);
+            const hasDeparture = Boolean(times.actualDeparture || times.plannedDeparture);
+            const hasArrival = Boolean(times.actualArrival || times.plannedArrival);
+
+            if ((stop.cancelled) && (stop.arrival == null) && (stop.departure == null) && !hasDeparture && !hasArrival) {
                 return 'cancelled';
             }
 
-            const plannedArrival = stop.plannedArrival ? new Date(stop.plannedArrival) : null;
-            const actualArrival = stop.arrival ? new Date(stop.arrival) : null;
-            const plannedDeparture = stop.plannedDeparture ? new Date(stop.plannedDeparture) : null;
-            const actualDeparture = stop.departure ? new Date(stop.departure) : null;
-
-            const arrivalTime = actualArrival || plannedArrival;
-            const departureTime = actualDeparture || plannedDeparture;
-
-            if (isLastStop && arrivalTime && arrivalTime < currentTime) {
-                return 'past';
+            if (hasDeparture) {
+                const departureTime = times.actualDeparture || times.plannedDeparture;
+                return departureTime < currentTime ? 'past' : 'future';
             }
 
-            if (departureTime && departureTime < currentTime) {
-                return 'past';
-            } else if (!stop.nextToCurrent && arrivalTime && arrivalTime > currentTime) {
-                return 'future';
-            } else {
-                return 'unknown';
+            if (hasArrival) {
+                const arrivalTime = times.actualArrival || times.plannedArrival;
+                const isRealtimeArrival = Boolean(times.actualArrival);
+                const toleranceMs = isRealtimeArrival ? 60 * 1000 : 5 * 60 * 1000;
+                return arrivalTime.getTime() + toleranceMs < currentTime.getTime() ? 'past' : 'future';
             }
+
+            return 'unknown';
         }
 
         const stopoversContainer = document.querySelector('.trip-stopovers');
@@ -599,31 +1004,30 @@
 
         const currentTime = new Date();
 
-        let currentStopFound = false;
+        const stopStatuses = data.trip.stopovers.map((stop) => getStopStatus(stop, currentTime));
+        const currentStopIndex = stopStatuses.findIndex((status) => status === 'future');
 
         data.trip.stopovers.forEach((stop, index) => {
             const stopElement = document.createElement('div');
             stopElement.classList.add('trip-stopover');
 
-            const isLastStop = index === data.trip.stopovers.length - 1;
-            let stopStatus = getStopStatus(stop, currentTime, isLastStop);
-
-            if (!currentStopFound && stopStatus === 'future') {
+            let stopStatus = stopStatuses[index];
+            if (index === currentStopIndex) {
                 stopStatus = 'current';
 
                 let progressPercentage = 0;
 
                 if (index > 0) {
                     const previousStop = data.trip.stopovers[index - 1];
-                    const previousDepartureTime = previousStop.departure ? new Date(previousStop.departure) : new Date(previousStop.plannedDeparture);
-                    const arrivalTime = stop.arrival ? new Date(stop.arrival) : new Date(stop.plannedArrival);
-                    const departureTime = stop.departure ? new Date(stop.departure) : new Date(stop.plannedDeparture);
+                    const previousEventTime = getPreferredEventTime(previousStop);
+                    const currentArrivalTime = getArrivalEventTime(stop);
 
-                    const totalTime = arrivalTime - previousDepartureTime;
-                    const timePassed = currentTime - previousDepartureTime;
-
-                    progressPercentage = (timePassed / totalTime) * 100;
-                    progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
+                    if (previousEventTime && currentArrivalTime && currentArrivalTime > previousEventTime) {
+                        const totalTime = currentArrivalTime - previousEventTime;
+                        const timePassed = currentTime - previousEventTime;
+                        progressPercentage = (timePassed / totalTime) * 100;
+                        progressPercentage = Math.min(Math.max(progressPercentage, 0), 100);
+                    }
                 }
 
                 stopElement.style.setProperty('--progress-percentage', `${progressPercentage}%`);
@@ -652,8 +1056,6 @@
             </div>
         `;
             } else if (stopStatus === 'current') {
-                currentStopFound = true;
-
                 const plannedArrivalTime = stop.plannedArrival ? new Date(stop.plannedArrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
                 const actualArrivalTime = stop.arrival ? new Date(stop.arrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
                 const plannedDepartureTime = stop.plannedDeparture ? new Date(stop.plannedDeparture).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
@@ -807,21 +1209,151 @@
             document.getElementById('remarks').classList.add('hidden');
         }
 
-        const badgeClassProductName = encodeURIComponent(data.trip.line.productName);
-        const badgeClassProduct = encodeURIComponent(data.trip.line.product);
-        const badgeClassLineOperator = encodeURIComponent(lineName.replace(/\s+/g, '')) + encodeURIComponent(data.trip.line.operator.id);
-        const badgeClassOperator = encodeURIComponent(data.trip.line.operator.id);
-        const tripID = encodeURIComponent(data.trip.id);
+        function normalizeBadgeToken(value) {
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/&/g, ' und ')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
 
-        document.getElementById('bigheaderbox').classList.add(badgeClassProductName);
-        document.getElementById('bigheaderbox').classList.add(badgeClassProduct);
-        document.getElementById('bigheaderbox').classList.add(badgeClassLineOperator);
-        document.getElementById('bigheaderbox').classList.add(badgeClassOperator);
+        function normalizeBadgeTokenVariants(value) {
+            const raw = String(value || '').trim();
+            if (!raw) {
+                return [];
+            }
+            const variants = new Set([raw]);
+            variants.add(raw.replace(/\(.*?\)/g, ' ').trim());
+            variants.add(raw.replace(/,.*$/g, ' ').trim());
+            variants.add(raw.split('/')[0].trim());
+            return Array.from(variants)
+                .map((item) => normalizeBadgeToken(item))
+                .filter(Boolean);
+        }
 
-        document.getElementById('linebadge').classList.add(badgeClassProductName);
-        document.getElementById('linebadge').classList.add(badgeClassProduct);
-        document.getElementById('linebadge').classList.add(badgeClassLineOperator);
-        document.getElementById('linebadge').classList.add(badgeClassOperator);
+        function normalizeLineToken(value) {
+            if (value === undefined || value === null) {
+                return '';
+            }
+            return String(value)
+                .toUpperCase()
+                .replace(/\s+/g, '')
+                .replace(/[^A-Z0-9]/g, '');
+        }
+
+        function getLinePrefixToken(value) {
+            const raw = String(value || '').trim();
+            if (!raw) {
+                return '';
+            }
+            const firstPart = raw.split(/\s+/)[0] || '';
+            return firstPart.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        }
+
+        function getLineFamilyToken(value) {
+            const compact = String(value || '').toUpperCase().replace(/\s+/g, '');
+            const match = compact.match(/^[A-Z]+/);
+            return match ? match[0] : '';
+        }
+
+        function mapProductToStyleToken(productValue) {
+            const normalized = String(productValue || '').toLowerCase();
+            const map = {
+                nationalexpress: 'nationalExpress',
+                national: 'national',
+                ice: 'nationalExpress',
+                ece: 'nationalExpress',
+                ic: 'nationalExpress',
+                ec: 'nationalExpress',
+                regionalexpress: 'RE',
+                regional: 'regional',
+                suburban: 'S',
+                bus: 'Bus',
+                tram: 'tram',
+                subway: 'U',
+                ferry: 'ferry'
+            };
+            return map[normalized] || '';
+        }
+
+        const lineToken = normalizeLineToken(lineName);
+        const operatorCandidates = [
+            data.trip.line.operator && data.trip.line.operator.id ? data.trip.line.operator.id : '',
+            data.trip.line.operator && data.trip.line.operator.name ? data.trip.line.operator.name : ''
+        ];
+        const operatorTokens = new Set();
+        const legalForms = new Set(['ag', 'gmbh', 'mbh', 'kg', 'kgaa', 'se', 'ev', 'eg']);
+        operatorCandidates.forEach((candidate) => {
+            normalizeBadgeTokenVariants(candidate).forEach((token) => {
+                operatorTokens.add(token);
+                const parts = token.split('-').filter(Boolean);
+                const withoutLegalForm = parts.filter((part) => !legalForms.has(part)).join('-');
+                if (withoutLegalForm && withoutLegalForm !== token) {
+                    operatorTokens.add(withoutLegalForm);
+                }
+                const strippedPrefixes = [
+                    withoutLegalForm.replace(/^db-regio-ag-/, ''),
+                    withoutLegalForm.replace(/^db-regio-/, ''),
+                    withoutLegalForm.replace(/^db-/, '')
+                ].filter(Boolean);
+                strippedPrefixes.forEach((stripped) => {
+                    if (stripped && stripped !== withoutLegalForm) {
+                        operatorTokens.add(stripped);
+                    }
+                });
+            });
+        });
+
+        const operatorIdToken = normalizeBadgeToken(data.trip.line.operator && data.trip.line.operator.id ? data.trip.line.operator.id : '');
+        const productNameToken = normalizeLineToken(data.trip.line.productName || '');
+        const productToken = normalizeBadgeToken(data.trip.line.product || '');
+        const mappedProductToken = mapProductToStyleToken(data.trip.line.product || data.trip.line.productName || '');
+        const linePrefixToken = getLinePrefixToken(lineName);
+        const lineFamilyToken = getLineFamilyToken(lineName);
+        const badgeClassLineOperator = lineToken && operatorIdToken ? `${lineToken}${operatorIdToken}` : '';
+        const inferredExpress = new Set(['ICE', 'ECE', 'IC', 'EC', 'RJ', 'RJX', 'TGV', 'THA', 'FLX']).has(lineFamilyToken)
+            ? 'nationalExpress'
+            : '';
+
+        const badgeClasses = [
+            'linebadge',
+            productNameToken,
+            productToken,
+            mappedProductToken,
+            inferredExpress,
+            linePrefixToken,
+            lineFamilyToken,
+            lineToken,
+            badgeClassLineOperator
+        ].filter(Boolean);
+        operatorTokens.forEach((token) => {
+            badgeClasses.push(token);
+            if (lineToken) {
+                badgeClasses.push(`${lineToken}${token}`);
+            }
+        });
+
+        const headerBadgeElement = document.getElementById('bigheaderbox');
+        const lineBadgeElement = document.getElementById('linebadge');
+        headerBadgeElement.className = 'coloredSpace';
+        lineBadgeElement.className = 'smallBadge';
+        lineBadgeElement.classList.add('linebadge');
+        const providerBadgeClass = (data.trip.line.operator && data.trip.line.operator.id)
+            ? normalizeBadgeToken(data.trip.line.operator.id)
+            : 'db';
+        badgeClasses.push(providerBadgeClass);
+        badgeClasses.push('db');
+        Array.from(new Set(badgeClasses)).forEach((className) => {
+            if (className) {
+                headerBadgeElement.classList.add(className);
+                lineBadgeElement.classList.add(className);
+            }
+        });
 
         let $number = encodeURIComponent(data.trip.id);
 
@@ -859,6 +1391,9 @@
         async function loadTrainData() {
         const url = `https://data.cuzimmartin.dev/wagenreihung?train_number=${data.trip.line.fahrtNr}&eva=${choosenstation}&train_type=${data.trip.line.productName}&departure_time=${tripdepartureTime}`;
         const response = await fetch(url);
+        if (!response.ok || !hasJsonContentType(response)) {
+            return;
+        }
         const traindata = await response.json();
 
         const container = document.getElementById("trainslider");
@@ -869,16 +1404,24 @@
 
         container.innerHTML = ""; 
 
+        if (!traindata || !Array.isArray(traindata.groups) || traindata.groups.length === 0) {
+            container.classList.add('hidden');
+            return;
+        }
+
         traindata.groups.forEach(group => {
-            const transportCategory = group.transport.category;
-            const vehicles = group.vehicles;
+            const transportCategory = group && group.transport ? group.transport.category : "";
+            const vehicles = Array.isArray(group && group.vehicles) ? group.vehicles : [];
+            if (vehicles.length === 0) {
+                return;
+            }
 
             vehicles.forEach((vehicle, index) => {
-            const vehicleId = vehicle.vehicleID;
-            const category = vehicle.type.category;
-            const constructionType = vehicle.type.constructionType || "";
-            const series = vehicle.typeDetails.series || "";
-            const typeDetailsCategory = vehicle.typeDetails.category;
+            const vehicleId = vehicle && vehicle.vehicleID ? vehicle.vehicleID : "";
+            const category = vehicle && vehicle.type && vehicle.type.category ? vehicle.type.category : "blank";
+            const constructionType = vehicle && vehicle.type ? (vehicle.type.constructionType || "") : "";
+            const series = vehicle && vehicle.typeDetails ? (vehicle.typeDetails.series || "") : "";
+            const typeDetailsCategory = vehicle && vehicle.typeDetails && vehicle.typeDetails.category ? vehicle.typeDetails.category : "vehicle";
 
             let suffix = "";
             if (index === 0) suffix = "-firstgroupvehicle";
@@ -901,7 +1444,12 @@
             // Fallback-Mechanismus
             img.onerror = function () {
                 let index = parseInt(this.dataset.index, 10);
-                const fallbacks = JSON.parse(this.dataset.fallbacks);
+                let fallbacks = [];
+                try {
+                    fallbacks = JSON.parse(this.dataset.fallbacks || '[]');
+                } catch {
+                    fallbacks = ['../assets/icons/blankvehicle.png'];
+                }
 
                 if (index < fallbacks.length - 1) {
                 index++;
@@ -918,6 +1466,14 @@
         }
         loadTrainData();
         
+        } catch (error) {
+            console.error('Fehler beim Laden der Tripdaten:', error);
+            const tripStatus = document.getElementById('tripStatus');
+            if (tripStatus) {
+                tripStatus.textContent = 'Tripdaten konnten nicht geladen werden.';
+            }
+            hideMapLoading();
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -927,8 +1483,6 @@
             updateIntervalId = setInterval(fetchAndDisplayData, 30000);
         }
     });
-
-    fetchAndDisplayData();
 
 
 
