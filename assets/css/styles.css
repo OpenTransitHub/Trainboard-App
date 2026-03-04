@@ -37,6 +37,27 @@ h3 {
     margin-bottom: 10px;
 }
 
+#speed {
+    font-size: 100px;
+    padding-left: 40px;
+    z-index: 20;
+    position: relative;
+    
+}
+
+.speedometer {
+    height: 80vw;
+    width: 80vw;
+    max-width: 300px;
+    max-height: 300px;
+    margin-bottom: -200px;
+    border-radius: 1000px;
+    clip-path: inset(0 0 49% 0);
+    z-index: 0;
+    border: 2px dashed var(--switch-color);
+    
+}
+
 .nohight {
     line-height: 0px;
 }
@@ -244,6 +265,7 @@ h3 {
 }
 
 .addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip, .editChip {
+.addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip, .editChip, .speedChip {
     background-color: #ffffff1f !important;
     color: #fff;  
     flex: 0 0 auto;
@@ -269,6 +291,7 @@ h3 {
 }
 
 .addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip, .editChip {
+.addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .speedChip:hover, .warnchip, .editChip {
     cursor: pointer;
 
 }
@@ -291,6 +314,10 @@ h3 {
 
 .webfisChip {
     background-image: url(../icons/webFIS.svg);
+}
+
+.speedChip {
+    background-image: url(../icons/speed.svg);
 }
 
 .editChip {

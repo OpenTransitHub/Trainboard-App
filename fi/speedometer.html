@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedometer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/dark-styles.css">
+    <link rel="stylesheet" href="../assets/css/line-colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/branding/favicon.ico">
+    <link rel="manifest" href="../manifest.json" type="application/json" >
+    <meta name="theme-color" content="#000">
+</head>
+
+<body class="fixednavbar">
+
+<center>
+
+    <nav id="navbar"><div class="tabs"><span class="active">&nbsp;Speedometer&nbsp;<span id="arrivallineheader"></span></a></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="../assets/icons/close.svg" class="mediumicon"></a></div></nav>
+
+    <br>
+    <br>
+    <br>
+    <div class="speedometer" id="speedometer"></div>
+    <span id="speed"><img src="../assets/blackSpinner.svg" class="loadingspinner multicolorspinner"></span><span id="current"></span><br><br>
+    
+    <div class="smallBadge whiteBadge linebadge" id="linebadge"></div>
+    <br>
+    <small class="disabled" id="lauf"></small>
+
+
+    <br><br>
+
+</center>
+
+
+<script>
+    
+const fetchTripData = async () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const tripId = urlParams.get('tripId');
+    const operator = urlParams.get('operator');
+  const url = 'https://prod.cuzimmartin.dev/api/fi/trip?tripId=' + tripId + '&operator=' + operator;
+
+  try {
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (result.success && result.data) {
+      const trip = result.data;
+      
+      const output = {
+        speed: trip.currentPosition?.speed,
+        maximumspeed: trip.currentPosition?.speed, 
+        line: trip.line,
+        category: trip.category,
+        name: `${trip.category} ${trip.tripNumber}`,
+        originname: trip.origin?.stationName,
+        destnationname: trip.destination?.stationName
+      };
+
+      console.log(output);
+
+      document.getElementById('speed').innerHTML = `${trip.currentPosition?.speed}`;
+      document.getElementById('linebadge').innerHTML = `${trip.line}`;
+      document.getElementById('linebadge').classList.add(operator, trip.category, `fi-${trip.line}`);
+      document.getElementById('lauf').innerHTML = `${trip.origin?.stationName} → ${trip.destination?.stationName} <br><br>Fahrzeug Vmax: ${trip.metadata.composition.maximumSpeed} km/h`;
+      document.getElementById('current').innerHTML =`km/h`;
+
+
+      function calculateDegrees(current, max) {
+            return Math.round(-90 + (current / max) * 180);
+        }
+
+        const grad = calculateDegrees(trip.currentPosition?.speed, trip.metadata.composition.maximumSpeed);
+        console.log(grad); 
+
+        document.getElementById('speedometer').style.background = `conic-gradient(from ${grad}deg, #00ff0000, 240deg, #00ff0000, #00ff00)`;
+    }
+  } catch (error) {
+    console.error("Fehler beim Abrufen:", error);
+  }
+};
+
+// Führt die Funktion sofort aus und dann alle 2 Sekunden (2000ms)
+fetchTripData();
+setInterval(fetchTripData, 2000);
+</script>
+
+</body>
+</html>
