@@ -2620,6 +2620,7 @@ top: 0px;
 .listimagecontainer .listlogo {
     border-radius: 5px;
     border: 2px solid #fff;
+    background-color: #fff;
 }
 
 .listimagecontainer .fillimg {
