@@ -264,7 +264,6 @@ h3 {
     animation: wiggle 0.5s ease-in-out;
 }
 
-.addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip, .editChip {
 .addtrainchip, .removetrainchip, .reihungchip, .checkinChip, .webfisChip, .warnchip, .editChip, .speedChip {
     background-color: #ffffff1f !important;
     color: #fff;  
@@ -290,7 +289,6 @@ h3 {
     margin-bottom: 4px;
 }
 
-.addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .warnchip, .editChip {
 .addtrainchip:hover, .removetrainchip:hover, .reihungchip:hover, .checkinChip:hover, .webfisChip:hover, .speedChip:hover, .warnchip, .editChip {
     cursor: pointer;
 
@@ -357,7 +355,7 @@ h3 {
 }
 
 .tab {
-    background-color: #f2f2f7;
+    background-color: #e7e7e7;
     border-radius: 100px;
     margin: 10px;
     padding: 5px;
@@ -413,8 +411,9 @@ h3 {
     padding: 8px;
     transition: 0.2s;
     border-radius: 10px;
-    border: 1px solid #f2f2f7;
+    border: 1px solid #e7e7e7;
     font-family: "Roboto", serif;
+    background-color: #e7e7e7;
 }
 
 .tab button:hover {
@@ -2076,13 +2075,17 @@ font-weight: bold;
 
 
 /* Stopover Liste */
-.trip-stopovers {
+.trip-stopovers, .trip.legend {
     position: relative;
     margin-bottom: 20px;
 }
 
+.legendtitle {
+    font-size: 15px !important;
+}
+
 .marked-stopover {
-    background-color: #c1d38c;
+    background-color: #c1d4e4;
 }
 
 .coloredSpace {
@@ -2172,7 +2175,7 @@ font-weight: bold;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #d8d8d8;
     position: relative;
 }
 
@@ -2207,10 +2210,8 @@ font-weight: bold;
 }
 
 .trip-platform {
-    color: #646464;
     position: relative;
     z-index: 1;
-    font-size: 20px;
 }
 
 .marker {
@@ -2305,7 +2306,7 @@ padding-left: 0px;
     }
 
 
-    .trip-stopovers {
+    .trip-stopovers, .trip-legend {
         width: auto;
         padding: 0px;
     }
@@ -2477,35 +2478,50 @@ top: 0px;
 
 
 
-/* Linke Border als Pseudo-Element */
 .trip-stopover::before {
     content: '  ';
     position: absolute;
     left: 19px;
     top: 0;
-    width: 2px; /* Breite der linken Border */
+    width: 15px;
     height: 100%;
-    background-color: #ccc; /* Standardfarbe für zukünftige Haltestellen */
+    background-color: #ccc; 
+    background-image: url(../icons/blob.svg);
+    background-size: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
+.legenditem::before {
+    background-color: unset !important;
+    background-image: unset;
+}
 
+.trip-stopover:first-child::before {
+    border-radius: 10px 10px 0px 0px;
+}
+
+.trip-stopover:last-child::before {
+    border-radius: 0px 0px 10px 10px;
 }
 
 /* Vergangene Haltestellen */
 .trip-stopover.stop-past::before,  .stop-unknown::before {
-    background-color: #018001;
-
+    background-color: #2196f3;
+    background-image: url(../icons/blobdeparted.svg);
 }
 
 
 
 /* Aktuelle Haltestelle mit progress-percentage */
 .trip-stopover.stop-current::before {
-    background: linear-gradient(to bottom, #2eff00 0%, #2eff00 var(--progress-percentage), #ccc var(--progress-percentage), #ccc 100%);
+    background: linear-gradient(to bottom, #2196f3 0%, #2196f3 var(--progress-percentage), #ccc var(--progress-percentage), #ccc 100%);
 }
 
 /* Ausgefallene Haltestellen */
 .trip-stopover.stop-cancelled::before {
     background-color: #ff0000;
+    background-image: url(../icons/blobcross.svg);
     color: #999;
 }
 
@@ -2518,9 +2534,9 @@ top: 0px;
 .trainposition {
     height: 36px;
     position: absolute;
-    margin-left: -27.5px;
-    margin-top: calc(var(--progress-px) - 5px);
+    margin-left: -22px;
     z-index: 10;
+    margin-top: -20px;
 
 }
 
@@ -2535,7 +2551,7 @@ top: 0px;
     overflow-x: hidden;
     border-radius: 20px;
     z-index: 10;
-    background-color: rgba(217,217,217,0.9);
+    background-color: rgba(245, 245, 245, 0.9);
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     font-size: smaller;
@@ -2543,7 +2559,7 @@ top: 0px;
 
 
 .vehicle {
-    height: 60px;
+    height: 45px;
 }
 
 #trainslider {

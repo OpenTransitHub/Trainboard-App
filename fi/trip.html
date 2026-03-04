@@ -38,7 +38,11 @@
                     <div class="tripcontainer wide">
 
                         <table class="wide"><tr><td><div class="smallBadge whiteBadge" id="linebadge"></div></td><td style="padding-left: 4px;"><small class="disabled" id="trainTitle"></small></td><td class="wide"></td><td><div class="warnchip chip iconchip hidden" id="trip-warning-counter-button">0</div></td><td><a href="#" onclick="history.go(-1)" style="padding: 0px !important; padding-top: 5px !important;"><img src="../assets/icons/close.svg" class="mediumicon"></a></td></tr></table>
-                        <small class="disabled" id="operatorName"></small><br><small class="disabled" id="trip-date"></small>
+                        <small class="disabled" id="operatorName"></small>
+                        
+                        &nbsp;&nbsp;
+                        
+                        <small class="disabled" id="trip-date"></small>
 
                         <br>
                         <small class="disabled"><span id="lauf"></span></small>
@@ -63,6 +67,12 @@
                     <a id="webfisbutton" class="bigonly">
                         <div class="chip webfisChip iconchip">
                             webFIS
+                        </div>
+                    </a>
+
+                    <a id="speedlink" class="bigonly">
+                        <div class="chip speedChip iconchip hidden" id="speedbutton">
+                            Speed
                         </div>
                     </a>
 
@@ -98,7 +108,19 @@
         </div>
 
 
-        <!-- Liste der Haltestellen -->
+         <div class="trip-legend">
+            <div class="trip-stopover  legenditem">
+                <div class="trip-stop-time">
+                    <span class="legendtitle">Plan &nbsp; Live</span>
+                </div>
+                <div class="trip-stop-info">
+                    <span class="legendtitle">Station</span>
+                    <span class="legendtitle">Gleis</span>
+                </div>
+                <div class="connection-cell">&nbsp;</div>
+            </div>        
+        </div>
+
         <div class="trip-stopovers">
             <!-- Dynamisch generierte Stopover-Elemente werden hier eingefÃ¼gt -->
         </div>

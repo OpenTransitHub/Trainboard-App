@@ -3,7 +3,7 @@ Please read comments carefully.
 */
 
 /* The following classes create standard signets for different types of public transport. You may not change them */
-.suburban, .S {
+.suburban, .S, .Commuter {
 	background-color: #639830;
 	border-radius: 200px;
 	color: #fff;
@@ -30,40 +30,40 @@ Please read comments carefully.
 	color: #fff;
 }
 
-.linebadge.oebb,
-.linebadge.oebb-badge {
+.oebb,
+.oebb-badge {
 	background-color: #e3000f;
 	color: #fff;
 }
 
-.linebadge.oebb.oebb-RJX,
-.linebadge.oebb.oebb-RJ,
-.linebadge.oebb.oebb-IC,
-.linebadge.oebb.oebb-EC,
-.linebadge.oebb.oebb-NJ,
-.linebadge.oebb.oebb-EN,
-.linebadge.oebb-badge.oebb-RJX,
-.linebadge.oebb-badge.oebb-RJ,
-.linebadge.oebb-badge.oebb-IC,
-.linebadge.oebb-badge.oebb-EC,
-.linebadge.oebb-badge.oebb-NJ,
-.linebadge.oebb-badge.oebb-EN {
+.oebb.oebb-RJX,
+.oebb.oebb-RJ,
+.oebb.oebb-IC,
+.oebb.oebb-EC,
+.oebb.oebb-NJ,
+.oebb.oebb-EN,
+.oebb-badge.oebb-RJX,
+.oebb-badge.oebb-RJ,
+.oebb-badge.oebb-IC,
+.oebb-badge.oebb-EC,
+.oebb-badge.oebb-NJ,
+.oebb-badge.oebb-EN {
 	background-color: #e3000f;
 	color: #fff;
 }
 
-.linebadge.oebb.oebb-REX,
-.linebadge.oebb.oebb-CJX,
-.linebadge.oebb.oebb-R,
-.linebadge.oebb-badge.oebb-REX,
-.linebadge.oebb-badge.oebb-CJX,
-.linebadge.oebb-badge.oebb-R {
+.oebb.oebb-REX,
+.oebb.oebb-CJX,
+.oebb.oebb-R,
+.oebb-badge.oebb-REX,
+.oebb-badge.oebb-CJX,
+.oebb-badge.oebb-R {
 	background-color: #1455c0;
 	color: #fff;
 }
 
-.linebadge.oebb.oebb-S,
-.linebadge.oebb-badge.oebb-S {
+.oebb.oebb-S,
+.oebb-badge.oebb-S {
 	background-color: #639830;
 	color: #fff;
 	border-radius: 200px;
@@ -789,43 +789,43 @@ Individual design on Signets is limited to color to keep a consistent look. Plea
 	color: #fff;
 }
 
-.linebadge.vr,
-.linebadge.fi-commuter {
+.vr,
+.fi-commuter {
 	background-color: #5a2ca0;
 	color: #fff;
 }
 
-.linebadge.fi-A {
+.fi-A {
 	background-color: #1f7aeb;
 	color: #fff;
 }
 
-.linebadge.fi-E {
+.fi-E {
 	background-color: #1da05e;
 	color: #fff;
 }
 
-.linebadge.fi-I {
+.fi-I {
 	background-color: #e05a18;
 	color: #fff;
 }
 
-.linebadge.fi-K {
+.fi-K {
 	background-color: #b7226d;
 	color: #fff;
 }
 
-.linebadge.fi-P {
+.fi-P {
 	background-color: #6f47dc;
 	color: #fff;
 }
 
-.linebadge.fi-R {
+.fi-R {
 	background-color: #0b7d74;
 	color: #fff;
 }
 
-.linebadge.fi-Z {
+.fi-Z {
 	background-color: #1557b0;
 	color: #fff;
 }

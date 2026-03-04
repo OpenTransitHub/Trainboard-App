@@ -64,7 +64,7 @@
 	}
 
 	.marked-stopover {
-		background-color: #212614;
+		background-color: #161f29;
 	}
 
 	.trip-stop-name {
@@ -149,7 +149,11 @@
 	.tab {
 		background-color: #1d1d1f;
 		color: #fff;
-	
+	}
+
+	.tab button {
+		border: 1px solid #1d1d1f;
+		background-color: #1d1d1f;
 	}
 
 	.trainTab {
@@ -335,6 +339,19 @@
 		background-color: #fff;
 		color: #000;
 	}
+
+	.trip-stopover {
+		border-bottom: 1px solid #202020;
+	}
+
+	.trip-stopover::before {
+		background-color: #5e5e5e; 
+	}
+
+	.trip-stopover.stop-current::before {
+		background: linear-gradient(to bottom, #2196f3 0%, #2196f3 var(--progress-percentage), #5e5e5e var(--progress-percentage), #5e5e5e 100%);
+	}
+
 }
 
 

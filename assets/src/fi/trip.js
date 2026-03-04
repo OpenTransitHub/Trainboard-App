@@ -51,7 +51,7 @@ function toDate(value) {
 function formatTime(value) {
     const parsed = toDate(value);
     if (!parsed) {
-        return "--:--";
+        return "-";
     }
     return parsed.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
 }
@@ -155,7 +155,7 @@ function renderHeader(trip) {
     document.getElementById("operatorName").textContent = provider.providerName;
     document.getElementById("trip-date").textContent = formatDate(origin.scheduledTime);
     document.getElementById("lauf").textContent = `${origin.stationName || "-"} → ${destination.stationName || "-"}`;
-    document.getElementById("title").textContent = `${lineName} → ${destination.stationName || "-"}`;
+    document.getElementById("title").textContent = `${lineName} 🡺 ${destination.stationName || "-"}`;
 
     setBadgeClasses(lineName);
 }
@@ -216,22 +216,22 @@ function formatStopTime(scheduledValue, estimatedValue, delayValue) {
         delay = ` <small class="disabled">(${delayValue > 0 ? `+${delayValue}` : `${delayValue}`})</small>`;
     }
     if (differs) {
-        return `<s class="disabled">${scheduled}</s> <span>${estimated}</span>${delay}`;
+        return `<s class="disabled">${scheduled}</s> <span class="red">${estimated}</span>${delay}`;
     }
-    return `${estimated !== "--:--" ? estimated : scheduled}${delay}`;
+    return `${estimated !== "-" ? estimated : scheduled}${delay}`;
 }
 
 function renderStops(trip) {
     const stops = Array.isArray(trip.stops) ? trip.stops : [];
     const stopoversContainer = document.querySelector(".trip-stopovers");
-    stopoversContainer.innerHTML = "";
+    stopoversContainer.innerHTML = ``;
     const classes = getStopClassList(stops);
 
     stops.forEach((stop, index) => {
         const stopElement = document.createElement("div");
         const className = classes[index] || "stop-unknown";
         stopElement.classList.add("trip-stopover", className);
-
+        
         if (className === "stop-current") {
             stopElement.style.setProperty("--progress-percentage", "50%");
             stopElement.style.setProperty("--progress-px", "20px");
@@ -250,7 +250,7 @@ function renderStops(trip) {
 
         const arrivalTime = formatStopTime(stop.scheduledArrival, stop.estimatedArrival, stop.arrivalDelay);
         const departureTime = formatStopTime(stop.scheduledDeparture, stop.estimatedDeparture, stop.departureDelay);
-        const platform = stop.platform && stop.platform !== "unknown" ? `Gl&nbsp;${escapeHtml(stop.platform)}` : "-";
+        const platform = stop.platform && stop.platform !== "unknown" ? `${escapeHtml(stop.platform)}` : "-";
 
         if (isCancelledStop(stop)) {
             stopElement.innerHTML += `
@@ -299,6 +299,9 @@ function renderTrainTab(trip) {
     }
     if (trip.currentPosition && typeof trip.currentPosition.speed === "number") {
         entries.push(`Aktuelle Geschwindigkeit: ${trip.currentPosition.speed} km/h`);
+        document.getElementById('speedbutton').innerText = `${trip.currentPosition.speed} km/h`;
+        document.getElementById('speedbutton').classList.remove('hidden')
+        speedlink.href = `speedometer.html?tripId=${trip.id}&operator=${trip.metadata.train.operatorShortCode}`;
     }
     const composition = trip.metadata && trip.metadata.composition ? trip.metadata.composition : null;
     if (composition && Array.isArray(composition.sections)) {
@@ -306,13 +309,34 @@ function renderTrainTab(trip) {
         composition.sections.forEach((section) => {
             const locos = Array.isArray(section.locomotives) ? section.locomotives : [];
             const wagons = Array.isArray(section.wagons) ? section.wagons : [];
+            document.getElementById('trainslider').innerHTML = ('');
             locos.forEach((item) => {
                 const key = item && item.type ? String(item.type).trim() : "Lok";
                 typeCount.set(key, (typeCount.get(key) || 0) + 1);
+
+                document.getElementById('trainslider').innerHTML += `
+                    <img 
+                    src="https://materialtrains.unibits.eu/vehicles/vr-finland/${trip.category}-${item.type}.png" 
+                    onerror="this.onerror=null; this.src='../assets/icons/blankvehicle.png';" 
+                    alt="${trip.category}-${item.type}"
+                    class="vehicle" 
+                    alt="Vehicle">
+                `;
+
+               
+
             });
             wagons.forEach((item) => {
                 const key = item && item.type ? String(item.type).trim() : "Wagen";
                 typeCount.set(key, (typeCount.get(key) || 0) + 1);
+                document.getElementById('trainslider').innerHTML += `
+                    <img 
+                    src="https://materialtrains.unibits.eu/vehicles/vr-finland/${trip.category}-${item.type}.png" 
+                    onerror="this.onerror=null; this.src='../assets/icons/blankvehicle.png';" 
+                    alt="${trip.category}-${item.type}"
+                    class="vehicle" 
+                    alt="Vehicle">
+                `;
             });
         });
         if (typeCount.size > 0) {
@@ -693,7 +717,7 @@ async function renderMap(trip) {
     };
     const darkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     const routeColor = darkMode ? "#ffffff" : "#343332";
-    const routeCasingColor = darkMode ? "#1b1b1b" : "#ffffff";
+    const routeCasingColor = darkMode ? "#4a5b5c" : "#ffffff";
 
     if (map.getSource("fullRoute")) {
         map.getSource("fullRoute").setData(route);
@@ -706,15 +730,7 @@ async function renderMap(trip) {
             layout: { "line-join": "round", "line-cap": "round", visibility: "visible" },
             paint: {
                 "line-color": routeCasingColor,
-                "line-width": [
-                    "interpolate",
-                    ["linear"],
-                    ["zoom"],
-                    2, 9,
-                    6, 8,
-                    10, 7,
-                    14, 6
-                ],
+                "line-width": 7,
                 "line-opacity": 0.95,
                 "line-emissive-strength": 0.8
             }
@@ -726,16 +742,7 @@ async function renderMap(trip) {
             layout: { "line-join": "round", "line-cap": "round", visibility: "visible" },
             paint: {
                 "line-color": routeColor,
-                "line-width": [
-                    "interpolate",
-                    ["linear"],
-                    ["zoom"],
-                    2, 6,
-                    6, 6,
-                    10, 6,
-                    14, 6
-                ],
-                "line-opacity": 1,
+                "line-width": 4,
                 "line-emissive-strength": 40
             }
         });
@@ -774,19 +781,23 @@ async function renderMap(trip) {
         map.getSource("stops").setData(stopData);
     } else {
         map.addSource("stops", { type: "geojson", data: stopData });
+        
         map.addLayer({
             id: "stop-points",
             type: "circle",
             source: "stops",
             paint: {
-                "circle-radius": 3,
-                "circle-color": "#4d4d4d",
-                "circle-opacity": 0.85,
-                "circle-stroke-width": 1,
+                "circle-radius": 4,
+                "circle-color": "#343332",
+                "circle-stroke-width": 2,
                 "circle-stroke-color": "#ffffff",
-                "circle-stroke-opacity": 0.75
+                "circle-emissive-strength": 1
             }
         });
+
+        const textcolor = darkMode ? "#ffffff" : "#000000";
+        const texthalocolor = darkMode ? "#4a5b5c" : "#ffffff";
+
         map.addLayer({
             id: "poi-labels",
             type: "symbol",
@@ -797,9 +808,10 @@ async function renderMap(trip) {
                 "text-radial-offset": 1,
                 "text-justify": "auto"
             },
+
             paint: {
-                "text-color": "#000000",
-                "text-halo-color": "#ffffff",
+                "text-color": textcolor,
+                "text-halo-color": texthalocolor,
                 "text-halo-width": 2
             },
             minzoom: 6
