@@ -1,34 +1,39 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainboard</title>
-    <link rel="stylesheet" href="./assets/css/styles.css">
-    <link rel="stylesheet" href="./assets/css/dark-styles.css">
-    <link rel="stylesheet" href="./assets/css/line-colors.css">
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-    <link rel="manifest" href="/manifest.json" type="application/json">
-    <meta name="theme-color" content="#000">
-    <meta name="description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und AnkÃ¼nften an deutschen BahnhÃ¶fen mit unserer interaktiven Zugtafel.">
-    <meta name="keywords" content="bahn, db, bahnhof, deutschebahn, trainboard, abfahrtstafel, abfahrtsmonitor, ankunftsmonitor, stationsinformation, zugtafel, abfahrt, ankunft, deutsche bahnhÃ¶fe">
+	<title>Abfahrten und Ankünfte | Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="./branding/apple-touch-icon.png">
+
+	<link rel="manifest" href="/manifest.json" type="application/json">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_forward_ios,settings,star,tune" />
+	<script src="./script/i18n.js"></script>
+
+	<meta name="description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und Ankünften an deutschen Bahnhöfen mit unserer interaktiven Zugtafel.">
+    <meta name="keywords" content="bahn, db, bahnhof, deutschebahn, trainboard, abfahrtstafel, abfahrtsmonitor, ankunftsmonitor, stationsinformation, zugtafel, abfahrt, ankunft, deutsche bahnhöfe">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Abfahrten und AnkÃ¼nfte - Deutsche BahnhÃ¶fe | Trainboard">
-    <meta property="og:description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und AnkÃ¼nften an deutschen BahnhÃ¶fen mit unserer interaktiven Zugtafel.">
+    <meta property="og:title" content="Abfahrten und Ankünfte - Deutsche Bahnhöfe | Trainboard">
+    <meta property="og:description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und Ankünften an deutschen Bahnhöfen mit unserer interaktiven Zugtafel.">
     <meta property="og:image" content="https://trainboard.eu/assets/branding/icon-512x512.png">
     <meta property="og:url" content="https://trainboard.eu">
     <meta property="og:type" content="website">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Abfahrten und AnkÃ¼nfte - Deutsche BahnhÃ¶fe | Trainboard">
-    <meta name="twitter:description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und AnkÃ¼nften an deutschen BahnhÃ¶fen mit unserer interaktiven Zugtafel.">
+    <meta name="twitter:title" content="Abfahrten und Ankünfte - Deutsche Bahnhöfe | Trainboard">
+    <meta name="twitter:description" content="Erhalten Sie aktuelle Informationen zu Abfahrten und Ankünften an deutschen Bahnhöfen mit unserer interaktiven Zugtafel.">
     <meta name="twitter:image" content="https://trainboard.eu/assets/branding/bigbanner.png">
     <meta name="twitter:url" content="https://trainboard.eu">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Schema.org Markup -->
     <script type="application/ld+json">
@@ -37,26 +42,98 @@
             "@type": "WebSite",
             "name": "Trainboard",
             "url": "https://trainboard.eu",
-            "description": "Interaktive Abfahrts- und Ankunftstafel fÃ¼r Deutsche BahnhÃ¶fe.",
+            "description": "Interaktive Abfahrts- und Ankunftstafel für Deutsche Bahnhöfe.",
         }
     </script>
 </head>
-
-
 <body>
-    <br><br><br>
-    <center>
-    <img src="./assets/blackSpinner.svg" class="loadingspinner  multicolorspinner">
 
-    <script src="./assets/src/provider.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const provider = ProviderStore.getProvider();
-            const route = ProviderStore.getProviderRoute(provider);
-            window.location.href = `./${route}/index.html`;
-        });
-    </script>
 
+	<center>
+	<main>
+
+
+		<div style="height: 4px;"></div>
+		<div class="buttonselect">
+			<a href="#" id="tab-departures" class="active">Zugtafel</a>
+			<a href="#" id="tab-arrivals">Bahnhof</a>
+			
+		</div>
+
+		<a href="about.html"><div class="rightbutton" style="margin-right: 10px; background-image: url(./icons/info.svg); margin-top: -6px !important; margin-right: 0px !important;"></div></a>
+		
+		<br>
+
+		<div id="tab1">
+		<a href="settings.html" translate="no" class="material-symbols-outlined notranslate searchbarlink">settings</a>
+			
+		<input type="search" id="station-search" placeholder="Suche" autocomplete="off" autofocus>
+
+		<div id="search-results">
+
+		</div>
+
+		<div id="homesection">
+			<div class="listelement-container">
+				<div id="listelement-container">
+					<a href="providers.html" id="providerlink">
+					<table>
+						<tr class="wide">
+							<td><div id="providericon"></div></td>
+							<td class="wide"><strong id="selected-provider">Lade...</strong><span id="provider-status"></span><br><small class="secondary">Gewählter Provider</small></td>
+							<td><span translate="no" class="material-symbols-outlined notranslate">arrow_forward_ios</span></td>
+						</tr>
+					</table>
+					</a>
+				</div>
+			</div>
+
+			<br>
+
+			<table id="favtag"><tbody><tr><td><small translate="no" class="material-symbols-outlined notranslate smallicon secondary filled">star</small></td><td><small class="secondary bold">Favoriten</small></td></tr></tbody></table>
+
+			<div class="listelement-container" id="favorites-container">
+
+			</div>
+				
+
+			
+		</div>
+		</div>
+
+		<div id="tab2" class="hidden">
+			<a href="settings.html" translate="no" class="material-symbols-outlined notranslate searchbarlink">settings</a>
+			
+			<input type="search" id="railstation-search" placeholder="Suche" autocomplete="off" autofocus>
+
+			<div id="railstation-results">
+
+			</div>
+
+			<div id="secondhomesection">
+				<div class="listelement-container">
+					<div>
+						<table>
+						<tr class="wide">
+							<td><div class="providericon" style="background-image: url('./providerLogos/infrago.svg');"></div></td>
+							<td class="wide"><b>DB Infrago AG</b><br><small class="secondary">Diese Funktion ist aktuell nur in Deutschland verfügbar.</small></td>
+						</tr>
+					</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
+
+
+	</main>
+
+	<script src="./script/index.js"></script>
+	<script>
+	if (typeof navigator.serviceWorker !== 'undefined') {
+		navigator.serviceWorker.register('service-worker.js')
+	}
+	</script>
 </body>
 </html>
-

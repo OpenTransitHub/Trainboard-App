@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 -960 960 960"
+   width="24px"
+   fill="#5a5a5a"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="bus_station.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="43.625"
+     inkscape:cx="11.988539"
+     inkscape:cy="12"
+     inkscape:window-width="2400"
+     inkscape:window-height="1261"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M155-235q-35-35-35-85-33 0-56.5-23.5T40-400v-280q0-33 23.5-56.5T120-760h527q16 0 30.5 6t25.5 17l194 194q11 11 17 25.5t6 30.5v87q0 33-23.5 56.5T840-320q0 50-35 85t-85 35q-50 0-85-35t-35-85H360q0 50-35 85t-85 35q-50 0-85-35Zm445-325h160L640-680h-40v120Zm-240 0h160v-120H360v120Zm-240 0h160v-120H120v120Zm155.5 275.5Q290-299 290-320t-14.5-35.5Q261-370 240-370t-35.5 14.5Q190-341 190-320t14.5 35.5Q219-270 240-270t35.5-14.5Zm480 0Q770-299 770-320t-14.5-35.5Q741-370 720-370t-35.5 14.5Q670-341 670-320t14.5 35.5Q699-270 720-270t35.5-14.5Z"
+     id="path1"
+     style="fill:#848484;fill-opacity:1" />
+</svg>

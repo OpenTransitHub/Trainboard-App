@@ -1,149 +1,99 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Wetter</title>
-	<link rel="stylesheet" href="./assets/css/styles.css">
-	<link rel="stylesheet" href="./assets/css/dark-styles.css">
-	<link rel="stylesheet" href="./assets/css/line-colors.css">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-	<link rel="manifest" href="/manifest.json" type="application/json" >
-	<meta name="theme-color" content="#000">
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Wetter - Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+	<meta name="robots" content="noindex">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+	<script src="./script/weather.js" defer></script>
+	<script src="./script/i18n.js"></script>
 </head>
+<body>
 
-<body class="coloredbody fixednavbar">
+	<div class="glowbar"></div>
 
-<center>
+	<center>
+	<main>
+		<a href="#" onclick="history.go(-1)"><div class="backbutton"></div></a>
+		<span class="toptitle" id="toptitle">Wetter </span>
+		
+		<br><br><br>
 
-<nav id="navbar"><div class="tabs"><span class="active">&nbsp;Wetter <span id="city"></span></a></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
-<br>
+		<center><p><canvas id="billing-loader"></canvas></p></center>
 
-<br>
 
-<div id="blanktext" class="coloredspace">
-	<div class="container blanktext">
-		<div class="left-div">
-
-			<div class="listcontainer" style="margin-top: 5px;">
-
-				<div class="listitem">
-					<div class="listimagecontainer listimagecontainerlightred"><img src="./assets/icons/temperature.svg"></div>
-					<div class="listitemtext"><span id="minMax"></span><br><small class="disabled">Temperatur Maxime</small></div>
-				</div>
-
-				<div class="listitem">
-					<div class="listimagecontainer listimagecontainerlightgreen"><img src="./assets/icons/pressure.svg"></div>
-					<div class="listitemtext"><span id="pressure"></span><br><small class="disabled">Luftdruck</small></div>
-				</div>
-
-				<div class="listitem">
-					<div class="listimagecontainer listimagecontainerblue"><img src="./assets/icons/waterdrop.svg"></div>
-					<div class="listitemtext"><span id="humidity"></span><br><small class="disabled">Luftfeuchte</small></div>
-				</div>
-
-				<div class="listitem">
-					<div class="listimagecontainer listimagecontainerorange"><img src="./assets/icons/wind.svg" id="windicon"></div>
-					<div class="listitemtext"><span id="wind"></span><br><small class="disabled">Wind</small></div>
-				</div>
-
-				<div class="listitem">
-					<div class="listimagecontainer listimagecontainerslate"><img src="./assets/icons/clouds.svg"></div>
-					<div class="listitemtext"><span id="clouds"></span><br><small class="disabled">Bewölkung</small></div>
-				</div>
-
+		<div class="headercontainer">
+			<div class="leftpane">
+				<div id="weatherwidget"><span id="temp"></span><br><span id="description"></span><br><small id="feelsLike"></small></div>
 			</div>
-
-			
-	
-			<p><small class="disabled">Wetterdaten: Open Weather Map</small></p>
-		</div>
-		<div class="right-div lineview">
-			<div id="weatherimage" class="weatherimage">
-				<div class="imageboxcontent">
-					<span class="aligner" id="weatherheader"></span>
-					<span id="description"></span><br>
-					<small id="feelsLike"></small>
+			<div class="rightpane">
+				<div class="listelement-container">
+					<div class="trip-message-item">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon coloricon green" style="background-image: url('./icons/pressure.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong id="airpressure"></strong><br><small class="secondary">Luftdruck</small></td>
+								</tr>
+							</tbody></table>
+					</div>
+					<div class="trip-message-item">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon coloricon blue" style="background-image: url('./icons/humidity.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong id="humidity"></strong><br><small class="secondary">Luftfeuchte</small></td>
+								</tr>
+							</tbody></table>
+					</div>
+					<div class="trip-message-item">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon coloricon orange" style=" border-radius: 100px !important; display: flex; justify-content: center; align-items: center;"><img src="./icons/wind.svg" id="windicon"></div></td>
+									<td class="wide"><strong id="wind"></strong><br><small class="secondary">Wind</small></td>
+								</tr>
+							</tbody></table>
+					</div>
 				</div>
-				
 			</div>
-
-			<br>
-
-			<div id="warnings"></div>
-
-			
 		</div>
-	</div>
-</div>
+
+		<br><br><br><br><center>
+		<small class="secondary">Daten:<br>Open Weather Map</small>
 
 	
-</center>
-
-<script>
-
-const urlParams = new URLSearchParams(window.location.search);
-
-var city = urlParams.get('city');
+	</main>
 
 
-	fetch(`https://data.cuzimmartin.dev/weather?city=${city}`)
-	.then(response => response.json())
-	.then(weatherdata => {
-		
-		console.log(weatherdata.main.temp);
-		
-		console.log(weatherdata.weather[0].description);
-
-		document.getElementById("weatherimage").style.backgroundImage = "url('./assets/weathercanvas/canvas-" + weatherdata.weather[0].icon + ".png')";
-		
-		document.getElementById('city').innerHTML =  weatherdata.name;	
-		
-		document.getElementById('weatherheader').innerHTML =  "<span class=\"big\">" + Math.floor(weatherdata.main.temp) + "°C</span> &nbsp;<img src=\"./assets/weatcherIcons/" + weatherdata.weather[0].icon + ".svg\" class=\"weathercardicon\">";
-		
-		document.getElementById('feelsLike').innerHTML =  "Gefühlt wie: " + Math.floor(weatherdata.main.feels_like) + "°C";	  
-
-		document.getElementById('description').innerHTML =  weatherdata.weather[0].description;	
-		
-		document.getElementById('minMax').innerHTML =  "&#10167; " + Math.floor(weatherdata.main.temp_min) + "°C &nbsp; &#10169; " +  Math.floor(weatherdata.main.temp_max)  + "°C";	  
-  
-		document.getElementById('pressure').innerHTML =  weatherdata.main.pressure + " mbar";	  
-
-		document.getElementById('humidity').innerHTML =  weatherdata.main.humidity + " %";	  
-
-		document.getElementById('wind').innerHTML =  Math.floor(weatherdata.wind.speed) + " km/h / "+ weatherdata.wind.deg + "°";	
-		document.getElementById('windicon').style.transform = `rotate(${weatherdata.wind.deg}deg)`;
-
-		document.getElementById('clouds').innerHTML =  weatherdata.clouds.all + " %";
-		
-		
-
-		if (weatherdata?.alerts?.[0]?.properties?.EVENT != null) {
-
-			document.getElementById('warnings').innerHTML += `
-				
-				<div class="listcontainer">
-					<div class="listitem">
-						<div class="listimagecontainer listimagecontainerred"><img src="./assets/weatherWarnIcons/${weatherdata.alerts[0].properties?.EC_GROUP.split(';')[0]}.svg"></div>
-						<div class="listitemtext">
-							${weatherdata.alerts[0].properties?.EVENT}<br><small class="disabled">Unwetterwarnung</small>
-							
-						</div>
-					</div>
-					<div class="listitem">
-						<div class="listitemtext">
-							<small>${weatherdata.alerts[0].properties?.DESCRIPTION}</small><br>
-							<small class="disabled">Herausgegeben von ${weatherdata.alerts[0].properties?.CONTACT}</small>	
-						</div>
-					</div>
-					
-				</div>
-
-				<br>
-			`;
+	<script type="module">
+		import {
+			M3Animator,
+			getMorphedShape,
+			drawIndicator,
+			setupCanvas,
+		} from "https://cdn.jsdelivr.net/npm/@alerix/m3-loading-indicator/dist/core/index.js";
+		const canvas = document.querySelector("#billing-loader");
+		const size = 56;
+		// Set up a HiDPI-aware 2D canvas context.
+		const ctx = setupCanvas(canvas, size);
+		// Create the animation controller.
+		const animator = new M3Animator();
+		function renderBillingLoader(timestamp) {
+			animator.update(timestamp);
+			// Convert the current morph value into a drawable shape.
+			const shape = getMorphedShape(animator.morph);
+			drawIndicator(ctx, size, shape, animator.rotation, {
+			color: "#5a5a5a",
+			sizeRatio: 0.8,
+			contained: false
+			});
+			requestAnimationFrame(renderBillingLoader);
 		}
-	})
+		requestAnimationFrame(renderBillingLoader);
 </script>
-
 </body>
 </html>

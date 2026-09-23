@@ -1,109 +1,42 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Offline</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-	<link rel="manifest" href="/manifest.json" type="application/json" >
-	<meta name="theme-color" content="#000">
-	
-	
-	<style>
-	
-@import url('https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap');
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Offline - Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+	<meta name="robots" content="noindex">
 
-
-body {
-	font-family: "Kode Mono", monospace;
-	font-size: 20px;
-	margin: 0px;
-	overflow-x: clip;
-}
-
-.blanktext {
-	width: 80%;
-	border-radius: 5px;
-	overflow-y:hidden;
-	text-align: left;
-}
-
-@media (prefers-color-scheme: dark) {
-
-body {
-	background-color: #0f0f0f;
-	color: #efefef;
-}
-}
-	</style>
+	<script src="./script/i18n.js"></script>
 </head>
-
 <body>
 
-<center>
+	<div class="glowbar"></div>
+	
+	<center>
+	<main>
+	
+		<br><br><br>
 
+		<img src="/icons/offline.png" style="width: 80%;"><br><br>
 
-<div class="blanktext">
-	
-	<br>
-	<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   height="48.001709"
-   viewBox="0 -960 2363.3893 1920.0684"
-   width="59.084732"
-   fill="#e8eaed"
-   version="1.1"
-   id="svg1"
-   sodipodi:docname="no-connection.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs1" />
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="5.4432491"
-     inkscape:cx="49.51087"
-     inkscape:cy="31.690631"
-     inkscape:window-width="1920"
-     inkscape:window-height="974"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
-  <path
-     d="M 1988.3529,960.06837 1075.94,42.49601 Q 936.81691,59.96056 812.99146,119.68054 689.16601,179.42632 597.68996,275.46843 L 436.5621,111.16754 Q 528.03814,19.69149 642.83465,-47.20005 757.63116,-114.06579 885.8421,-147.60185 L 580.22541,-453.1928 q -111.72667,50.20096 -220.66727,124.41884 -108.94059,74.21788 -200.41664,165.69393 L 0,-327.38093 q 92.48213,-92.48217 197.34681,-167.68027 104.86468,-75.224 211.43195,-129.5782 L 182.17819,-851.2658 290.91241,-960 2102.2465,851.33415 Z M 1180.7014,828.71021 q -87.5033,0 -147.9456,-61.21621 -60.41647,-61.2162 -60.41647,-147.1459 0,-87.50332 60.41647,-147.91982 60.4423,-60.4165 147.9456,-60.4165 87.5034,0 147.9457,60.4165 60.4165,60.4165 60.4165,147.91982 0,85.9297 -60.4165,147.1459 -60.4423,61.21621 -147.9457,61.21621 z m 608.8085,-584.19815 -59.4363,-59.43621 -59.4361,-59.43621 -293.0794,-293.07936 q 148.4358,20.63757 290.6029,91.37286 142.1928,70.76108 256.6798,185.24803 z m 412.7515,-407.59209 q -198.6367,-198.63667 -460.476,-310.85347 -261.8391,-112.2168 -561.084,-112.2168 -54.1736,0 -105.9739,3.8695 -51.7745,3.8696 -100.40181,11.6087 L 776.69512,-768.3027 q 90.67635,-24.017 190.69119,-36.0126 100.01489,-12.0214 213.31509,-12.0214 349.4458,0 651.8636,130.2748 302.4179,130.2746 530.8242,358.68097 z"
-     id="path1"
-     style="fill:#ff0000;stroke-width:2.57969" />
-</svg>
+		<span class="title">Du bist offline.</span>
 
-	
-	
-	<h2>Du bist offline.</h2>
-	<p><b>Trainboard</b> benötigt eine Netzwerkverbindung um Echtzeit-Informationen aus dem Internet abzurufen.</p>
-	
-	<p>Versuche Folgendes:</p>
-	<ul>
-		<li>Flugzeugmodus ausschalten</li>
-		<li>Mobile Daten oder WLAN einschalten</li>
-		<li>Signal an deinem Standort prüfen</li>
-	</ul>
-	
+		<p><b>Trainboard</b> benötigt eine Netzwerkverbindung um Echtzeit-Informationen aus dem Internet abzurufen.</p>
 
-</div>
-	
-</center>
+		<p>Versuche Folgendes:</p>
+		<ul>
+			<li>Flugzeugmodus ausschalten</li>
+			<li>Mobile Daten oder WLAN einschalten</li>
+			<li>Signal an deinem Standort prüfen</li>
+		</ul>
+
+	</main>
+
 
 </body>
 </html>

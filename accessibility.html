@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Accessibility - Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+	<meta name="robots" content="noindex">
+
+	<script src="./script/accessibility.js" defer></script>
+	<script src="./script/i18n.js"></script>
+</head>
+<body>
+
+	<div class="glowbar"></div>
+	
+	<center>
+	<main>
+		<a href="#" onclick="history.go(-1)"><div class="backbutton"></div></a>
+		<span class="toptitle" id="toptitle" style="width: calc(100% - 60px);"></span>
+		
+		<br><br><br>
+
+		<!---<center><p><canvas id="billing-loader"></canvas></p></center>-->
+
+		<div class="" id="retarder">
+
+		
+
+	<br>
+	<small class="secondary bold">Außer Betrieb</small>
+		<div class="listelement-container" id="facilities">
+			
+		</div>
+
+	<br>
+	
+	<small class="secondary bold">Ausstattung</small>
+	<select id="platformSelect" class="platformselect"></select>
+		<div class="listelement-container" id="anemeties">
+			
+		</div>
+	
+	</div>
+	
+	</main>
+
+
+	<script type="module">
+		import {
+			M3Animator,
+			getMorphedShape,
+			drawIndicator,
+			setupCanvas,
+		} from "https://cdn.jsdelivr.net/npm/@alerix/m3-loading-indicator/dist/core/index.js";
+		const canvas = document.querySelector("#billing-loader");
+		const size = 56;
+		// Set up a HiDPI-aware 2D canvas context.
+		const ctx = setupCanvas(canvas, size);
+		// Create the animation controller.
+		const animator = new M3Animator();
+		function renderBillingLoader(timestamp) {
+			animator.update(timestamp);
+			// Convert the current morph value into a drawable shape.
+			const shape = getMorphedShape(animator.morph);
+			drawIndicator(ctx, size, shape, animator.rotation, {
+			color: "#5a5a5a",
+			sizeRatio: 0.8,
+			contained: false
+			});
+			requestAnimationFrame(renderBillingLoader);
+		}
+		requestAnimationFrame(renderBillingLoader);
+</script>
+</body>
+</html>

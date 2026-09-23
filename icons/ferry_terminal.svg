@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="24px"
+   viewBox="0 -960 960 960"
+   width="24px"
+   fill="#5a5a5a"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="ferry_terminal.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="43.625"
+     inkscape:cx="11.988539"
+     inkscape:cy="12"
+     inkscape:window-width="2400"
+     inkscape:window-height="1261"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M411.5-89Q379-97 339-116q-47 19-89.5 26T160-81q-17 1-28.5-10.5T120-120q0-17 11.5-28.5T160-161q24-1 44.5-3t40.5-6.5q20-4.5 41-11.5t45-17q5-2 10-2t10 2q33 17 60.5 28t68.5 11q41 0 68.5-11t60.5-28q5-2 10-2t10 2q24 10 45 17t41 11.5q20 4.5 41 6.5t44 3q17 1 28.5 12.5T840-120q0 17-11.5 28.5T800-81q-47-2-89.5-9T622-116q-40 19-73 27t-69 8q-36 0-68.5-8ZM280-720v113l180-48q10-3 20-3t20 3l180 48v-113H280Zm200 480q-60 0-105-40l-45-40q-19 18-40.5 32.5T245-262q-19 8-37.5-2T183-294l-70-226q-5-17 3-31t25-19l59-16v-134q0-33 23.5-56.5T280-800h100v-40q0-17 11.5-28.5T420-880h120q17 0 28.5 11.5T580-840v40h100q33 0 56.5 23.5T760-720v134l59 16q17 5 25 19t3 31l-70 226q-6 20-24.5 30t-37.5 2q-24-11-45.5-25.5T630-320l-45 40q-45 40-105 40Z"
+     id="path1"
+     style="fill:#848484;fill-opacity:1" />
+</svg>

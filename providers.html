@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Provider - Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+	<meta name="robots" content="noindex">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+	<script src="./script/i18n.js"></script>
+</head>
+<body>
+
+	<div class="glowbar"></div>
+	
+	<center>
+	<main>
+		<a href="settings.html"><div class="backbutton"></div></a>
+		<span class="toptitle">Provider</span>
+		
+		<br><br><br>
+
+		<div id="listelement-container">
+			<div class="trip-message-item">
+				<table>
+					<tr class="wide">
+						<td><div id="providericon"></div></td>
+						<td class="wide"><strong id="selected-provider"></strong><span id="provider-status"></span><br><small class="secondary">Gewählter Provider</small></td>
+						
+					</tr>
+				</table>
+			</div>
+
+			<div class="setting-item">
+				<label for="fast-switching-toggle"></label>
+				<table>
+					<tr class="wide">
+						<td class="wide"><strong>Schnelle Providerwechsel</strong><br><small class="secondary">Kehrt automatisch zurück wenn der Provider von der Startseite aus geändert wurde.</small></td>
+						<td><input type="checkbox" id="fast-switching-toggle" class="slider"/></td>
+					</tr>
+				</table>
+				</label>
+			</div>
+		</div>
+		
+		<div id="providers-container">
+			<center><br><br><br>
+			<div id="stops-container"><center><p><canvas id="billing-loader"></canvas></p></center></div>
+		</div>
+
+	
+	</main>
+
+	<script src="./script/providers.js"></script>
+
+	<script type="module">
+		import {
+			M3Animator,
+			getMorphedShape,
+			drawIndicator,
+			setupCanvas,
+		} from "https://cdn.jsdelivr.net/npm/@alerix/m3-loading-indicator/dist/core/index.js";
+		const canvas = document.querySelector("#billing-loader");
+		const size = 56;
+		// Set up a HiDPI-aware 2D canvas context.
+		const ctx = setupCanvas(canvas, size);
+		// Create the animation controller.
+		const animator = new M3Animator();
+		function renderBillingLoader(timestamp) {
+			animator.update(timestamp);
+			// Convert the current morph value into a drawable shape.
+			const shape = getMorphedShape(animator.morph);
+			drawIndicator(ctx, size, shape, animator.rotation, {
+			color: "#5a5a5a",
+			sizeRatio: 0.8,
+			contained: false
+			});
+			requestAnimationFrame(renderBillingLoader);
+		}
+		requestAnimationFrame(renderBillingLoader);
+</script>
+</body>
+</html>

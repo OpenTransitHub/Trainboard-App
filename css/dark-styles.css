@@ -1,0 +1,184 @@
+@media (prefers-color-scheme: dark) {
+
+:root {
+    --black: #fff;
+    --second: #848484;
+    --red: #b22f2f;
+    --blue: #2097f4;
+    --green: #34c759;
+
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+
+#stops-container div, #messages-container div, #listelement-container div, #search-results div, .listelement-container div, #board-container div, #connections-container div, #railstation-results div {
+    background-color: #3c3c3c;
+    color: #fff;
+}
+
+
+.header {
+    color: #fff;
+}
+
+.tripwidget {
+    color: #fff;
+}
+
+
+.finalstations {
+    background-color: rgba(0, 0, 0, 0.085);
+}
+
+
+.backbutton, .rightbutton {
+    background-color: #4a4a4a;
+    color: #ffff;
+}
+
+
+.toptitle {
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 40px), transparent 100%);
+
+}
+
+
+#providericon, .providericon {
+    background-color: #fff !important;
+}
+
+#station-search, #railstation-search {
+    background-color: #3c3c3c;
+    color: #fff;
+    background-image: url(../icons/search-dark.svg);
+}
+
+.searchbarlink {
+    color: #fff;
+}
+
+.linelabel {
+    background-color: #3c3c3c;
+    color: #fff;
+}
+
+#category-filters {
+    color: #fff;
+}
+
+
+.buttonselect a {
+    background-color: #3c3c3c;
+    color: #fff;
+}
+
+.buttonselect .active {
+    background-color: #fff;
+    color: #000;
+}
+
+
+input[type="checkbox"].slider::before {
+  background-color: #000;
+}
+
+input[type="checkbox"].slider:checked {
+  background-color: #fff;
+}
+
+input[type="checkbox"].slider:focus-visible {
+  outline: 2px solid #fff;
+}
+#stationimg, #weatherwidget, #versionwidget {
+    background-color: #000 !important;
+}
+
+
+
+
+#platformSelect {
+    color: #fff;
+
+}
+
+@keyframes colorChange {
+  0% {
+    background-color: #fff; 
+  }
+  100% {
+    background-color: #ececec; 
+  }
+}
+
+  @media (max-width: 600px) {
+    
+
+    .glowbar {
+        background: linear-gradient(0deg,rgba(000, 000, 000, 0) 0%, rgba(000, 000, 000, 1) 100%);
+    }
+
+   
+
+  }
+
+.button {
+    background-color: var(--black) !important;
+    color: #fff;
+}
+
+.listelementicon {
+    filter: invert(1);
+    background-color: unset!important;
+}
+
+.listelementicon.green {
+    background-color: #34c759 !important;
+    filter: invert(0);
+}
+
+.listelementicon.blue {
+    background-color: #2097f4 !important;
+    filter: invert(0);
+}
+
+.listelementicon.red {
+    background-color: #ff2d55 !important;
+    filter: invert(0);
+}
+
+.listelementicon.turquoise {
+    background-color: #00c3d0 !important;
+    filter: invert(0);
+}
+
+.listelementicon.orange {
+    background-color: #ff8d28 !important;
+    filter: invert(0);
+}
+
+.callbutton {
+    background-color: var(--green)!important;
+}
+
+
+.listelement-container div:has(input[type="radio"]) {
+    background-image: url(../icons/darkcheckbox.svg);
+   
+}
+
+.listelement-container div:has(input[type="radio"]:checked) {
+    background-image: url(../icons/darkcheckedimg.svg);
+    
+}
+
+.noinvert {
+    filter: invert(0);
+}
+
+}
+

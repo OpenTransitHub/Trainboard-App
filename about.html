@@ -1,249 +1,230 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>About</title>
-	<link rel="stylesheet" href="./assets/css/styles.css">
-	<link rel="stylesheet" href="./assets/css/dark-styles.css">
-	<link rel="stylesheet" href="./assets/css/line-colors.css">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/branding/favicon.ico">
-	<link rel="manifest" href="/manifest.json" type="application/json" >
-	<meta name="theme-color" content="#000">
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>About - Trainboard</title>
+	<link rel="shortcut icon" type="image/x-icon" href="./branding/favicon.ico">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/dark-styles.css">
+	<meta name="theme-color" content="#e3e3e3" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+	<meta name="robots" content="noindex">
+
+	<script src="./script/i18n.js"></script>
 </head>
+<body>
 
-<body class="bodyWithPopup coloredbody fixednavbar">
-
-<center>
-
-<nav id="navbar"><div class="tabs"><span class="active">&nbsp;About&nbsp;</span></div><div class="iconbar bigonly"><a href="#" onclick="history.go(-1)">Schließen</a></div><div class="iconbar"><a href="#" onclick="history.go(-1)"><img src="./assets/icons/close.svg" class="mediumicon"></a></div></nav>
-
-	<br>
+	<div class="glowbar"></div>
 	
-	<div id="blanktext" class="coloredspace">
-		<div class="container blanktext">
-			<div class="left-div">
-				<br>
-				<h3>Impressum</h3>
-				Felix Nietzold<br>
-				Tharandter Straße 105<br>
-				01187<br>
-				Dresden<br><br>
+	<center>
+	<main>
+		<a href="#" onclick="history.go(-1)"><div class="backbutton"></div></a>
+		<span class="toptitle" id="toptitle">About Trainboard</span>
+		
+		<br><br><br>
 
-				felix@unibits.eu<br><br>
 
-				<a href="https://twitter.com/_aufgegleist" class="black underlined">Twitter</a> |
-				<a href="https://zug.network/@SBahnFahrer" class="black underlined">Mastodon</a> |
-				<a href="https://github.com/hoolycrash" class="black underlined">GitHub</a>
 
-				<br><br><br>
-				<h3>Datenschutz</h3>
-				<p>Der Webserver speichert zu Sicherheitszwecken Protokolldaten der Zugriffe:</p>
-				<ul>
-					<li>IP-Adresse</li>
-					<li>Eindeutige ID des Zugriffs</li>
-					<li>User-Agent-Header</li>
-				</ul>
-
-				<p>Die Protokolldaten werden 7 Tage aufbewahrt.</p>
-				<p><i>Trainboard</i> verwendet den Drittanbieter <i>Google Fonts</i> zur Bereitstellung von Schriftarten, welche ein plattformübergreifend einheitliches Erscheinungsbild sicherstellen: <a href="https://policies.google.com/privacy" class="black underlined">https://policies.google.com/privacy</a></p>
-
-				<br>
-				<h3>Lizenzen</h3>
-				<div class="listcontainer">
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							GitHub API<br>
-							<small class="disabled">Individual License</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/GITHUB_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#h-api-terms"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
+		<div class="headercontainer">
+			<div class="leftpane">
+				<div id="versionwidget">
+					<img src="./branding/v3_icon.svg" class="versionicon">
+					<div class="imgcardcontent">
+						<span class="imgcardtitle">v3</span><br>
+						<span class="imcardsubtitle">Early Preview</span><br>
+						v.3.0.0.1
 					</div>
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							Material Design Icons<br>
-							<small class="disabled">Apache License 2.0</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/MATERIAL_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://github.com/google/material-design-icons/blob/master/LICENSE"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
-					</div>
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							Mapbox Web SDK<br>
-							<small class="disabled">Individual License</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/MAPBOX_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://github.com/mapbox/mapbox-gl-js/blob/main/LICENSE.txt"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
-					</div>
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							Open Street Map<br>
-							<small class="disabled">Open Data Commons Open Database License</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/OSM_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://www.openstreetmap.org/copyright/de"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
-					</div>
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							Railway Stations API<br>
-							<small class="disabled">MIT License</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/RSAPI_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://codeberg.org/RailwayStations/RSAPI/src/branch/main/LICENSE.txt"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
-					</div>
-
-					<div class="listitem">
-						<div class="listimagecontainer">
-							<img src="./assets/icons/license.svg">
-						</div>
-						<div class="listitemtext">
-							Roboto<br>
-							<small class="disabled">Apache License 2.0</small>
-						</div>
-						<div>
-							<a href="./assets/licenses/ROBOTO_LICENSE.txt"><small class="disabled"><u>Ansehen</u></small></a>
-							<a href="https://github.com/googlefonts/roboto-2/blob/main/LICENSE"><small class="disabled"><u>Quelle</u></small></a>
-						</div>
-					</div>
-
 				</div>
 			</div>
-			<div class="right-div lineview">
-				<div class="imgcard versiondiv">
+			<div class="rightpane">
+				<div class="listelement-container">
 					
-					<img src="./assets/branding/glacier_icon.svg" class="versionicon">
-					<div class="imgcardcontent" >
-						<small class="disabled">Trainboard</small><br>
-						<span class="imgcardtitle">Glacier</span> Feature Drop<br>
-
-					</div>
-				</div>
-				<br>
-				<div class="listcontainer">
-					<div class="listitem">
-						<div class="listimagecontainer"><a href="https://github.com/hoolycrash/trainboard/"><img src="./assets/icons/github.svg"></a></div>
-						<div class="listitemtext">
-							<a href="https://github.com/hoolycrash/trainboard/">Github<br>
-							<small class="disabled">Open Source Quellcode</small></a>
-						</div>
+					<div class="trip-message-item">
+						<a href="https://github.com/hoolycrash/trainboard/">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon" style="background-image: url('./icons/github.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong>Github</strong><br><small class="secondary">Open-Source Quellcode</small></td>
+								</tr>
+							</tbody></table>
+						</a>
 					</div>
 
-					<div class="listitem">
-						<div class="listimagecontainer"><a href="https://version.trainboard.eu/"><img src="./assets/icons/news.svg"></a></div>
-						<div class="listitemtext">
-							<a href="https://version.trainboard.eu/">Versionshinweise<br>
-							<small class="disabled">Neuigkeiten in Trainboard</small></a>
-						</div>
+					<div class="trip-message-item">
+						<a href="https://version.trainboard.eu/">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon" style="background-image: url('./icons/new.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong>Versionshinweise</strong><br><small class="secondary">Neuigkeiten in Trainboard</small></td>
+								</tr>
+							</tbody></table>
+						</a>
 					</div>
 
-					<div class="listitem">
-						<div class="listimagecontainer"><a href="https://version.trainboard.eu/changelog.html"><img src="./assets/icons/commit.svg"></a></div>
-						<div class="listitemtext">
-							<a href="https://version.trainboard.eu/changelog.html">Changelog<br>
-							<small class="disabled">Letzte Änderungen</small></a>
-						</div>
+					<div class="trip-message-item">
+						<a href="https://version.trainboard.eu/changelog.html">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon" style="background-image: url('./icons/commit.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong>Changelog</strong><br><small class="secondary">Letzte Änderungen</small></td>
+								</tr>
+							</tbody></table>
+						</a>
 					</div>
 
-					<div class="listitem">
-						<div class="listimagecontainer"><a href="https://version.trainboard.eu/releases.html"><img src="./assets/icons/release.svg"></a></div>
-						<div class="listitemtext">
-							<a href="https://version.trainboard.eu/releases.html">Releases<br>
-							<small class="disabled">Trainboard herunterladen</small></a>
-						</div>
+					<div class="trip-message-item">
+						<a href="https://version.trainboard.eu/releases.html">
+							<table>
+								<tbody><tr class="wide">
+									<td><div class="listelementicon" style="background-image: url('./icons/release.svg'); border-radius: 100px !important;"></div></td>
+									<td class="wide"><strong>Releases</strong><br><small class="secondary">Trainboard herunterladen</small></td>
+								</tr>
+							</tbody></table>
+						</a>
 					</div>
-				</div>
-				<br>
-				<div class="listcontainer">
-					<div class="listitem">
-						<div class="listimagecontainer"><img src="./assets/icons/crowd.svg"></div>
-						<div class="listitemtext">
-							Mitwirkende<br>
-							
-						</div>
-					</div>
-
-					<div class="listitem">
-						<div id="contributors"></div>
-					</div>
+					
 				</div>
 
 				
+			</div>
+		</div>
 
+		<br>
+		<span class="title">Impressum</span>
+		<p>
+			Felix Nietzold<br>
+			Tharandter Str. 105<br>
+			01187 Dresden
+		</p>
+
+		<p>
+			felix@unibits.eu
+		</p>
+
+		<br>
+		<span class="title">Datenschutz</span>
+		<p>
+			Der Webserver speichert zu Sicherheitszwecken Protokolldaten der Zugriffe:
+		</p>
+
+		<p>
+			<ul>
+				<li>IP-Adresse</li>
+				<li>Eindeutige ID des Zugriffs</li>
+				<li>User-Agent-Header</li>
+			</ul>
+		</p>
+
+		<p>
+			Die Protokolldaten werden 7 Tage aufbewahrt
+		</p>
+
+		<p>
+			<i>Trainboard</i> verwendet den Drittanbieter <i>Google Fonts</i> zur Bereitstellung von Schriftarten, welche ein plattformübergreifend einheitliches Erscheinungsbild sicherstellen:
+			<a href="https://policies.google.com/privacy"><u>https://policies.google.com/privacy</u></a>
+		</p>
+
+		<br>
+		<span class="title">Lizenzen</span>
+
+		<div class="listelement-container" id="servicessection">
+		
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>GitHub API</strong><br><small class="secondary ">Individual License</small></td>
+						<td>
+							<a href="./licenses/GITHUB_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#h-api-terms"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>Material Design Icons</strong><br><small class="secondary ">Apache License 2.0</small></td>
+						<td>
+							<a href="./licenses/MATERIALICONS_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://github.com/google/material-design-icons/blob/master/LICENSE"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>Mapbox Web SDK</strong><br><small class="secondary ">Individual License</small></td>
+						<td>
+							<a href="./licenses/MAPBOX_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://github.com/mapbox/mapbox-gl-js/blob/main/LICENSE.txt"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>M3 Loading Indicator</strong><br><small class="secondary ">Apache-2.0 license</small></td>
+						<td>
+							<a href="./licenses/M3_LOADING_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://github.com/Aler1x/m3-loading-indicator/blob/main/LICENSE"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>Open Street Map</strong><br><small class="secondary ">Open Data Commons Open Database License</small></td>
+						<td>
+							<a href="./licenses/OSM_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://www.openstreetmap.org/copyright/de"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
+			</div>
+
+			<div class="setting-item">
+				<table>
+					<tbody><tr class="wide">
+						<td><div class="listelementicon" style="background-image: url('./icons/license.svg');"></div></td>
+						<td class="wide"><strong>Railway Stations API</strong><br><small class="secondary ">MIT License</small></td>
+						<td>
+							<a href="./licenses/RSAPI_LICENSE.txt"><small class="secondary"><u>Ansehen</u></small></a><br>
+							<a href="https://codeberg.org/RailwayStations/RSAPI/src/branch/main/LICENSE.txt"><small class="secondary"><u>Quelle</u></small></a>
+						</td>
+					</tr>
+				</tbody></table>
 			</div>
 
 
-		</div>
-		<span id="notice"></span>
-		<br>
-	</div>
-	
-	
-	
-<div class="blanktext"></div>
-	
-</center>
+			
 
+		 </div>
 
-<script>
-
-	
-
-	
-
-
-	fetch('https://api.github.com/repos/hoolycrash/trainboard/contributors')
-	  .then(response => response.json())
-	  .then(data => {
-		const contributorsDiv = document.getElementById('contributors');
-		data.forEach(contributor => {
-		  const div = document.createElement('div');
-		  div.innerHTML = `
-			<a class="contributor" href="${contributor.html_url}" class="black">
-			  <img src="${contributor.avatar_url}" alt="${contributor.login}" class="avatar">
-			  ${contributor.login}
-			  <span class="green"> +${contributor.contributions}</span>
+		 <br><br><br>
+			<center>
+			<a href="https://github.com/OpenTransitHub">
+				<img src="./icons/oth.png" class="smalllogo"><br>
+				<small class="secondary">
+					A project by<br>Open Transit Hub
+				</small>
 			</a>
-		  `;
-		  contributorsDiv.appendChild(div);
-		});
-	  })
-	  .catch(error => {
-		console.error('Fehler beim Abrufen der Daten:', error);
-	  });
+		<br><br><br>
 
-	  fetchAndDisplayData();
+	</main>
 
-</script>
 
 </body>
 </html>
